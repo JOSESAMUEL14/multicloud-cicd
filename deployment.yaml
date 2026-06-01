@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multicloud-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multicloud-app
+  template:
+    metadata:
+      labels:
+        app: multicloud-app
+    spec:
+      containers:
+      - name: multicloud-app
+        image: josesamuel14/multicloud-app:v1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: CLOUD_PROVIDER
+          value: "local"
