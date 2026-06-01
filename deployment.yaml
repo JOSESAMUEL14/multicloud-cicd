@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: multicloud-app
-        image: josesamuel14/multicloud-app:ad62bd0cb968420c8335e43dafc4db645b057454
+        image: josesamuel14/multicloud-app:350d485577943d0decc362e0e09208e876d0dc61
         ports:
         - containerPort: 5000
         env:
