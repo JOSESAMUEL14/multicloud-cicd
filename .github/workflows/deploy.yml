@@ -1,10 +1,11 @@
-
 name: CI/CD Pipeline
 
-o  push:
+on:
+  push:
     branches: [ main ]
 
 jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,12 +26,3 @@ jobs:
         context: ./app
         push: true
         tags: josesamuel14/multicloud-app:${{ github.sha }}
-
-    - name: Update deployment image
-      run: |
-        sed -i 's|josesamuel14/multicloud-app:.*|josesamuel14/multicloud-app:${{ github.sha }}|' deployment.yaml
-        git config user.name "JOSE SAMUEL"
-        git config user.email "Josesamueld2005@gmail.com"
-        git add deployment.yaml
-        git commit -m "Update image to ${{ github.sha }}"
-        git push
