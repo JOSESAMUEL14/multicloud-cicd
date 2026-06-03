@@ -1,7 +1,12 @@
 from flask import Flask
 import os, platform, socket
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
+
+# Static metrics
+metrics.info('app_info', 'MultiCloud CI/CD App', version='1.0.0')
 
 @app.route("/")
 def home():
@@ -11,9 +16,9 @@ def home():
     python_ver = platform.python_version()
 
     themes = {
-        "aws":   {"p1":"#FF9900","p2":"#FF6B35","label":"Amazon Web Services","short":"AWS"},
-        "gcp":   {"p1":"#4285F4","p2":"#34A853","label":"Google Cloud Platform","short":"GCP"},
-        "local": {"p1":"#7C3AED","p2":"#06B6D4","label":"Local Kubernetes","short":"LOCAL"}
+        "aws":   {"p1":"#FF9900","p2":"#FF6B35","p3":"#FFD700","label":"Amazon Web Services","short":"AWS"},
+        "gcp":   {"p1":"#4285F4","p2":"#34A853","p3":"#FBBC05","label":"Google Cloud Platform","short":"GCP"},
+        "local": {"p1":"#7C3AED","p2":"#06B6D4","p3":"#EC4899","label":"Local Kubernetes","short":"LOCAL"}
     }
     t = themes.get(cloud.lower(), themes["local"])
 
@@ -41,21 +46,15 @@ body{{
   background:var(--bg);color:#fff;
   display:flex;align-items:center;justify-content:center;
 }}
-
-/* ── HEX GRID BG ── */
 #cv{{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}}
 .vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 25%,rgba(6,6,26,0.7) 100%)}}
-
-/* ── WRAP ── */
 .wrap{{
   position:relative;z-index:10;
-  width:100%;max-width:860px;
+  width:100%;max-width:900px;
   padding:1rem 1.2rem;
   display:flex;flex-direction:column;
   align-items:center;gap:1.1rem;
 }}
-
-/* ── PILL ── */
 .pill{{
   display:inline-flex;align-items:center;gap:8px;
   background:rgba(255,255,255,0.04);
@@ -69,8 +68,6 @@ body{{
 }}
 .pill-dot{{width:7px;height:7px;border-radius:50%;background:var(--p1);box-shadow:0 0 10px var(--p1);animation:blink 2s infinite}}
 @keyframes blink{{0%,100%{{opacity:1;transform:scale(1)}}50%{{opacity:0.3;transform:scale(0.6)}}}}
-
-/* ── HERO ── */
 .hero{{text-align:center;animation:fadeUp 0.7s cubic-bezier(.16,1,.3,1)}}
 .hero-eye{{
   font-size:9px;font-weight:600;letter-spacing:4px;
@@ -93,8 +90,6 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
   display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
 }}
 .dot{{width:3px;height:3px;border-radius:50%;background:var(--p1);opacity:0.5}}
-
-/* ── PIPELINE ── */
 .pipeline{{
   width:100%;
   background:rgba(255,255,255,0.025);
@@ -122,7 +117,7 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 }}
 .p-icon:hover{{
   transform:translateY(-6px) scale(1.08);
-  box-shadow:0 0 22px color-mix(in srgb,var(--p1) 55%,transparent),0 0 45px color-mix(in srgb,var(--p1) 25%,transparent),inset 0 0 18px color-mix(in srgb,var(--p1) 15%,transparent);
+  box-shadow:0 0 22px color-mix(in srgb,var(--p1) 55%,transparent),0 0 45px color-mix(in srgb,var(--p1) 25%,transparent);
   border-color:var(--p2);
 }}
 .p-icon i{{font-size:20px;color:#fff}}
@@ -132,15 +127,12 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 .pline{{width:100%;height:1.5px;background:linear-gradient(90deg,var(--p1),var(--p2));opacity:0.2;position:relative;overflow:hidden;border-radius:2px}}
 .pline::after{{content:'';position:absolute;top:0;left:-50%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);animation:sweep 2s linear infinite}}
 @keyframes sweep{{to{{left:150%}}}}
-
-/* ── CARDS GRID ── */
 .cards{{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;width:100%;
   animation:fadeUp 1.1s cubic-bezier(.16,1,.3,1);
 }}
-/* Row 2 — 4 more cards */
 .card{{
   background:rgba(10,10,30,0.85);
   border-radius:16px;
@@ -161,7 +153,7 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 @keyframes bargl{{from{{opacity:0.2}}to{{opacity:0.7}}}}
 .card:hover{{
   transform:perspective(400px) rotateX(8deg) rotateY(-3deg) translateY(-8px) scale(1.03);
-  box-shadow:0 25px 70px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.12),inset 0 1px 0 rgba(255,255,255,0.15),0 0 30px rgba(255,255,255,0.05);
+  box-shadow:0 25px 70px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.12),inset 0 1px 0 rgba(255,255,255,0.15);
 }}
 .card-top{{display:flex;align-items:center;justify-content:space-between}}
 .card-icon{{
@@ -173,7 +165,7 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
   transition:transform 0.5s cubic-bezier(.16,1,.3,1);
   flex-shrink:0;
 }}
-.card:hover .card-icon{{transform:rotate(-12deg) scale(1.15) translateZ(20px)}}
+.card:hover .card-icon{{transform:rotate(-12deg) scale(1.15)}}
 .card-ping{{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 2s infinite}}
 .card-label{{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3)}}
 .card-value{{
@@ -183,8 +175,6 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
   line-height:1.1;
 }}
 .card-sub{{font-size:9px;color:rgba(255,255,255,0.2);font-weight:400}}
-
-/* ── STATUS ── */
 .statusbar{{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
   animation:fadeUp 1.3s cubic-bezier(.16,1,.3,1);
@@ -200,14 +190,17 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 .chip-green{{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
 .chip-white{{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7)}}
 .chip-mono{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
-
+.chip-metrics{{
+  background:rgba(234,179,8,0.08);
+  border:1px solid rgba(234,179,8,0.25);
+  color:#eab308;
+  text-decoration:none;
+}}
 @keyframes fadeDown{{from{{opacity:0;transform:translateY(-18px)}}to{{opacity:1;transform:translateY(0)}}}}
 @keyframes fadeUp{{from{{opacity:0;transform:translateY(22px)}}to{{opacity:1;transform:translateY(0)}}}}
-
 @media(max-width:640px){{
   .cards{{grid-template-columns:1fr 1fr}}
   .p-icon{{width:38px;height:38px}}
-  .p-icon i{{font-size:16px}}
   h1{{font-size:2rem}}
 }}
 </style>
@@ -215,14 +208,11 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 <body>
 <canvas id="cv"></canvas>
 <div class="vig"></div>
-
 <div class="wrap">
-
   <div class="pill">
     <span class="pill-dot"></span>
     {t['short']} &nbsp;·&nbsp; {t['label']} &nbsp;·&nbsp; Live
   </div>
-
   <div class="hero">
     <div class="hero-eye">Multi · Cloud · Infrastructure</div>
     <h1>
@@ -233,7 +223,6 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       Kubernetes<span class="dot"></span>Docker<span class="dot"></span>GitHub Actions<span class="dot"></span>Terraform<span class="dot"></span>AWS · GCP
     </div>
   </div>
-
   <div class="pipeline">
     <div class="pstep">
       <div class="p-icon"><i class="fa-solid fa-code"></i></div>
@@ -268,7 +257,6 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       <div class="p-label">{'AWS' if cloud.lower()=='aws' else 'GCP' if cloud.lower()=='gcp' else 'Cloud'}</div>
     </div>
   </div>
-
   <div class="cards">
     <div class="card">
       <div class="card-top"><div class="card-icon"><i class="fa-solid fa-cloud"></i></div><div class="card-ping"></div></div>
@@ -313,28 +301,25 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       <div class="card-sub">All pods healthy</div>
     </div>
     <div class="card">
-      <div class="card-top"><div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div><div class="card-ping"></div></div>
-      <div class="card-label">Terraform</div>
-      <div class="card-value">IaC Active</div>
-      <div class="card-sub">Infra as code</div>
+      <div class="card-top"><div class="card-icon"><i class="fa-solid fa-chart-line"></i></div><div class="card-ping"></div></div>
+      <div class="card-label">Monitoring</div>
+      <div class="card-value">Prometheus</div>
+      <div class="card-sub">+ Grafana</div>
     </div>
   </div>
-
   <div class="statusbar">
     <div class="chip chip-green">
       <span style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 1.5s infinite;display:inline-block"></span>
       All Systems Operational
     </div>
     <div class="chip chip-white"><i class="fa-solid fa-bolt"></i> Auto-Deploy Active</div>
+    <a href="/metrics" class="chip chip-metrics"><i class="fa-solid fa-chart-bar"></i> Metrics</a>
     <div class="chip chip-mono" id="clk">--:--:--</div>
   </div>
-
 </div>
-
 <script>
 function tick(){{const n=new Date();document.getElementById('clk').textContent=n.toTimeString().slice(0,8);}}
 setInterval(tick,1000);tick();
-
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 let W,H,t=0;
 function rsz(){{W=cv.width=innerWidth;H=cv.height=innerHeight;}}
@@ -368,6 +353,10 @@ draw();
 </script>
 </body>
 </html>"""
+
+@app.route("/health")
+def health():
+    return {"status": "healthy", "cloud": os.getenv("CLOUD_PROVIDER", "local")}, 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
