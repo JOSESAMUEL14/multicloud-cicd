@@ -66,7 +66,7 @@ multicloud-cicd/
 
 ## Author
 
-Jose Samuel D
+Samuel D
 GitHub: https://github.com/JOSESAMUEL14
 LinkedIn: https://linkedin.com/in/samueld14
 Email: Josesamueld2005@gmail.com
