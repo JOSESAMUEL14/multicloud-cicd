@@ -3,6 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main ]
+  repository_dispatch:
+    types: [manual-deploy]
 
 jobs:
   build-and-deploy:
@@ -25,4 +27,4 @@ jobs:
       with:
         context: ./app
         push: true
-        tags: josesamuel14/multicloud-app:${{ github.sha }}
+        tags: josesamuel14/multicloud-app:latest
