@@ -286,61 +286,59 @@ draw();
 
 @app.route("/health")
 def health():
-    return jsonify({{
+    data = {
         "status": "healthy",
         "cloud": os.getenv("CLOUD_PROVIDER", "local"),
         "region": os.getenv("CLOUD_REGION", "local"),
         "uptime": get_uptime(),
         "hostname": socket.gethostname(),
         "python": platform.python_version()
-    }}), 200
+    }
+    return jsonify(data), 200
 
 @app.route("/stats")
 def stats():
     try:
-        metrics_data = requests.get(
-            "http://localhost:5000/metrics",
-            timeout=2
-        ).text
+        metrics_data = requests.get("http://localhost:5000/metrics", timeout=2).text
         total = 0
-        for line in metrics_data.split('\n'):
-            if 'flask_http_request_total' in line and not line.startswith('#'):
+        for line in metrics_data.split(chr(10)):
+            if "flask_http_request_total" in line and not line.startswith("#"):
                 try:
-                    total += float(line.split(' ')[-1])
+                    total += float(line.split(" ")[-1])
                 except:
                     pass
     except:
         total = 0
-    return jsonify({{
+    data = {
         "status": "HEALTHY",
         "total_requests": int(total),
         "uptime": get_uptime(),
         "cloud": os.getenv("CLOUD_PROVIDER", "local"),
         "hostname": socket.gethostname()
-    }})
+    }
+    return jsonify(data)
 
 @app.route("/deploy", methods=["POST"])
 def deploy():
     token = os.getenv("GITHUB_TOKEN", "")
     if not token:
-        return jsonify({{"success": False, "message": "GITHUB_TOKEN not configured"}}), 200
+        return jsonify({"success": False, "message": "GITHUB_TOKEN not configured"})
     try:
         r = requests.post(
             "https://api.github.com/repos/JOSESAMUEL14/multicloud-cicd/dispatches",
-            headers={{
-                "Authorization": f"Bearer {{token}}",
+            headers={
+                "Authorization": f"Bearer {token}",
                 "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/json"
-            }},
-            json={{"event_type": "manual-deploy"}},
+            },
+            json={"event_type": "manual-deploy"},
             timeout=10
         )
         if r.status_code == 204:
-            return jsonify({{"success": True, "message": "Pipeline triggered!"}})
         else:
-            return jsonify({{"success": False, "message": f"GitHub API error: {{r.status_code}} - {{r.text}}"}}), 200
+            return jsonify({"success": False, "message": f"GitHub API error: {r.status_code}"})
     except Exception as e:
-        return jsonify({{"success": False, "message": str(e)}}), 500
+        return jsonify({"success": False, "message": str(e)})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
