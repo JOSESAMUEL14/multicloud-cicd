@@ -335,6 +335,7 @@ def deploy():
             timeout=10
         )
         if r.status_code == 204:
+            return jsonify({"success": True, "message": "Pipeline triggered!"})
         else:
             return jsonify({"success": False, "message": f"GitHub API error: {r.status_code}"})
     except Exception as e:
