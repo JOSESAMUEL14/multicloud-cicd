@@ -21,14 +21,15 @@ def home():
     hostname = socket.gethostname()
     python_ver = platform.python_version()
     github_repo = "JOSESAMUEL14/multicloud-cicd"
-
     themes = {
-        "aws":    {"p1":"#FF9900","p2":"#FF6B35","p3":"#FFD700","label":"Amazon Web Services","short":"AWS"},
-        "gcp":    {"p1":"#4285F4","p2":"#34A853","p3":"#FBBC05","label":"Google Cloud Platform","short":"GCP"},
-        "render": {"p1":"#7C3AED","p2":"#06B6D4","p3":"#EC4899","label":"Render Cloud","short":"RENDER"},
-        "local":  {"p1":"#7C3AED","p2":"#06B6D4","p3":"#EC4899","label":"Local Kubernetes","short":"LOCAL"}
+        "aws":    {"p1":"#FF9900","p2":"#FF6B35","label":"Amazon Web Services","short":"AWS"},
+        "gcp":    {"p1":"#4285F4","p2":"#34A853","label":"Google Cloud Platform","short":"GCP"},
+        "render": {"p1":"#7C3AED","p2":"#06B6D4","label":"Render Cloud","short":"RENDER"},
+        "local":  {"p1":"#7C3AED","p2":"#06B6D4","label":"Local Kubernetes","short":"LOCAL"}
     }
     t = themes.get(cloud.lower(), themes["local"])
+    p1 = t['p1']
+    p2 = t['p2']
     cloud_icon = "<i class='fa-brands fa-aws'></i>" if cloud.lower()=="aws" else "<i class='fa-brands fa-google'></i>" if cloud.lower()=="gcp" else "<i class='fa-solid fa-cloud'></i>"
     cloud_label = "AWS" if cloud.lower()=="aws" else "GCP" if cloud.lower()=="gcp" else "Cloud"
 
@@ -37,112 +38,145 @@ def home():
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MultiCloud CI/CD — Samuel DevOps</title>
+<meta name="description" content="Multi-Cloud CI/CD Pipeline by Samuel — Docker, Kubernetes, GitHub Actions, Terraform, AWS">
+<title>MultiCloud CI/CD — Samuel</title>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
-:root{{--p1:{t['p1']};--p2:{t['p2']};--bg:#06061a;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.38)}}
+:root{{
+  --p1:{p1};--p2:{p2};
+  --bg:#06061a;
+  --glass:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+  --muted:rgba(255,255,255,0.4);
+}}
 html{{scroll-behavior:smooth}}
 body{{font-family:"Exo 2",sans-serif;background:var(--bg);color:#fff;overflow-x:hidden}}
 #cv{{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}}
-.vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 25%,rgba(6,6,26,0.7) 100%)}}
+.vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 25%,rgba(6,6,26,0.75) 100%)}}
 
-/* NAV */
-nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.8rem 2rem;background:rgba(6,6,26,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
-.nav-brand{{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;letter-spacing:2px;color:#fff}}
-.nav-brand span{{color:var(--p1)}}
-.nav-links{{display:flex;gap:20px}}
-.nav-link{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;cursor:pointer}}
+/* ── NAV ── */
+nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.75rem 2rem;background:rgba(6,6,26,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
+.nav-logo{{display:flex;align-items:center;gap:8px;text-decoration:none}}
+.nav-logo-icon{{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,{p1},{p2});display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:900;font-family:"Space Mono",monospace}}
+.nav-logo-text{{font-family:"Space Mono",monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff}}
+.nav-links{{display:flex;gap:18px}}
+.nav-link{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;background:none;border:none;cursor:pointer;padding:4px 0;transition:color 0.3s;font-size:9px}}
 .nav-link:hover{{color:#fff}}
 .nav-right{{display:flex;align-items:center;gap:10px}}
-.nav-github{{color:var(--muted);font-size:18px;transition:color 0.3s;text-decoration:none}}
+.nav-github{{color:var(--muted);font-size:17px;transition:color 0.3s;text-decoration:none}}
 .nav-github:hover{{color:#fff}}
-.live-pill{{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;color:#10b981}}
-.live-dot{{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 2s infinite}}
+.live-pill{{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;color:#10b981}}
+.live-dot{{width:5px;height:5px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981;animation:blink 2s infinite}}
 @keyframes blink{{0%,100%{{opacity:1}}50%{{opacity:0.2}}}}
 
-/* SECTIONS */
+/* ── MODAL ── */
+.modal{{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px)}}
+.modal.show{{display:flex}}
+.modal-box{{background:#0d0d1a;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center}}
+.modal-title{{font-size:1.2rem;font-weight:800;margin-bottom:0.5rem}}
+.modal-sub{{font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}}
+.modal-btns{{display:flex;gap:10px;justify-content:center}}
+.modal-btn{{padding:10px 24px;border-radius:100px;font-size:10px;font-weight:700;cursor:pointer;border:none;transition:all 0.3s;font-family:"Space Mono",monospace;letter-spacing:1px}}
+.modal-confirm{{background:linear-gradient(135deg,{p1},{p2});color:#fff}}
+.modal-cancel{{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2)}}
+.modal-status{{margin-top:1rem;font-size:11px;color:var(--muted);font-family:"Space Mono",monospace}}
+
+/* ── SECTIONS ── */
 .section{{position:relative;z-index:10;padding:5rem 2rem 4rem;max-width:960px;margin:0 auto}}
 .section-tag{{display:inline-flex;align-items:center;gap:8px;font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:5px 14px;border-radius:100px;border:1px solid var(--border);margin-bottom:1.2rem}}
-.section-title{{font-size:clamp(2rem,5vw,3.8rem);font-weight:900;letter-spacing:-1px;line-height:0.9;margin-bottom:1rem}}
-.section-title .w{{color:#fff}}
-.section-title .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.section-desc{{font-size:0.95rem;color:var(--muted);line-height:1.8;max-width:580px;margin-bottom:2.5rem}}
+.sec-title{{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:-1px;line-height:0.92;margin-bottom:1rem}}
+.sec-title .w{{color:#fff}}
+.sec-title .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
+.sec-desc{{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:560px;margin-bottom:2.5rem}}
 .divider{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3rem 0}}
+.alt-bg{{background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}}
 
-/* CARDS */
+/* ── GRID ── */
 .grid-2{{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:2rem}}
 .grid-3{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-bottom:2rem}}
+
+/* ── CARDS ── */
 .card{{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:1.4rem;backdrop-filter:blur(20px);transition:all 0.4s cubic-bezier(.16,1,.3,1)}}
 .card:hover{{transform:translateY(-5px);border-color:rgba(255,255,255,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.5)}}
-.card-icon{{font-size:1.8rem;margin-bottom:0.8rem}}
+.card-icon{{font-size:2rem;margin-bottom:0.8rem}}
 .card-title{{font-size:1rem;font-weight:700;margin-bottom:0.4rem;color:#fff}}
 .card-desc{{font-size:0.82rem;color:var(--muted);line-height:1.6}}
 
-/* FADE IN */
+/* ── FADE IN ── */
 .fade-in{{opacity:0;transform:translateY(28px);transition:all 0.7s cubic-bezier(.16,1,.3,1)}}
 .fade-in.visible{{opacity:1;transform:translateY(0)}}
 
-/* PIPELINE STEPS */
-.pipe-step{{display:flex;gap:1.2rem;margin-bottom:1.8rem;align-items:flex-start}}
-.pipe-num{{font-family:"Space Mono",monospace;font-size:2.5rem;font-weight:700;color:rgba(255,255,255,0.07);min-width:70px;line-height:1}}
-.pipe-content{{flex:1;padding-top:6px}}
-.pipe-title{{font-size:1.1rem;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.pipe-desc{{font-size:0.85rem;color:var(--muted);line-height:1.6}}
-.pipe-tag{{display:inline-block;font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:var(--p1);margin-top:6px}}
+/* ── VISUAL BLOCK ── */
+.visual-block{{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.1));border:1px solid rgba(124,58,237,0.2);border-radius:18px;padding:2rem;text-align:center;margin-bottom:2rem;position:relative;overflow:hidden}}
+.visual-block::before{{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent);pointer-events:none}}
+.vb-icon{{font-size:4rem;margin-bottom:1rem;display:block}}
+.vb-title{{font-size:1.3rem;font-weight:800;margin-bottom:0.5rem}}
+.vb-desc{{font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:400px;margin:0 auto}}
 
-/* ARCH */
-.arch-diagram{{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:1.5rem;margin-bottom:2rem}}
-.arch-row{{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin-bottom:1.2rem}}
-.arch-box{{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.8rem 1rem;text-align:center;min-width:90px;transition:all 0.3s}}
-.arch-box:hover{{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);transform:translateY(-3px)}}
-.arch-box-icon{{font-size:1.3rem;margin-bottom:4px}}
+/* ── ANIMATED STATS ── */
+.stat-row{{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}}
+.stat-box{{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:1.2rem;flex:1;min-width:120px;text-align:center}}
+.stat-num{{font-size:2rem;font-weight:900;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}}
+.stat-label{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px}}
+
+/* ── PIPE STEPS ── */
+.pipe-step{{display:flex;gap:1.2rem;margin-bottom:1.8rem;align-items:flex-start;padding:1rem;border-radius:16px;transition:background 0.3s}}
+.pipe-step:hover{{background:var(--glass)}}
+.pipe-num{{font-family:"Space Mono",monospace;font-size:2.5rem;font-weight:700;color:rgba(255,255,255,0.07);min-width:65px;line-height:1}}
+.pipe-content{{flex:1;padding-top:4px}}
+.pipe-title{{font-size:1.05rem;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
+.pipe-desc{{font-size:0.82rem;color:var(--muted);line-height:1.6}}
+.pipe-icon{{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(6,182,212,0.2));border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;margin-top:4px}}
+.pipe-tag{{display:inline-block;font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:{p1};margin-top:6px}}
+
+/* ── ARCH ── */
+.arch-diagram{{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:1.5rem;margin-bottom:2rem;overflow-x:auto}}
+.arch-row{{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin-bottom:1.2rem;min-width:500px}}
+.arch-box{{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.7rem 0.9rem;text-align:center;min-width:85px;transition:all 0.3s}}
+.arch-box:hover{{background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);transform:translateY(-3px)}}
+.arch-box-icon{{font-size:1.2rem;margin-bottom:3px}}
 .arch-box-name{{font-size:10px;font-weight:700;color:#fff}}
-.arch-box-desc{{font-size:8px;color:var(--muted);margin-top:2px}}
-.arch-arrow{{font-size:1.2rem;color:rgba(255,255,255,0.2);padding:0 6px;margin-bottom:24px}}
+.arch-box-desc{{font-size:8px;color:var(--muted);margin-top:1px}}
+.arch-arrow{{font-size:1.1rem;color:rgba(255,255,255,0.2);padding:0 5px;margin-bottom:22px;flex-shrink:0}}
 .arch-label{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:0.8rem}}
 .arch-divider{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1rem 0}}
 
-/* TOOL CARDS */
-.tool-card{{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:1.2rem;transition:all 0.3s}}
-.tool-card:hover{{transform:translateY(-4px);border-color:var(--p1)}}
-
-/* DASHBOARD SECTION */
-.dash-wrap{{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 1.2rem 2rem}}
-.pill-badge{{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(16px);padding:6px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}}
-.pill-dot{{width:7px;height:7px;border-radius:50%;background:var(--p1);box-shadow:0 0 10px var(--p1);animation:blink 2s infinite}}
-.hero-eye{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;display:flex;align-items:center;justify-content:center;gap:10px}}
+/* ── DASHBOARD HOME ── */
+.dash-wrap{{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4.5rem 1.2rem 2rem}}
+.pill-badge{{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(16px);padding:6px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}}
+.pill-dot{{width:7px;height:7px;border-radius:50%;background:{p1};box-shadow:0 0 10px {p1};animation:blink 2s infinite}}
+.hero-eye{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;display:flex;align-items:center;justify-content:center;gap:10px}}
 .hero-eye::before,.hero-eye::after{{content:"";width:35px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2))}}
 .hero-eye::after{{background:linear-gradient(90deg,rgba(255,255,255,0.2),transparent)}}
 h1{{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:-1px;line-height:0.92;margin-bottom:0.6rem;text-align:center}}
 h1 .w{{color:#fff}}
-h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.hero-sub{{font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:0.5rem}}
-.hero-dot{{width:3px;height:3px;border-radius:50%;background:var(--p1);opacity:0.5}}
-
-/* SCROLL CTA */
-.scroll-cta{{display:flex;gap:10px;justify-content:center;margin:1.2rem 0;flex-wrap:wrap}}
-.cta-btn{{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer}}
+h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
+.hero-sub{{font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}}
+.hero-dot{{width:3px;height:3px;border-radius:50%;background:{p1};opacity:0.5;display:inline-block}}
+.scroll-cta{{display:flex;gap:10px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}}
+.cta-btn{{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer}}
 .cta-btn:hover{{transform:translateY(-3px)}}
-.cta-primary{{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
-.cta-outline{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
+.cta-primary{{background:linear-gradient(135deg,{p1},{p2});color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
+.cta-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.6)}}
+.cta-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
 
-/* PIPELINE STRIP */
+/* ── PIPELINE STRIP ── */
 .pipeline{{width:100%;max-width:860px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:1rem 1.5rem;backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:1rem}}
 .pipeline::before{{content:"PIPELINE";position:absolute;top:7px;left:14px;font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.1)}}
 .pstep{{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}}
-.p-icon{{width:46px;height:46px;border-radius:13px;background:transparent;border:2px solid var(--p1);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all 0.4s;box-shadow:0 0 10px color-mix(in srgb,var(--p1) 25%,transparent)}}
-.p-icon:hover{{transform:translateY(-5px);box-shadow:0 0 22px color-mix(in srgb,var(--p1) 55%,transparent);border-color:var(--p2)}}
+.p-icon{{width:46px;height:46px;border-radius:13px;background:transparent;border:2px solid {p1};display:flex;align-items:center;justify-content:center;transition:all 0.4s;box-shadow:0 0 10px rgba(124,58,237,0.2)}}
+.p-icon:hover{{transform:translateY(-5px);box-shadow:0 0 22px rgba(124,58,237,0.5);border-color:{p2}}}
 .p-icon i{{font-size:18px;color:#fff}}
 .p-icon svg{{width:20px;height:20px}}
 .p-label{{font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}}
 .pconn{{flex:1;display:flex;align-items:center;padding-bottom:22px}}
-.pline{{width:100%;height:1.5px;background:linear-gradient(90deg,var(--p1),var(--p2));opacity:0.2;position:relative;overflow:hidden;border-radius:2px}}
+.pline{{width:100%;height:1.5px;background:linear-gradient(90deg,{p1},{p2});opacity:0.2;position:relative;overflow:hidden;border-radius:2px}}
 .pline::after{{content:"";position:absolute;top:0;left:-50%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);animation:sweep 2s linear infinite}}
 @keyframes sweep{{to{{left:150%}}}}
 
-/* CARDS GRID */
+/* ── CARDS GRID ── */
 .cards{{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%;max-width:860px;margin-bottom:1rem}}
 .dcard{{background:rgba(10,10,30,0.85);border-radius:15px;padding:0.9rem;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.08);border-top:1px solid rgba(226,232,240,0.2);transition:all 0.5s;cursor:default;transform-style:preserve-3d}}
 .dcard::after{{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#94a3b8,#ffffff,#94a3b8);opacity:0.4;animation:bargl 3s ease-in-out infinite alternate}}
@@ -157,11 +191,11 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 .dcard-sub{{font-size:8px;color:rgba(255,255,255,0.2)}}
 .dcard-live{{font-size:8px;color:#10b981;font-weight:600}}
 
-/* ACTIONS */
+/* ── ACTION BUTTONS ── */
 .actions{{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:860px}}
-.btn-action{{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none}}
+.btn-action{{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;-webkit-appearance:none}}
 .btn-action:hover{{transform:translateY(-3px)}}
-.btn-deploy{{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
+.btn-deploy{{background:linear-gradient(135deg,{p1},{p2});color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
 .btn-github{{background:var(--glass);border:1px solid var(--border);color:#fff}}
 .btn-health{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
 .btn-metrics{{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.25);color:#eab308}}
@@ -171,24 +205,39 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 .chip-white{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
 .chip-mono{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
 
-/* MODAL */
-.modal{{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px)}}
-.modal.show{{display:flex}}
-.modal-box{{background:#0d0d1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center}}
-.modal-title{{font-size:1.2rem;font-weight:800;margin-bottom:0.5rem}}
-.modal-sub{{font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}}
-.modal-btns{{display:flex;gap:10px;justify-content:center}}
-.modal-btn{{padding:10px 24px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all 0.3s;font-family:"Space Mono",monospace}}
-.modal-confirm{{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}}
-.modal-cancel{{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15)}}
+/* ── DEMO CARDS ── */
+.demo-card{{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:1.5rem;margin-bottom:1.2rem;backdrop-filter:blur(20px);transition:all 0.3s}}
+.demo-card:hover{{border-color:rgba(255,255,255,0.15)}}
+.demo-card-title{{font-size:1rem;font-weight:800;margin-bottom:0.4rem;display:flex;align-items:center;gap:8px}}
+.demo-card-desc{{font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6}}
+.demo-btn{{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;-webkit-appearance:none;margin-right:8px;margin-bottom:8px}}
+.demo-btn:hover{{transform:translateY(-2px)}}
+.demo-btn-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}}
+.demo-btn-yellow{{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);color:#eab308}}
+.demo-btn-primary{{background:linear-gradient(135deg,{p1},{p2});color:#fff}}
+.demo-btn-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
+.response-box{{display:none;margin-top:0.8rem;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.8rem;font-family:"Space Mono",monospace;font-size:11px;color:#10b981;white-space:pre-wrap;word-break:break-all}}
+.response-box.show{{display:block}}
+.stats-display{{display:none;margin-top:0.8rem;gap:8px}}
+.stats-display.show{{display:grid;grid-template-columns:1fr 1fr 1fr}}
+.stat-item{{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center}}
+.stat-val{{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
+.stat-lbl{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:3px}}
 
-@media(max-width:640px){{
+/* ── FOOTER ── */
+footer{{position:relative;z-index:10;text-align:center;padding:2rem;border-top:1px solid var(--border)}}
+.footer-text{{font-family:"Space Mono",monospace;font-size:10px;color:var(--muted);line-height:1.8}}
+.footer-text a{{color:{p1};text-decoration:none;transition:color 0.3s}}
+.footer-text a:hover{{color:{p2}}}
+
+@media(max-width:768px){{
   .cards{{grid-template-columns:1fr 1fr}}
-  .pipeline{{padding:0.8rem 0.8rem}}
+  .pipeline{{padding:0.8rem}}
   .p-icon{{width:36px;height:36px}}
   h1{{font-size:2.2rem}}
   .nav-links{{display:none}}
   .grid-2,.grid-3{{grid-template-columns:1fr}}
+  .arch-row{{min-width:auto;flex-wrap:wrap;gap:6px}}
 }}
 </style>
 </head>
@@ -198,46 +247,53 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 
 <!-- NAV -->
 <nav>
-  <div class="nav-brand">SAMUEL<span>/</span>DEVOPS</div>
+  <a class="nav-logo" href="javascript:void(0)" onclick="goTo('dashboard')">
+    <div class="nav-logo-icon">MC</div>
+    <span class="nav-logo-text">MULTICLOUD</span>
+  </a>
   <div class="nav-links">
-    <a class="nav-link" onclick="scrollTo('dashboard')">Home</a>
-    <a class="nav-link" onclick="scrollTo('about')">About</a>
-    <a class="nav-link" onclick="scrollTo('architecture')">Architecture</a>
-    <a class="nav-link" onclick="scrollTo('techstack')">Tech Stack</a>
-    <a class="nav-link" onclick="scrollTo('pipeline-section')">Pipeline</a>
-    <a class="nav-link" onclick="scrollTo('demo')">Demo</a>
+    <button class="nav-link" onclick="goTo('dashboard')">Home</button>
+    <button class="nav-link" onclick="goTo('about')">About</button>
+    <button class="nav-link" onclick="goTo('architecture')">Architecture</button>
+    <button class="nav-link" onclick="goTo('techstack')">Tech Stack</button>
+    <button class="nav-link" onclick="goTo('pipeline-section')">Pipeline</button>
+    <button class="nav-link" onclick="goTo('demo')">Demo</button>
   </div>
   <div class="nav-right">
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" class="nav-github"><i class="fa-brands fa-github"></i></a>
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="nav-github"><i class="fa-brands fa-github"></i></a>
     <div class="live-pill"><span class="live-dot"></span>LIVE</div>
   </div>
 </nav>
 
-<!-- MODAL -->
-<div class="modal" id="deployModal">
+<!-- DEPLOY MODAL -->
+<div class="modal" id="deployModal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div class="modal-title">🚀 Trigger Deployment</div>
-    <div class="modal-sub">This will trigger a real GitHub Actions pipeline run!</div>
+    <div class="modal-sub">This will trigger a real GitHub Actions CI/CD pipeline — building a new Docker image and deploying it automatically!</div>
     <div class="modal-btns">
       <button class="modal-btn modal-confirm" onclick="confirmDeploy()">Deploy Now</button>
       <button class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
     </div>
-    <div id="deploy-status" style="margin-top:1rem;font-size:11px;color:var(--muted)"></div>
+    <div class="modal-status" id="deploy-status"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 1 — DASHBOARD (HOME)           -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ═══════════ SECTION 1 — HOME DASHBOARD ═══════════ -->
 <div id="dashboard" class="dash-wrap">
   <div class="pill-badge"><span class="pill-dot"></span>{t['short']} &nbsp;·&nbsp; {t['label']} &nbsp;·&nbsp; Live</div>
   <div class="hero-eye">Multi · Cloud · Infrastructure</div>
   <h1><span class="w">MULTI</span><span class="a">CLOUD</span><br><span class="w">CI</span><span class="a">/CD</span></h1>
-  <div class="hero-sub">Kubernetes<span class="hero-dot"></span>Docker<span class="hero-dot"></span>GitHub Actions<span class="hero-dot"></span>Terraform<span class="hero-dot"></span>AWS</div>
+  <div class="hero-sub">
+    Kubernetes<span class="hero-dot"></span>
+    Docker<span class="hero-dot"></span>
+    GitHub Actions<span class="hero-dot"></span>
+    Terraform<span class="hero-dot"></span>
+    AWS
+  </div>
   <div class="scroll-cta">
-    <button class="cta-btn cta-primary" onclick="scrollTo('about')"><i class="fa-solid fa-circle-info"></i> Learn More</button>
-    <button class="cta-btn cta-outline" onclick="scrollTo('demo')"><i class="fa-solid fa-rocket"></i> Live Demo</button>
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" class="cta-btn cta-outline"><i class="fa-brands fa-github"></i> GitHub</a>
+    <button class="cta-btn cta-primary" onclick="goTo('about')"><i class="fa-solid fa-circle-info"></i> Learn More</button>
+    <button class="cta-btn cta-green" onclick="goTo('demo')"><i class="fa-solid fa-rocket"></i> Live Demo</button>
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="cta-btn cta-outline"><i class="fa-brands fa-github"></i> GitHub</a>
   </div>
 
   <div class="pipeline">
@@ -270,9 +326,9 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
 
   <div class="actions">
     <button class="btn-action btn-deploy" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
-    <a href="https://github.com/{github_repo}/actions" target="_blank" class="btn-action btn-github"><i class="fa-brands fa-github"></i> View Pipeline</a>
-    <a href="/health" target="_blank" class="btn-action btn-health"><i class="fa-solid fa-heart-pulse"></i> Health Check</a>
-    <a href="/metrics" target="_blank" class="btn-action btn-metrics"><i class="fa-solid fa-chart-bar"></i> Metrics</a>
+    <a href="https://github.com/{github_repo}/actions" target="_blank" rel="noopener" class="btn-action btn-github"><i class="fa-brands fa-github"></i> View Pipeline</a>
+    <a href="/health" target="_blank" rel="noopener" class="btn-action btn-health"><i class="fa-solid fa-heart-pulse"></i> Health Check</a>
+    <a href="/metrics" target="_blank" rel="noopener" class="btn-action btn-metrics"><i class="fa-solid fa-chart-bar"></i> Metrics</a>
   </div>
 
   <div class="status-bar">
@@ -282,50 +338,85 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 2 — ABOUT                      -->
-<!-- ═══════════════════════════════════════ -->
-<div style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<!-- ═══════════ SECTION 2 — ABOUT ═══════════ -->
+<div class="alt-bg">
 <div id="about" class="section">
   <div class="section-tag">About This Project</div>
-  <div class="section-title fade-in"><span class="w">WHAT IS</span><br><span class="a">CI/CD?</span></div>
-  <div class="section-desc fade-in">CI/CD stands for Continuous Integration and Continuous Deployment — the method used by Netflix, Amazon, Google and every modern tech company to ship software fast and reliably.</div>
+  <div class="sec-title fade-in"><span class="w">WHAT IS</span><br><span class="a">CI/CD?</span></div>
+  <div class="sec-desc fade-in">CI/CD stands for Continuous Integration and Continuous Deployment — the method used by Netflix, Amazon, Google and every modern tech company to ship software fast and reliably.</div>
+
+  <!-- Animated visual -->
+  <div class="visual-block fade-in">
+    <canvas id="flow-cv" width="600" height="80" style="max-width:100%;display:block;margin:0 auto"></canvas>
+    <div style="margin-top:1rem;font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center">LIVE PIPELINE FLOW SIMULATION</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-row fade-in">
+    <div class="stat-box"><div class="stat-num" id="counter-deploy">0</div><div class="stat-label">Pipeline Runs</div></div>
+    <div class="stat-box"><div class="stat-num">60s</div><div class="stat-label">Deploy Time</div></div>
+    <div class="stat-box"><div class="stat-num">8</div><div class="stat-label">Tools Used</div></div>
+    <div class="stat-box"><div class="stat-num">2</div><div class="stat-label">Cloud Providers</div></div>
+    <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Automated</div></div>
+  </div>
+
   <div class="grid-2">
-    <div class="card fade-in"><div class="card-icon">⚡</div><div class="card-title">Continuous Integration</div><div class="card-desc">Every code push automatically builds and tests the app. Bugs caught immediately. No more manual testing before releases.</div></div>
-    <div class="card fade-in"><div class="card-icon">🚀</div><div class="card-title">Continuous Deployment</div><div class="card-desc">After tests pass, new version deploys automatically to production. Push code — users see it in 60 seconds. Zero manual steps.</div></div>
+    <div class="card fade-in">
+      <div style="font-size:2.5rem;margin-bottom:0.8rem">⚡</div>
+      <div class="card-title">Continuous Integration</div>
+      <div class="card-desc">Every code push automatically builds and tests the application. Bugs caught immediately — no more "it works on my machine" problems. Code is always in a deployable state.</div>
+    </div>
+    <div class="card fade-in">
+      <div style="font-size:2.5rem;margin-bottom:0.8rem">🚀</div>
+      <div class="card-title">Continuous Deployment</div>
+      <div class="card-desc">After CI passes, the new version deploys automatically to production servers. Push code — users see it in 60 seconds. Zero manual steps, zero human error.</div>
+    </div>
   </div>
   <div class="grid-3">
-    <div class="card fade-in"><div class="card-icon">😰</div><div class="card-title">Without CI/CD</div><div class="card-desc">Deployments take hours. Bugs found late. Servers configured manually. Teams move slowly with fear.</div></div>
-    <div class="card fade-in"><div class="card-icon">✅</div><div class="card-title">With CI/CD</div><div class="card-desc">Deployments take 60 seconds. Bugs caught instantly. Infrastructure as code. Teams ship with confidence.</div></div>
-    <div class="card fade-in"><div class="card-icon">🏢</div><div class="card-title">Who Uses This?</div><div class="card-desc">Netflix deploys 100s of times daily. Amazon every 11 seconds. Swiggy, Zomato, Freshworks all use this pattern.</div></div>
+    <div class="card fade-in">
+      <div style="font-size:2rem;margin-bottom:0.8rem">😰</div>
+      <div class="card-title">Without CI/CD</div>
+      <div class="card-desc">Deployments take hours. Bugs discovered late. Manual server configuration. Teams move slowly with fear of breaking things.</div>
+    </div>
+    <div class="card fade-in">
+      <div style="font-size:2rem;margin-bottom:0.8rem">✅</div>
+      <div class="card-title">With CI/CD</div>
+      <div class="card-desc">Deployments take 60 seconds. Bugs caught instantly. Infrastructure as code. Teams ship with confidence multiple times a day.</div>
+    </div>
+    <div class="card fade-in">
+      <div style="font-size:2rem;margin-bottom:0.8rem">🏢</div>
+      <div class="card-title">Real World Usage</div>
+      <div class="card-desc">Netflix deploys 100+ times daily. Amazon every 11 seconds. Swiggy, Zomato, Freshworks all use CI/CD pipelines like this one.</div>
+    </div>
   </div>
-  <div class="card fade-in" style="max-width:460px">
+
+  <!-- About Samuel -->
+  <div class="card fade-in" style="max-width:500px">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
-      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">👨‍💻</div>
+      <div style="width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👨‍💻</div>
       <div>
-        <div style="font-size:1rem;font-weight:800">Jose Samuel D</div>
+        <div style="font-size:1rem;font-weight:800">Samuel</div>
         <div style="font-size:11px;color:var(--muted)">Aspiring DevOps and Cloud Engineer</div>
         <div style="font-size:11px;color:var(--muted)">Final Year CSE · Prathyusha Engineering College</div>
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="https://github.com/JOSESAMUEL14" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-github"></i> GitHub</a>
-      <a href="https://linkedin.com/in/samueld14" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-      <a href="mailto:Josesamueld2005@gmail.com" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-solid fa-envelope"></i> Email</a>
+      <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none;transition:color 0.3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none;transition:color 0.3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+      <a href="mailto:Josesamueld2005@gmail.com" style="display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none;transition:color 0.3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''"><i class="fa-solid fa-envelope"></i> Email</a>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 3 — ARCHITECTURE               -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ═══════════ SECTION 3 — ARCHITECTURE ═══════════ -->
 <div id="architecture" class="section">
   <div class="section-tag">System Design</div>
-  <div class="section-title fade-in"><span class="w">ARCHITECTURE</span><br><span class="a">DIAGRAM</span></div>
-  <div class="section-desc fade-in">How all components connect in this multi-cloud CI/CD system.</div>
+  <div class="sec-title fade-in"><span class="w">ARCHITECTURE</span><br><span class="a">DIAGRAM</span></div>
+  <div class="sec-desc fade-in">How all components connect and communicate in this multi-cloud CI/CD system.</div>
+
   <div class="arch-diagram fade-in">
-    <div class="arch-label">Developer Workflow</div>
+    <div class="arch-label">▸ Developer Workflow</div>
     <div class="arch-row">
       <div class="arch-box"><div class="arch-box-icon">💻</div><div class="arch-box-name">Developer</div><div class="arch-box-desc">Writes code</div></div>
       <div class="arch-arrow">→</div>
@@ -338,7 +429,7 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       <div class="arch-box"><div class="arch-box-icon">🐋</div><div class="arch-box-name">Docker Hub</div><div class="arch-box-desc">Registry</div></div>
     </div>
     <div class="arch-divider"></div>
-    <div class="arch-label">Cloud Deployment</div>
+    <div class="arch-label">▸ Cloud Deployment</div>
     <div class="arch-row">
       <div class="arch-box"><div class="arch-box-icon">🐋</div><div class="arch-box-name">Docker Hub</div><div class="arch-box-desc">Image pulled</div></div>
       <div class="arch-arrow">→</div>
@@ -349,7 +440,7 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       <div class="arch-box"><div class="arch-box-icon">☁️</div><div class="arch-box-name">Render</div><div class="arch-box-desc">24/7 hosting</div></div>
     </div>
     <div class="arch-divider"></div>
-    <div class="arch-label">Monitoring Stack</div>
+    <div class="arch-label">▸ Monitoring Stack</div>
     <div class="arch-row">
       <div class="arch-box"><div class="arch-box-icon">🏗️</div><div class="arch-box-name">Terraform</div><div class="arch-box-desc">IaC</div></div>
       <div class="arch-arrow">+</div>
@@ -360,196 +451,369 @@ h1 .a{{background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background
       <div class="arch-box"><div class="arch-box-icon">🔔</div><div class="arch-box-name">Alerts</div><div class="arch-box-desc">Anomalies</div></div>
     </div>
   </div>
+
   <div class="grid-2">
-    <div class="card fade-in"><div class="card-icon">🐳</div><div class="card-title">Containerisation</div><div class="card-desc">Flask app packaged in Docker with everything it needs. Runs identically on any machine — laptop or cloud server.</div></div>
-    <div class="card fade-in"><div class="card-icon">☸️</div><div class="card-title">Orchestration</div><div class="card-desc">Kubernetes keeps 2 replicas running always. Auto-restarts crashed containers. Rolling updates = zero downtime.</div></div>
-    <div class="card fade-in"><div class="card-icon">🏗️</div><div class="card-title">Infrastructure as Code</div><div class="card-desc">Terraform defines AWS infrastructure in code. No manual clicking in AWS console — everything automated.</div></div>
-    <div class="card fade-in"><div class="card-icon">📊</div><div class="card-title">Observability</div><div class="card-desc">Prometheus scrapes metrics every 15 seconds. Grafana live dashboards. Engineers know problems before users do.</div></div>
+    <div class="card fade-in"><div style="font-size:2rem;margin-bottom:0.8rem">🐳</div><div class="card-title">Containerisation</div><div class="card-desc">Flask app packaged in Docker with all dependencies. Runs identically on any machine — laptop or cloud server. No "works on my machine" issues.</div></div>
+    <div class="card fade-in"><div style="font-size:2rem;margin-bottom:0.8rem">☸️</div><div class="card-title">Orchestration</div><div class="card-desc">Kubernetes keeps 2 replicas running always. Auto-restarts crashed containers. Rolling updates ensure zero downtime during deployments.</div></div>
+    <div class="card fade-in"><div style="font-size:2rem;margin-bottom:0.8rem">🏗️</div><div class="card-title">Infrastructure as Code</div><div class="card-desc">Terraform defines AWS infrastructure in code files. No manual clicking in AWS console — everything provisioned automatically and reproducibly.</div></div>
+    <div class="card fade-in"><div style="font-size:2rem;margin-bottom:0.8rem">📊</div><div class="card-title">Observability</div><div class="card-desc">Prometheus scrapes metrics every 15 seconds. Grafana live dashboards show CPU, memory, request rates. Problems detected before users notice.</div></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 4 — TECH STACK                 -->
-<!-- ═══════════════════════════════════════ -->
-<div style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<!-- ═══════════ SECTION 4 — TECH STACK ═══════════ -->
+<div class="alt-bg">
 <div id="techstack" class="section">
   <div class="section-tag">Tools and Technologies</div>
-  <div class="section-title fade-in"><span class="w">THE TECH</span><br><span class="a">STACK</span></div>
-  <div class="section-desc fade-in">8 industry-standard tools — each chosen because it is used by real companies in production.</div>
+  <div class="sec-title fade-in"><span class="w">THE TECH</span><br><span class="a">STACK</span></div>
+  <div class="sec-desc fade-in">8 industry-standard tools — each chosen because it is used by real companies in production environments worldwide.</div>
   <div class="grid-2">
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(36,150,237,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-brands fa-docker" style="color:#2496ED"></i></div><div><div style="font-size:0.95rem;font-weight:800">Docker</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#2496ED,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Containerisation platform. Packages app and all dependencies into portable containers that run anywhere.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#2496ED;font-weight:700">Why:</span> Industry standard. Used by every major company.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(50,108,229,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-ship" style="color:#326CE5"></i></div><div><div style="font-size:0.95rem;font-weight:800">Kubernetes</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#326CE5,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Container orchestration. Manages, scales, and heals containers automatically across servers.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#326CE5;font-weight:700">Why:</span> Most in-demand DevOps skill in 2025.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-brands fa-github" style="color:#fff"></i></div><div><div style="font-size:0.95rem;font-weight:800">GitHub Actions</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#fff,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">CI/CD automation built into GitHub. Runs pipelines automatically on every code push.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#fff;font-weight:700">Why:</span> Free and integrated. Used by millions of developers.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(123,66,188,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-layer-group" style="color:#7B42BC"></i></div><div><div style="font-size:0.95rem;font-weight:800">Terraform</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#7B42BC,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Infrastructure as Code. Defines cloud resources in code and provisions them automatically.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#7B42BC;font-weight:700">Why:</span> Most popular IaC tool. Works on any cloud.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(255,153,0,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div><div style="font-size:0.95rem;font-weight:800">AWS EC2</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#FF9900,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Amazon Web Services virtual server. Runs the containerised application in the cloud.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#FF9900;font-weight:700">Why:</span> Largest cloud provider. Fundamental for cloud roles.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(230,82,44,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-chart-line" style="color:#E6522C"></i></div><div><div style="font-size:0.95rem;font-weight:800">Prometheus</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#E6522C,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Open source monitoring. Scrapes and stores metrics from applications and servers every 15 seconds.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#E6522C;font-weight:700">Why:</span> Industry standard for cloud-native monitoring.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(244,104,0,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-chart-bar" style="color:#F46800"></i></div><div><div style="font-size:0.95rem;font-weight:800">Grafana</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#F46800,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Visualisation platform. Creates beautiful live dashboards from Prometheus and other data sources.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#F46800;font-weight:700">Why:</span> Most popular open source dashboard tool.</div></div>
-    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:42px;height:42px;border-radius:12px;background:rgba(55,118,171,0.15);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-brands fa-python" style="color:#3776AB"></i></div><div><div style="font-size:0.95rem;font-weight:800">Python Flask</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#3776AB,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.6rem">Lightweight web framework. Powers the dashboard with REST API endpoints for health, metrics, and deploy.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#3776AB;font-weight:700">Why:</span> Simple, fast, perfect for microservices.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(36,150,237,0.15);border:1px solid rgba(36,150,237,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-brands fa-docker" style="color:#2496ED"></i></div><div><div style="font-size:0.95rem;font-weight:800">Docker</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#2496ED,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Containerisation platform. Packages app and all dependencies into portable containers that run anywhere.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#2496ED;font-weight:700">Why:</span> Industry standard. Every major company uses Docker.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(50,108,229,0.15);border:1px solid rgba(50,108,229,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-solid fa-ship" style="color:#326CE5"></i></div><div><div style="font-size:0.95rem;font-weight:800">Kubernetes</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#326CE5,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Container orchestration. Manages, scales, and auto-heals containers across servers.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#326CE5;font-weight:700">Why:</span> Most in-demand DevOps skill in 2025.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-brands fa-github" style="color:#fff"></i></div><div><div style="font-size:0.95rem;font-weight:800">GitHub Actions</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#fff,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">CI/CD automation built into GitHub. Runs pipelines automatically on every code push.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#fff;font-weight:700">Why:</span> Free, integrated, used by millions of developers.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(123,66,188,0.15);border:1px solid rgba(123,66,188,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-solid fa-layer-group" style="color:#7B42BC"></i></div><div><div style="font-size:0.95rem;font-weight:800">Terraform</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#7B42BC,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Infrastructure as Code. Defines and provisions cloud resources automatically.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#7B42BC;font-weight:700">Why:</span> Most popular IaC tool. Works on any cloud provider.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(255,153,0,0.15);border:1px solid rgba(255,153,0,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div><div style="font-size:0.95rem;font-weight:800">AWS EC2</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#FF9900,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Amazon Web Services virtual server. Runs the containerised app in Mumbai cloud region.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#FF9900;font-weight:700">Why:</span> Largest cloud provider. Fundamental for cloud roles.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(230,82,44,0.15);border:1px solid rgba(230,82,44,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-solid fa-chart-line" style="color:#E6522C"></i></div><div><div style="font-size:0.95rem;font-weight:800">Prometheus</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#E6522C,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Open source monitoring. Scrapes and stores metrics from applications every 15 seconds.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#E6522C;font-weight:700">Why:</span> Industry standard for cloud-native monitoring.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(244,104,0,0.15);border:1px solid rgba(244,104,0,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-solid fa-chart-bar" style="color:#F46800"></i></div><div><div style="font-size:0.95rem;font-weight:800">Grafana</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#F46800,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Visualisation platform. Creates beautiful live dashboards from Prometheus data.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#F46800;font-weight:700">Why:</span> Most popular open source dashboard tool worldwide.</div></div>
+    <div class="card fade-in"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.8rem"><div style="width:44px;height:44px;border-radius:13px;background:rgba(55,118,171,0.15);border:1px solid rgba(55,118,171,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fa-brands fa-python" style="color:#3776AB"></i></div><div><div style="font-size:0.95rem;font-weight:800">Python Flask</div><div style="width:35px;height:2px;background:linear-gradient(90deg,#3776AB,transparent);margin-top:3px;border-radius:2px"></div></div></div><div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:0.5rem">Lightweight web framework powering the dashboard with REST API endpoints.</div><div style="font-size:10px;color:var(--muted)"><span style="color:#3776AB;font-weight:700">Why:</span> Simple, fast, perfect for microservices and APIs.</div></div>
   </div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 5 — PIPELINE                   -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ═══════════ SECTION 5 — PIPELINE ═══════════ -->
 <div id="pipeline-section" class="section">
   <div class="section-tag">How It Works</div>
-  <div class="section-title fade-in"><span class="w">THE</span><br><span class="a">PIPELINE</span></div>
-  <div class="section-desc fade-in">From writing code to live in production — every step that happens automatically in under 60 seconds.</div>
+  <div class="sec-title fade-in"><span class="w">THE</span><br><span class="a">PIPELINE</span></div>
+  <div class="sec-desc fade-in">From writing a single line of code to seeing it live in production — every step that happens automatically in under 60 seconds.</div>
 
-  <div class="pipe-step fade-in"><div class="pipe-num">01</div><div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask app — adding features, fixing bugs, updating UI. Code lives in GitHub.</div><div class="pipe-tag">Local Development</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">02</div><div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly.</div><div class="pipe-tag">GitHub</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">03</div><div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub infrastructure.</div><div class="pipe-tag">GitHub Actions</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">04</div><div class="pipe-content"><div class="pipe-title">Docker Image Built</div><div class="pipe-desc">GitHub Actions reads the Dockerfile and builds a new Docker image with the updated application. Tagged with unique commit SHA.</div><div class="pipe-tag">Docker</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">05</div><div class="pipe-content"><div class="pipe-title">Image Pushed to Docker Hub</div><div class="pipe-desc">The built image is pushed to Docker Hub registry — making it available to any server worldwide as josesamuel14/multicloud-app:latest.</div><div class="pipe-tag">Docker Hub</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">06</div><div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — replacing old containers gradually. Zero downtime for users.</div><div class="pipe-tag">Kubernetes</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">07</div><div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version live on AWS EC2 Mumbai and Render simultaneously. Total time: under 60 seconds. Automatically. Every time.</div><div class="pipe-tag">AWS + Render</div></div></div>
-  <div class="pipe-step fade-in"><div class="pipe-num">08</div><div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know about problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div></div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon">💻</div>
+    <div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask application — adding features, fixing bugs, or updating the UI. Code lives in GitHub.</div><div class="pipe-tag">Local Development</div></div>
+    <div class="pipe-num">01</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon"><i class="fa-brands fa-github"></i></div>
+    <div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly with no manual intervention.</div><div class="pipe-tag">GitHub</div></div>
+    <div class="pipe-num">02</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon">⚡</div>
+    <div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub's infrastructure for free.</div><div class="pipe-tag">GitHub Actions</div></div>
+    <div class="pipe-num">03</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon"><i class="fa-brands fa-docker"></i></div>
+    <div class="pipe-content"><div class="pipe-title">Docker Image Built</div><div class="pipe-desc">GitHub Actions reads the Dockerfile and builds a new Docker image with the updated app. Tagged with unique commit SHA — every version is traceable.</div><div class="pipe-tag">Docker</div></div>
+    <div class="pipe-num">04</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon">🐋</div>
+    <div class="pipe-content"><div class="pipe-title">Image Pushed to Docker Hub</div><div class="pipe-desc">The built image is pushed to Docker Hub registry — making it available to any server worldwide as josesamuel14/multicloud-app:latest.</div><div class="pipe-tag">Docker Hub</div></div>
+    <div class="pipe-num">05</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon">☸️</div>
+    <div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — gradually replacing old containers. Zero downtime. Users never notice.</div><div class="pipe-tag">Kubernetes</div></div>
+    <div class="pipe-num">06</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon"><i class="fa-brands fa-aws"></i></div>
+    <div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version is live on AWS EC2 Mumbai and Render simultaneously. Total time from git push to live: under 60 seconds. Every time. Automatically.</div><div class="pipe-tag">AWS + Render</div></div>
+    <div class="pipe-num">07</div>
+  </div>
+  <div class="pipe-step fade-in">
+    <div class="pipe-icon">📊</div>
+    <div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know about problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div>
+    <div class="pipe-num">08</div>
+  </div>
 
-  <div class="card fade-in" style="text-align:center;padding:1.8rem">
-    <div style="font-size:1.8rem;margin-bottom:0.8rem">⚡</div>
-    <div style="font-size:1.2rem;font-weight:800;margin-bottom:0.4rem">Total Time: Under 60 Seconds</div>
-    <div style="font-size:13px;color:var(--muted)">From git push to live in production — fully automated, zero manual steps</div>
+  <div class="card fade-in" style="text-align:center;padding:2rem;background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.1));border-color:rgba(124,58,237,0.2)">
+    <div style="font-size:2.5rem;margin-bottom:0.6rem">⚡</div>
+    <div style="font-size:1.3rem;font-weight:800;margin-bottom:0.4rem">Total Time: Under 60 Seconds</div>
+    <div style="font-size:13px;color:var(--muted)">From git push to live in production — fully automated, zero manual steps, zero downtime</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 6 — LIVE DEMO                  -->
-<!-- ═══════════════════════════════════════ -->
-<div style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border)">
+<!-- ═══════════ SECTION 6 — LIVE DEMO ═══════════ -->
+<div class="alt-bg">
 <div id="demo" class="section">
   <div class="section-tag">Interactive Demo</div>
-  <div class="section-title fade-in"><span class="w">LIVE</span><br><span class="a">DEMO</span></div>
-  <div class="section-desc fade-in">Everything below is real and live. Click any button to interact with the actual running system.</div>
+  <div class="sec-title fade-in"><span class="w">LIVE</span><br><span class="a">DEMO</span></div>
+  <div class="sec-desc fade-in">Everything below is real and live. Click any button to interact with the actual running system right now.</div>
 
-  <div class="grid-2">
-    <div class="card fade-in">
-      <div class="card-icon" style="color:#10b981"><i class="fa-solid fa-heart-pulse"></i></div>
-      <div class="card-title">Health Check</div>
-      <div class="card-desc" style="margin-bottom:1rem">Returns real system info — cloud, region, uptime, hostname of the actual server running right now.</div>
-      <button onclick="checkHealth()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;border-style:solid"><i class="fa-solid fa-heart-pulse"></i> Check Now</button>
-      <div id="health-response" style="display:none;margin-top:0.8rem;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.8rem;font-family:Space Mono,monospace;font-size:11px;color:#10b981;white-space:pre-wrap"></div>
+  <div class="demo-card fade-in">
+    <div class="demo-card-title"><i class="fa-solid fa-heart-pulse" style="color:#10b981"></i> Health Check</div>
+    <div class="demo-card-desc">Returns real system information — cloud provider, region, uptime, and hostname of the actual server running this app right now.</div>
+    <button class="demo-btn demo-btn-green" onclick="checkHealth()"><i class="fa-solid fa-heart-pulse"></i> Check Health</button>
+    <div class="response-box" id="health-response"></div>
+  </div>
+
+  <div class="demo-card fade-in">
+    <div class="demo-card-title"><i class="fa-solid fa-chart-bar" style="color:#eab308"></i> Live Statistics</div>
+    <div class="demo-card-desc">Fetches real-time stats from the application — total HTTP requests served, current uptime, and system status. Data from Prometheus metrics.</div>
+    <button class="demo-btn demo-btn-yellow" onclick="checkStats()"><i class="fa-solid fa-chart-bar"></i> Fetch Live Stats</button>
+    <div class="stats-display" id="stats-display">
+      <div class="stat-item"><div class="stat-val" id="stat-req">--</div><div class="stat-lbl">Requests</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-up">--</div><div class="stat-lbl">Uptime</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-status">--</div><div class="stat-lbl">Status</div></div>
     </div>
-    <div class="card fade-in">
-      <div class="card-icon" style="color:#eab308"><i class="fa-solid fa-chart-bar"></i></div>
-      <div class="card-title">Live Stats</div>
-      <div class="card-desc" style="margin-bottom:1rem">Real-time stats — total requests served, current uptime, system status. Auto-updates every 5 seconds.</div>
-      <button onclick="checkStats()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.25);color:#eab308;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;border-style:solid"><i class="fa-solid fa-chart-bar"></i> Fetch Stats</button>
-      <div id="stats-display" style="display:none;margin-top:0.8rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-        <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center"><div id="stat-req" style="font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">--</div><div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:3px">REQUESTS</div></div>
-        <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center"><div id="stat-up" style="font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">--</div><div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:3px">UPTIME</div></div>
-        <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center"><div id="stat-status" style="font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">--</div><div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:3px">STATUS</div></div>
-      </div>
-    </div>
-    <div class="card fade-in">
-      <div class="card-icon" style="color:var(--p1)"><i class="fa-solid fa-rocket"></i></div>
-      <div class="card-title">Trigger Pipeline</div>
-      <div class="card-desc" style="margin-bottom:1rem">Click Deploy Now to trigger a real GitHub Actions CI/CD run. Watch it build and deploy live on GitHub!</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="showDeploy()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;border:none"><i class="fa-solid fa-rocket"></i> Deploy Now</button>
-        <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:#fff;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-decoration:none"><i class="fa-brands fa-github"></i> Watch Live</a>
-      </div>
-    </div>
-    <div class="card fade-in">
-      <div class="card-icon" style="color:#06B6D4"><i class="fa-solid fa-code"></i></div>
-      <div class="card-title">Source Code</div>
-      <div class="card-desc" style="margin-bottom:1rem">Entire project is open source — Dockerfile, K8s configs, Terraform IaC, GitHub Actions workflow, monitoring setup.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:#fff;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-decoration:none"><i class="fa-brands fa-github"></i> View Repo</a>
-        <a href="/metrics" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.25);color:#eab308;font-family:Space Mono,monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-decoration:none"><i class="fa-solid fa-chart-line"></i> Raw Metrics</a>
-      </div>
-    </div>
+  </div>
+
+  <div class="demo-card fade-in">
+    <div class="demo-card-title"><i class="fa-solid fa-rocket" style="color:{p1}"></i> Trigger CI/CD Pipeline</div>
+    <div class="demo-card-desc">Click Deploy Now to trigger a real GitHub Actions pipeline run. A new Docker image will be built and deployed automatically. Watch it live on GitHub!</div>
+    <button class="demo-btn demo-btn-primary" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> Watch on GitHub</a>
+  </div>
+
+  <div class="demo-card fade-in">
+    <div class="demo-card-title"><i class="fa-solid fa-code" style="color:#06B6D4"></i> Source Code</div>
+    <div class="demo-card-desc">The entire project is open source — Dockerfile, Kubernetes configs, Terraform IaC, GitHub Actions workflow, and monitoring setup.</div>
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> View GitHub Repo</a>
+    <a href="/metrics" target="_blank" rel="noopener" class="demo-btn demo-btn-yellow"><i class="fa-solid fa-chart-line"></i> Raw Metrics</a>
   </div>
 </div>
 </div>
 
 <!-- FOOTER -->
-<footer style="position:relative;z-index:10;text-align:center;padding:2rem;border-top:1px solid var(--border);font-family:Space Mono,monospace;font-size:10px;color:var(--muted)">
-  Built by <a href="https://github.com/JOSESAMUEL14" style="color:var(--p1);text-decoration:none">Jose Samuel D</a> &nbsp;·&nbsp;
-  <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" style="color:var(--muted);text-decoration:none">GitHub</a> &nbsp;·&nbsp;
-  <a href="https://linkedin.com/in/samueld14" style="color:var(--muted);text-decoration:none">LinkedIn</a>
+<footer>
+  <div class="footer-text">
+    Built by <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener">Samuel</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener">LinkedIn</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:Josesamueld2005@gmail.com">Contact</a>
+    <br><br>
+    <span style="font-size:9px;opacity:0.5">MultiCloud CI/CD Pipeline · Docker · Kubernetes · GitHub Actions · Terraform · AWS · Prometheus · Grafana</span>
+  </div>
 </footer>
 
 <script>
-function scrollTo(id){{
-  document.getElementById(id).scrollIntoView({{behavior:"smooth"}});
+// ── SCROLL NAVIGATION (works on all browsers) ──
+function goTo(id) {{
+  var el = document.getElementById(id);
+  if (el) {{
+    var top = el.getBoundingClientRect().top + window.pageYOffset - 60;
+    window.scrollTo({{top: top, behavior: 'smooth'}});
+  }}
 }}
-function tick(){{const n=new Date();document.getElementById("clk").textContent=n.toTimeString().slice(0,8);}}
-setInterval(tick,1000);tick();
-async function updateMetrics(){{
-  try{{
-    const r=await fetch("/stats");
-    const d=await r.json();
-    document.getElementById("req-count").textContent=d.total_requests||"0";
-    document.getElementById("uptime").textContent=d.uptime||"--";
-    document.getElementById("health-val").textContent=d.status||"--";
-  }}catch(e){{}}
-}}
-setInterval(updateMetrics,5000);updateMetrics();
-function showDeploy(){{document.getElementById("deployModal").classList.add("show");}}
-function closeModal(){{document.getElementById("deployModal").classList.remove("show");document.getElementById("deploy-status").textContent="";}}
-async function confirmDeploy(){{
-  const s=document.getElementById("deploy-status");
-  s.textContent="Triggering...";s.style.color="#eab308";
-  try{{
-    const r=await fetch("/deploy",{{method:"POST",headers:{{"Content-Type":"application/json"}}}});
-    const d=await r.json();
-    s.textContent=d.success?"✅ Pipeline triggered!":"❌ "+d.message;
-    s.style.color=d.success?"#10b981":"#ef4444";
-  }}catch(e){{s.textContent="❌ "+e.message;s.style.color="#ef4444";}}
-}}
-async function checkHealth(){{
-  const box=document.getElementById("health-response");
-  box.style.display="block";
-  box.textContent="Fetching...";
-  try{{
-    const r=await fetch("/health");
-    const d=await r.json();
-    box.textContent=JSON.stringify(d,null,2);
-  }}catch(e){{box.textContent="Error: "+e.message;}}
-}}
-async function checkStats(){{
-  document.getElementById("stats-display").style.display="grid";
-  try{{
-    const r=await fetch("/stats");
-    const d=await r.json();
-    document.getElementById("stat-req").textContent=d.total_requests||"0";
-    document.getElementById("stat-up").textContent=d.uptime||"--";
-    document.getElementById("stat-status").textContent=d.status||"--";
-  }}catch(e){{}}
-}}
-setInterval(checkStats,5000);
-const obs=new IntersectionObserver(entries=>{{
-  entries.forEach(e=>{{if(e.isIntersecting)e.target.classList.add("visible");}});
-}},{{threshold:0.1}});
-document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
 
-// Hex grid
-const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
-let W,H,t=0;
-function rsz(){{W=cv.width=innerWidth;H=cv.height=innerHeight;}}
-rsz();window.addEventListener("resize",rsz);
-const S=26;
-function draw(){{
-  ctx.fillStyle="#06061a";ctx.fillRect(0,0,W,H);
-  t+=0.05;
-  const rows=Math.ceil(H/(S*1.5))+2,cols=Math.ceil(W/(S*1.73))+2;
-  for(let r=0;r<rows;r++){{
-    for(let c=0;c<cols;c++){{
-      const x=c*S*1.73+(r%2)*S*0.866;
-      const y=r*S*1.5;
-      const v=(Math.sin(t+c*0.45+r*0.65)+Math.sin(t*0.85+c*0.75-r*0.45)+Math.sin(t*1.2-c*0.3+r*0.8))/3;
-      const a=0.05+v*0.22;
+// ── CLOCK ──
+function tick() {{
+  var n = new Date();
+  var h = String(n.getHours()).padStart(2,'0');
+  var m = String(n.getMinutes()).padStart(2,'0');
+  var s = String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clk').textContent = h+':'+m+':'+s;
+}}
+setInterval(tick, 1000);
+tick();
+
+// ── LIVE METRICS ──
+function updateMetrics() {{
+  fetch('/stats')
+    .then(function(r) {{ return r.json(); }})
+    .then(function(d) {{
+      document.getElementById('req-count').textContent = d.total_requests || '0';
+      document.getElementById('uptime').textContent = d.uptime || '--';
+      document.getElementById('health-val').textContent = d.status || '--';
+    }})
+    .catch(function(e) {{ console.log('metrics error', e); }});
+}}
+setInterval(updateMetrics, 5000);
+updateMetrics();
+
+// ── DEPLOY MODAL ──
+function showDeploy() {{
+  document.getElementById('deployModal').style.display = 'flex';
+}}
+function closeModal() {{
+  document.getElementById('deployModal').style.display = 'none';
+  document.getElementById('deploy-status').textContent = '';
+}}
+document.getElementById('deployModal').addEventListener('click', function(e) {{
+  if (e.target === this) closeModal();
+}});
+
+function confirmDeploy() {{
+  var s = document.getElementById('deploy-status');
+  s.textContent = 'Triggering pipeline...';
+  s.style.color = '#eab308';
+  fetch('/deploy', {{
+    method: 'POST',
+    headers: {{'Content-Type': 'application/json'}}
+  }})
+  .then(function(r) {{ return r.json(); }})
+  .then(function(d) {{
+    if (d.success) {{
+      s.textContent = '✅ Pipeline triggered! Check GitHub Actions.';
+      s.style.color = '#10b981';
+    }} else {{
+      s.textContent = '❌ ' + d.message;
+      s.style.color = '#ef4444';
+    }}
+  }})
+  .catch(function(e) {{
+    s.textContent = '❌ ' + e.message;
+    s.style.color = '#ef4444';
+  }});
+}}
+
+// ── HEALTH CHECK ──
+function checkHealth() {{
+  var box = document.getElementById('health-response');
+  box.className = 'response-box show';
+  box.textContent = 'Fetching...';
+  fetch('/health')
+    .then(function(r) {{ return r.json(); }})
+    .then(function(d) {{
+      box.textContent = JSON.stringify(d, null, 2);
+    }})
+    .catch(function(e) {{
+      box.textContent = 'Error: ' + e.message;
+    }});
+}}
+
+// ── LIVE STATS ──
+function checkStats() {{
+  var grid = document.getElementById('stats-display');
+  grid.className = 'stats-display show';
+  fetch('/stats')
+    .then(function(r) {{ return r.json(); }})
+    .then(function(d) {{
+      document.getElementById('stat-req').textContent = d.total_requests || '0';
+      document.getElementById('stat-up').textContent = d.uptime || '--';
+      document.getElementById('stat-status').textContent = d.status || '--';
+    }})
+    .catch(function(e) {{ console.log(e); }});
+}}
+setInterval(checkStats, 5000);
+
+// ── COUNTER ANIMATION ──
+function animateCounter(id, end, duration) {{
+  var el = document.getElementById(id);
+  if (!el) return;
+  var start = 0;
+  var step = end / (duration / 16);
+  var timer = setInterval(function() {{
+    start += step;
+    if (start >= end) {{ start = end; clearInterval(timer); }}
+    el.textContent = Math.floor(start);
+  }}, 16);
+}}
+
+// ── SCROLL ANIMATIONS ──
+var obs = new IntersectionObserver(function(entries) {{
+  entries.forEach(function(e) {{
+    if (e.isIntersecting) {{
+      e.target.classList.add('visible');
+      if (e.target.id === 'about' || e.target.closest('#about')) {{
+        animateCounter('counter-deploy', 39, 1500);
+      }}
+    }}
+  }});
+}}, {{threshold: 0.1}});
+document.querySelectorAll('.fade-in').forEach(function(el) {{ obs.observe(el); }});
+
+// ── PIPELINE FLOW ANIMATION ──
+var flowCv = document.getElementById('flow-cv');
+if (flowCv) {{
+  var fctx = flowCv.getContext('2d');
+  var fw = flowCv.width, fh = flowCv.height;
+  var nodes = [
+    {{x:60,y:40,label:'Code',icon:'💻'}},
+    {{x:160,y:40,label:'GitHub',icon:'⚡'}},
+    {{x:260,y:40,label:'Docker',icon:'🐳'}},
+    {{x:360,y:40,label:'K8s',icon:'☸️'}},
+    {{x:460,y:40,label:'AWS',icon:'☁️'}},
+  ];
+  var particles = [];
+  for (var i=0; i<8; i++) {{
+    particles.push({{x: Math.random()*fw, progress: Math.random(), speed: 0.002+Math.random()*0.003}});
+  }}
+  var ft = 0;
+  function drawFlow() {{
+    fctx.clearRect(0,0,fw,fh);
+    fctx.strokeStyle = 'rgba(124,58,237,0.3)';
+    fctx.lineWidth = 1.5;
+    fctx.setLineDash([4,4]);
+    fctx.beginPath();
+    fctx.moveTo(60,40);
+    fctx.lineTo(460,40);
+    fctx.stroke();
+    fctx.setLineDash([]);
+    nodes.forEach(function(n) {{
+      var glow = 0.5 + Math.sin(ft*2+n.x*0.02)*0.3;
+      fctx.beginPath();
+      fctx.arc(n.x,n.y,18,0,Math.PI*2);
+      fctx.fillStyle = 'rgba(124,58,237,'+(0.1+glow*0.1)+')';
+      fctx.fill();
+      fctx.strokeStyle = 'rgba(124,58,237,'+(0.4+glow*0.3)+')';
+      fctx.lineWidth = 1.5;
+      fctx.stroke();
+      fctx.font = '14px serif';
+      fctx.textAlign = 'center';
+      fctx.textBaseline = 'middle';
+      fctx.fillStyle = '#fff';
+      fctx.fillText(n.icon, n.x, n.y);
+      fctx.font = '8px Space Mono, monospace';
+      fctx.fillStyle = 'rgba(255,255,255,0.4)';
+      fctx.fillText(n.label.toUpperCase(), n.x, n.y+28);
+    }});
+    particles.forEach(function(p) {{
+      p.progress += p.speed;
+      if (p.progress > 1) p.progress = 0;
+      var px = 60 + p.progress * 400;
+      fctx.beginPath();
+      fctx.arc(px, 40, 3, 0, Math.PI*2);
+      fctx.fillStyle = 'rgba(6,182,212,0.8)';
+      fctx.fill();
+      fctx.beginPath();
+      fctx.arc(px, 40, 6, 0, Math.PI*2);
+      fctx.fillStyle = 'rgba(6,182,212,0.2)';
+      fctx.fill();
+    }});
+    ft += 0.02;
+    requestAnimationFrame(drawFlow);
+  }}
+  drawFlow();
+}}
+
+// ── HEX GRID BACKGROUND ──
+var cv = document.getElementById('cv');
+var ctx = cv.getContext('2d');
+var W, H, t = 0;
+function rsz() {{ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }}
+rsz();
+window.addEventListener('resize', rsz);
+var S = 26;
+function draw() {{
+  ctx.fillStyle = '#06061a';
+  ctx.fillRect(0, 0, W, H);
+  t += 0.05;
+  var rows = Math.ceil(H/(S*1.5))+2;
+  var cols = Math.ceil(W/(S*1.73))+2;
+  for (var r=0; r<rows; r++) {{
+    for (var c=0; c<cols; c++) {{
+      var x = c*S*1.73 + (r%2)*S*0.866;
+      var y = r*S*1.5;
+      var v = (Math.sin(t+c*0.45+r*0.65) + Math.sin(t*0.85+c*0.75-r*0.45) + Math.sin(t*1.2-c*0.3+r*0.8))/3;
+      var a = 0.05 + v*0.22;
       ctx.beginPath();
-      for(let i=0;i<6;i++){{
-        const ang=Math.PI/180*(60*i-30);
-        i===0?ctx.moveTo(x+(S-1)*Math.cos(ang),y+(S-1)*Math.sin(ang)):ctx.lineTo(x+(S-1)*Math.cos(ang),y+(S-1)*Math.sin(ang));
+      for (var i=0; i<6; i++) {{
+        var ang = Math.PI/180*(60*i-30);
+        var px = x+(S-1)*Math.cos(ang);
+        var py = y+(S-1)*Math.sin(ang);
+        if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
       }}
       ctx.closePath();
-      ctx.strokeStyle=`rgba(6,182,212,${{Math.max(0.04,a)}})`;ctx.lineWidth=0.9;ctx.stroke();
-      if(v>0.45){{ctx.fillStyle=`rgba(124,58,237,${{(v-0.45)*0.28}})`;ctx.fill();}}
-      if(v>0.72){{ctx.fillStyle=`rgba(6,182,212,${{(v-0.72)*0.55}})`;ctx.fill();}}
-      if(v>0.88){{ctx.fillStyle=`rgba(255,255,255,${{(v-0.88)*0.15}})`;ctx.fill();}}
+      ctx.strokeStyle = 'rgba(6,182,212,'+Math.max(0.04,a)+')';
+      ctx.lineWidth = 0.9;
+      ctx.stroke();
+      if (v > 0.45) {{ ctx.fillStyle = 'rgba(124,58,237,'+(v-0.45)*0.28+')'; ctx.fill(); }}
+      if (v > 0.72) {{ ctx.fillStyle = 'rgba(6,182,212,'+(v-0.72)*0.55+')'; ctx.fill(); }}
+      if (v > 0.88) {{ ctx.fillStyle = 'rgba(255,255,255,'+(v-0.88)*0.15+')'; ctx.fill(); }}
     }}
   }}
   requestAnimationFrame(draw);
@@ -562,14 +826,14 @@ draw();
 
 @app.route("/health")
 def health():
-    data = {{
+    data = {
         "status": "healthy",
         "cloud": os.getenv("CLOUD_PROVIDER", "local"),
         "region": os.getenv("CLOUD_REGION", "local"),
         "uptime": get_uptime(),
         "hostname": socket.gethostname(),
         "python": platform.python_version()
-    }}
+    }
     return jsonify(data), 200
 
 
@@ -587,13 +851,13 @@ def stats():
                     pass
     except:
         total = 0
-    data = {{
+    data = {
         "status": "HEALTHY",
         "total_requests": int(total),
         "uptime": get_uptime(),
         "cloud": os.getenv("CLOUD_PROVIDER", "local"),
         "hostname": socket.gethostname()
-    }}
+    }
     return jsonify(data)
 
 
@@ -601,24 +865,24 @@ def stats():
 def deploy():
     token = os.getenv("GITHUB_TOKEN", "")
     if not token:
-        return jsonify({{"success": False, "message": "GITHUB_TOKEN not configured"}})
+        return jsonify({"success": False, "message": "GITHUB_TOKEN not configured"})
     try:
         r = requests.post(
             "https://api.github.com/repos/JOSESAMUEL14/multicloud-cicd/dispatches",
-            headers={{
-                "Authorization": f"Bearer {{token}}",
+            headers={
+                "Authorization": "Bearer " + token,
                 "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/json"
-            }},
-            json={{"event_type": "manual-deploy"}},
+            },
+            json={"event_type": "manual-deploy"},
             timeout=10
         )
         if r.status_code == 204:
-            return jsonify({{"success": True, "message": "Pipeline triggered!"}})
+            return jsonify({"success": True, "message": "Pipeline triggered!"})
         else:
-            return jsonify({{"success": False, "message": f"GitHub API error: {{r.status_code}}"}})
+            return jsonify({"success": False, "message": "GitHub API error: " + str(r.status_code)})
     except Exception as e:
-        return jsonify({{"success": False, "message": str(e)}})
+        return jsonify({"success": False, "message": str(e)})
 
 
 if __name__ == "__main__":
