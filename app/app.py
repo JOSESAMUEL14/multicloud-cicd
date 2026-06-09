@@ -573,8 +573,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 <div id="contact-section" class="section" style="text-align:center">
   <div class="section-tag" style="margin:0 auto 1.2rem">Get In Touch</div>
   <div class="sec-title fade-in" style="text-align:center"><span class="w">LET'S</span><br><span class="a">CONNECT</span></div>
-  <div class="sec-desc fade-in" style="margin:0 auto 2.5rem;text-align:center">Open to DevOps internships, fresher roles, and collaborations. Feel free to reach out!</div>
-  <div class="grid-3 fade-in" style="max-width:700px;margin:0 auto 2rem">
+  
     <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project" class="contact-card">
       <i class="fa-solid fa-envelope contact-icon" style="color:{p1}"></i>
       <div class="contact-label">Email</div>
