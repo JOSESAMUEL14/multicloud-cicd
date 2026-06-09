@@ -56,8 +56,6 @@ html{{scroll-behavior:smooth}}
 body{{font-family:"Exo 2",sans-serif;background:var(--bg);color:#fff;overflow-x:hidden}}
 #cv{{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}}
 .vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(6,6,26,0.8) 100%)}}
-
-/* NAV */
 nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.75rem 2rem;background:rgba(6,6,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
 .nav-logo{{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}}
 .nav-logo-dots{{display:flex;flex-direction:column;gap:4px;justify-content:center}}
@@ -76,8 +74,6 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .nav-hamburger{{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px}}
 .nav-hamburger span{{width:20px;height:1.5px;background:var(--muted);display:block}}
 @keyframes blink{{0%,100%{{opacity:1}}50%{{opacity:0.2}}}}
-
-/* MODAL */
 .modal{{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px)}}
 .modal.show{{display:flex}}
 .modal-box{{background:#0d0d1a;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center}}
@@ -88,8 +84,6 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .modal-confirm{{background:linear-gradient(135deg,{p1},{p2});color:#fff}}
 .modal-cancel{{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2)}}
 .modal-status{{margin-top:1rem;font-size:11px;color:var(--muted);font-family:"Space Mono",monospace;min-height:16px}}
-
-/* SHARED */
 .section{{position:relative;z-index:10;padding:5rem 2rem 4rem;max-width:1000px;margin:0 auto}}
 .section-tag{{display:inline-flex;align-items:center;gap:8px;font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:5px 14px;border-radius:100px;border:1px solid var(--border);margin-bottom:1.2rem}}
 .sec-title{{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:-1px;line-height:0.9;margin-bottom:1rem}}
@@ -102,15 +96,11 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .fade-in.visible{{opacity:1;transform:translateY(0)}}
 .grid-2{{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
 .grid-3{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
-
-/* INFO CARDS */
 .card{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem;backdrop-filter:blur(20px);transition:all 0.4s cubic-bezier(.16,1,.3,1)}}
 .card:hover{{transform:translateY(-5px);border-color:rgba(255,255,255,0.15);box-shadow:0 24px 60px rgba(0,0,0,0.5)}}
 .card-icon{{font-size:2.2rem;margin-bottom:1rem}}
 .card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;color:#fff}}
 .card-desc{{font-size:0.88rem;color:var(--muted);line-height:1.7}}
-
-/* TERMINAL */
 .terminal-wrap{{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:18px;overflow:hidden;margin-bottom:2.5rem;width:100%}}
 .terminal-bar{{background:#161b27;padding:14px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.07)}}
 .t-dot{{width:13px;height:13px;border-radius:50%}}
@@ -128,15 +118,11 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .t-badge-blue{{display:inline-block;background:#3b82f6;color:#fff;font-size:11px;padding:1px 10px;border-radius:5px;font-weight:700;margin-left:8px;vertical-align:middle}}
 .t-cursor{{display:inline-block;width:8px;height:14px;background:#fff;animation:cur 1s step-end infinite;vertical-align:-2px}}
 @keyframes cur{{0%,100%{{opacity:1}}50%{{opacity:0}}}}
-
-/* STAT ROW 5 */
 .stat-row5{{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem;margin-bottom:2.5rem}}
 .stat-card5{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem 1rem;text-align:center;transition:all 0.3s}}
 .stat-card5:hover{{background:rgba(255,255,255,0.07);transform:translateY(-3px)}}
 .stat-num5{{font-family:"Space Mono",monospace;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;letter-spacing:-1px}}
 .stat-label5{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:10px;line-height:1.5}}
-
-/* PIPE STEPS */
 .pipe-step{{display:flex;gap:1.5rem;margin-bottom:1.5rem;align-items:flex-start;padding:1.2rem;border-radius:18px;transition:background 0.3s;border:1px solid transparent}}
 .pipe-step:hover{{background:rgba(255,255,255,0.03);border-color:var(--border)}}
 .pipe-icon-box{{width:54px;height:54px;border-radius:14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}}
@@ -145,8 +131,6 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .pipe-desc{{font-size:0.88rem;color:var(--muted);line-height:1.7}}
 .pipe-tag{{display:inline-block;font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:100px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:{p1};margin-top:8px}}
 .pipe-num{{font-family:"Space Mono",monospace;font-size:3rem;font-weight:700;color:rgba(255,255,255,0.06);min-width:70px;line-height:1;text-align:right;flex-shrink:0;align-self:center}}
-
-/* ARCH */
 .arch-wrap{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}}
 .arch-section-label{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:8px}}
 .arch-section-label::before,.arch-section-label::after{{content:"";flex:1;max-width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--border))}}
@@ -159,8 +143,6 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .arch-node-desc{{font-size:9px;color:var(--muted)}}
 .arch-arrow{{font-size:1.2rem;color:rgba(255,255,255,0.25);padding:0 6px;margin-bottom:28px;flex-shrink:0}}
 .arch-sep{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1.5rem 0}}
-
-/* TOOL CARDS */
 .tool-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.5rem;transition:all 0.3s}}
 .tool-card:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.5)}}
 .tool-header{{display:flex;align-items:center;gap:12px;margin-bottom:0.9rem}}
@@ -169,8 +151,6 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .tool-line{{width:40px;height:2px;border-radius:2px;margin-top:4px}}
 .tool-desc{{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:0.5rem}}
 .tool-why{{font-size:10px;color:var(--muted)}}
-
-/* DASH HOME */
 .dash-wrap{{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4.5rem 1.2rem 2rem}}
 .pill-badge{{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(16px);padding:6px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}}
 .pill-dot{{width:7px;height:7px;border-radius:50%;background:{p1};box-shadow:0 0 10px {p1};animation:blink 2s infinite}}
@@ -188,8 +168,6 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .cta-primary{{background:linear-gradient(135deg,{p1},{p2});color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
 .cta-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.6)}}
 .cta-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
-
-/* PIPELINE STRIP */
 .pipeline{{width:100%;max-width:880px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:1rem 1.5rem;backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:1rem;overflow-x:auto}}
 .pipeline::before{{content:"PIPELINE";position:absolute;top:7px;left:14px;font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.1)}}
 .pstep{{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:48px}}
@@ -202,8 +180,6 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .pline{{width:100%;height:1.5px;background:linear-gradient(90deg,{p1},{p2});opacity:0.2;position:relative;overflow:hidden;border-radius:2px}}
 .pline::after{{content:"";position:absolute;top:0;left:-50%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);animation:sweep 2s linear infinite}}
 @keyframes sweep{{to{{left:150%}}}}
-
-/* METRIC CARDS */
 .cards{{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:880px;margin-bottom:1rem}}
 .dcard{{background:rgba(10,12,35,0.9);border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.08);border-top:1px solid rgba(226,232,240,0.2);transition:all 0.5s;cursor:default;transform-style:preserve-3d}}
 .dcard::after{{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#94a3b8,#ffffff,#94a3b8);opacity:0.4;animation:bargl 3s ease-in-out infinite alternate}}
@@ -217,8 +193,6 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .dcard-value{{font-size:0.95rem;font-weight:800;background:linear-gradient(135deg,#e2e8f0,#ffffff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}}
 .dcard-sub{{font-size:8px;color:rgba(255,255,255,0.2)}}
 .dcard-live{{font-size:8px;color:#10b981;font-weight:600}}
-
-/* ACTIONS */
 .actions{{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px}}
 .btn-action{{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none}}
 .btn-action:hover{{transform:translateY(-3px)}}
@@ -231,8 +205,6 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .chip-green{{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
 .chip-white{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
 .chip-mono{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
-
-/* DEMO */
 .demo-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.8rem;margin-bottom:1.2rem;backdrop-filter:blur(20px)}}
 .demo-card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;display:flex;align-items:center;gap:10px}}
 .demo-card-desc{{font-size:13px;color:var(--muted);margin-bottom:1.2rem;line-height:1.7}}
@@ -249,17 +221,19 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .stat-item{{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center}}
 .stat-val{{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
 .stat-lbl{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:3px}}
-
-/* FOOTER */
+.contact-card{{display:flex;flex-direction:column;align-items:center;gap:10px;padding:1.8rem 1rem;background:var(--card-bg);border:1px solid var(--border);border-radius:18px;text-decoration:none;transition:all 0.3s}}
+.contact-card:hover{{border-color:rgba(255,255,255,0.2);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.4)}}
+.contact-icon{{font-size:2rem}}
+.contact-label{{font-size:11px;font-family:"Space Mono",monospace;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}}
+.contact-val{{font-size:12px;color:rgba(255,255,255,0.6);text-align:center}}
+.scroll-top{{position:fixed;bottom:2rem;right:2rem;z-index:50;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 4px 20px rgba(124,58,237,0.4);transition:all 0.3s}}
+.scroll-top.show{{display:flex}}
+.scroll-top:hover{{transform:translateY(-3px) scale(1.05)}}
 footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--border)}}
 .footer-text{{font-family:"Space Mono",monospace;font-size:10px;color:var(--muted);line-height:2}}
 .footer-text a{{color:{p1};text-decoration:none;transition:color 0.3s}}
 .footer-text a:hover{{color:{p2}}}
-
-/* RESPONSIVE */
-@media(max-width:1024px){{
-  .stat-row5{{grid-template-columns:repeat(3,1fr)}}
-}}
+@media(max-width:1024px){{.stat-row5{{grid-template-columns:repeat(3,1fr)}}}}
 @media(max-width:900px){{
   .arch-row{{flex-wrap:wrap;gap:8px;justify-content:center}}
   .arch-arrow{{display:none}}
@@ -292,6 +266,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   .demo-card{{padding:1.2rem}}
   .stat-num5{{font-size:clamp(1.5rem,8vw,2.2rem)}}
   .stat-card5{{padding:1.2rem 0.5rem}}
+  .scroll-top{{bottom:1rem;right:1rem;width:38px;height:38px;font-size:15px}}
 }}
 @media(max-width:480px){{
   .cards{{grid-template-columns:1fr 1fr}}
@@ -313,7 +288,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 <canvas id="cv"></canvas>
 <div class="vig"></div>
 
-<!-- NAV -->
 <nav>
   <button class="nav-logo" onclick="goTo('dashboard')" aria-label="Home">
     <div class="nav-logo-dots">
@@ -333,7 +307,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <button class="nav-link" onclick="goTo('techstack')">Tech Stack</button>
     <button class="nav-link" onclick="goTo('pipeline-section')">Pipeline</button>
     <button class="nav-link" onclick="goTo('demo')">Demo</button>
-    <button class="nav-link" onclick="window.location.href='mailto:Josesamueld2005@gmail.com?subject=Regarding MultiCloud CI/CD Project'">Contact</button>
+    <button class="nav-link" onclick="goTo('contact-section')">Contact</button>
   </div>
   <div class="nav-right">
     <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="nav-github"><i class="fa-brands fa-github"></i></a>
@@ -344,7 +318,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </nav>
 
-<!-- MOBILE NAV -->
 <div id="mobile-nav" style="display:none;position:fixed;top:52px;left:0;right:0;z-index:99;background:rgba(6,6,26,0.98);border-bottom:1px solid var(--border);padding:1.2rem 2rem;backdrop-filter:blur(20px)">
   <div style="display:flex;flex-direction:column;gap:16px">
     <button class="nav-link" onclick="goTo('dashboard');closeMobileNav()">Home</button>
@@ -353,11 +326,10 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <button class="nav-link" onclick="goTo('techstack');closeMobileNav()">Tech Stack</button>
     <button class="nav-link" onclick="goTo('pipeline-section');closeMobileNav()">Pipeline</button>
     <button class="nav-link" onclick="goTo('demo');closeMobileNav()">Demo</button>
-    <button class="nav-link" onclick="window.location.href='mailto:Josesamueld2005@gmail.com?subject=Regarding MultiCloud CI/CD Project';closeMobileNav()">Contact</button>
+    <button class="nav-link" onclick="goTo('contact-section');closeMobileNav()">Contact</button>
   </div>
 </div>
 
-<!-- DEPLOY MODAL -->
 <div class="modal" id="deployModal">
   <div class="modal-box">
     <div class="modal-title">🚀 Trigger Deployment</div>
@@ -370,7 +342,8 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- SECTION 1 HOME -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({{top:0,behavior:'smooth'}})" aria-label="Scroll to top">↑</button>
+
 <div id="dashboard" class="dash-wrap">
   <div class="pill-badge"><span class="pill-dot"></span>{t['short']} &nbsp;·&nbsp; {t['label']} &nbsp;·&nbsp; Live</div>
   <div class="hero-eye">Multi · Cloud · Infrastructure</div>
@@ -415,13 +388,11 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- SECTION 2 ABOUT -->
 <div class="alt-bg">
 <div id="about" class="section">
   <div class="section-tag">About This Project</div>
   <div class="sec-title fade-in"><span class="w">WHAT IS</span><br><span class="a">CI/CD?</span></div>
   <div class="sec-desc fade-in">CI/CD stands for Continuous Integration and Continuous Deployment — the method used by Netflix, Amazon, Google and every modern tech company to ship software fast and reliably.</div>
-
   <div class="terminal-wrap fade-in">
     <div class="terminal-bar">
       <div class="t-dot" style="background:#ef4444"></div>
@@ -443,7 +414,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="t-line" id="tl10"><span class="t-prompt">samuel@multicloud:~/multicloud-cicd$</span> <span class="t-cursor"></span></div>
     </div>
   </div>
-
   <div class="stat-row5 fade-in">
     <div class="stat-card5"><div class="stat-num5" id="about-req">0</div><div class="stat-label5">Pipeline<br>Runs</div></div>
     <div class="stat-card5"><div class="stat-num5">60s</div><div class="stat-label5">Deploy<br>Time</div></div>
@@ -451,9 +421,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <div class="stat-card5"><div class="stat-num5">2</div><div class="stat-label5">Cloud<br>Providers</div></div>
     <div class="stat-card5"><div class="stat-num5">100%</div><div class="stat-label5">Automated</div></div>
   </div>
-
   <div class="divider"></div>
-
   <div class="grid-2">
     <div class="card fade-in"><div class="card-icon">⚡</div><div class="card-title">Continuous Integration</div><div class="card-desc">Every code push automatically builds and tests the application. Bugs caught immediately — no more "it works on my machine" problems. Code is always in a deployable state.</div></div>
     <div class="card fade-in"><div class="card-icon">🚀</div><div class="card-title">Continuous Deployment</div><div class="card-desc">After CI passes, the new version deploys to production automatically. Push code — users see it in 60 seconds. Zero manual steps, zero human error.</div></div>
@@ -463,7 +431,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <div class="card fade-in"><div class="card-icon">✅</div><div class="card-title">With CI/CD</div><div class="card-desc">Deployments take 60 seconds. Bugs caught instantly. Infrastructure as code. Teams ship with confidence multiple times a day.</div></div>
     <div class="card fade-in"><div class="card-icon">🏢</div><div class="card-title">Real World Usage</div><div class="card-desc">Netflix deploys 100+ times daily. Amazon every 11 seconds. Swiggy, Zomato, Freshworks all use CI/CD pipelines like this one.</div></div>
   </div>
-
   <div class="card fade-in" style="max-width:520px">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
       <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👨‍💻</div>
@@ -482,7 +449,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 </div>
 </div>
 
-<!-- SECTION 3 ARCHITECTURE -->
 <div id="architecture" class="section">
   <div class="section-tag">System Design</div>
   <div class="sec-title fade-in"><span class="w">ARCHITECTURE</span><br><span class="a">DIAGRAM</span></div>
@@ -531,7 +497,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- SECTION 4 TECH STACK -->
 <div class="alt-bg">
 <div id="techstack" class="section">
   <div class="section-tag">Tools and Technologies</div>
@@ -550,19 +515,18 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 </div>
 </div>
 
-<!-- SECTION 5 PIPELINE -->
 <div id="pipeline-section" class="section">
   <div class="section-tag">How It Works</div>
   <div class="sec-title fade-in"><span class="w">THE</span><br><span class="a">PIPELINE</span></div>
   <div class="sec-desc fade-in">From writing a single line of code to seeing it live in production — every step that happens automatically in under 60 seconds.</div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">💻</div><div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask application — adding features, fixing bugs, or updating the UI. Code lives in GitHub accessible to the entire team.</div><div class="pipe-tag">Local Development</div></div><div class="pipe-num">01</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-github"></i></div><div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly with no manual intervention needed.</div><div class="pipe-tag">GitHub</div></div><div class="pipe-num">02</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">⚡</div><div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub's free infrastructure to run the pipeline.</div><div class="pipe-tag">GitHub Actions</div></div><div class="pipe-num">03</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-docker" style="color:#2496ED"></i></div><div class="pipe-content"><div class="pipe-title">Docker Image Built</div><div class="pipe-desc">GitHub Actions reads the Dockerfile and builds a new Docker image with the updated application. Tagged with unique commit SHA — every version is traceable.</div><div class="pipe-tag">Docker</div></div><div class="pipe-num">04</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">🐋</div><div class="pipe-content"><div class="pipe-title">Image Pushed to Docker Hub</div><div class="pipe-desc">The built image is pushed to Docker Hub registry — making it available to any server worldwide as josesamuel14/multicloud-app:latest.</div><div class="pipe-tag">Docker Hub</div></div><div class="pipe-num">05</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">☸️</div><div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — gradually replacing old containers. Zero downtime. Users never notice.</div><div class="pipe-tag">Kubernetes</div></div><div class="pipe-num">06</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version is live on AWS EC2 Mumbai and Render simultaneously. Total time from git push to live: under 60 seconds. Every time. Automatically.</div><div class="pipe-tag">AWS + Render</div></div><div class="pipe-num">07</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">📊</div><div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know about problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div><div class="pipe-num">08</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box">💻</div><div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask application — adding features, fixing bugs, or updating the UI. Code lives in GitHub.</div><div class="pipe-tag">Local Development</div></div><div class="pipe-num">01</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-github"></i></div><div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly.</div><div class="pipe-tag">GitHub</div></div><div class="pipe-num">02</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box">⚡</div><div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub's free infrastructure.</div><div class="pipe-tag">GitHub Actions</div></div><div class="pipe-num">03</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-docker" style="color:#2496ED"></i></div><div class="pipe-content"><div class="pipe-title">Docker Image Built</div><div class="pipe-desc">GitHub Actions reads the Dockerfile and builds a new Docker image. Tagged with unique commit SHA — every version is traceable.</div><div class="pipe-tag">Docker</div></div><div class="pipe-num">04</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box">🐋</div><div class="pipe-content"><div class="pipe-title">Image Pushed to Docker Hub</div><div class="pipe-desc">The built image is pushed to Docker Hub registry — available worldwide as josesamuel14/multicloud-app:latest.</div><div class="pipe-tag">Docker Hub</div></div><div class="pipe-num">05</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box">☸️</div><div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — replacing old containers gradually. Zero downtime.</div><div class="pipe-tag">Kubernetes</div></div><div class="pipe-num">06</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version is live on AWS EC2 Mumbai and Render simultaneously. Total time: under 60 seconds. Every time. Automatically.</div><div class="pipe-tag">AWS + Render</div></div><div class="pipe-num">07</div></div>
+  <div class="pipe-step fade-in"><div class="pipe-icon-box">📊</div><div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div><div class="pipe-num">08</div></div>
   <div class="card fade-in" style="text-align:center;padding:2.5rem;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08));border-color:rgba(124,58,237,0.2)">
     <div style="font-size:3rem;margin-bottom:0.8rem">⚡</div>
     <div style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">Total Time: Under 60 Seconds</div>
@@ -570,7 +534,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- SECTION 6 DEMO -->
 <div class="alt-bg">
 <div id="demo" class="section">
   <div class="section-tag">Interactive Demo</div>
@@ -578,13 +541,13 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   <div class="sec-desc fade-in">Everything below is real and live. Click any button to interact with the actual running system right now.</div>
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-heart-pulse" style="color:#10b981"></i> Health Check</div>
-    <div class="demo-card-desc">Returns real system information — cloud provider, region, uptime, and hostname of the actual server running this app right now.</div>
+    <div class="demo-card-desc">Returns real system information — cloud provider, region, uptime, and hostname of the actual server running right now.</div>
     <button class="demo-btn demo-btn-green" onclick="checkHealth()"><i class="fa-solid fa-heart-pulse"></i> Check Health</button>
     <div class="response-box" id="health-response"></div>
   </div>
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-chart-bar" style="color:#eab308"></i> Live Statistics</div>
-    <div class="demo-card-desc">Fetches real-time statistics — total HTTP requests served, current uptime, and system status. Data from Prometheus metrics endpoint.</div>
+    <div class="demo-card-desc">Fetches real-time statistics — total HTTP requests served, current uptime, and system status from Prometheus metrics.</div>
     <button class="demo-btn demo-btn-yellow" onclick="checkStats()"><i class="fa-solid fa-chart-bar"></i> Fetch Live Stats</button>
     <div class="stats-display" id="stats-display">
       <div class="stat-item"><div class="stat-val" id="stat-req">--</div><div class="stat-lbl">Requests</div></div>
@@ -594,7 +557,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-rocket" style="color:{p1}"></i> Trigger CI/CD Pipeline</div>
-    <div class="demo-card-desc">Click Deploy Now to trigger a real GitHub Actions pipeline run. A new Docker image will be built and deployed automatically. Watch it live on GitHub!</div>
+    <div class="demo-card-desc">Click Deploy Now to trigger a real GitHub Actions pipeline run. New Docker image built and deployed. Watch live on GitHub!</div>
     <button class="demo-btn demo-btn-primary" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
     <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> Watch on GitHub</a>
   </div>
@@ -607,7 +570,29 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 </div>
 </div>
 
-<!-- FOOTER -->
+<div id="contact-section" class="section" style="text-align:center">
+  <div class="section-tag" style="margin:0 auto 1.2rem">Get In Touch</div>
+  <div class="sec-title fade-in" style="text-align:center"><span class="w">LET'S</span><br><span class="a">CONNECT</span></div>
+  <div class="sec-desc fade-in" style="margin:0 auto 2.5rem;text-align:center">Open to DevOps internships, fresher roles, and collaborations. Feel free to reach out!</div>
+  <div class="grid-3 fade-in" style="max-width:700px;margin:0 auto 2rem">
+    <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project" class="contact-card">
+      <i class="fa-solid fa-envelope contact-icon" style="color:{p1}"></i>
+      <div class="contact-label">Email</div>
+      <div class="contact-val">Josesamueld2005@gmail.com</div>
+    </a>
+    <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener" class="contact-card">
+      <i class="fa-brands fa-linkedin contact-icon" style="color:#0077b5"></i>
+      <div class="contact-label">LinkedIn</div>
+      <div class="contact-val">linkedin.com/in/samueld14</div>
+    </a>
+    <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener" class="contact-card">
+      <i class="fa-brands fa-github contact-icon" style="color:#fff"></i>
+      <div class="contact-label">GitHub</div>
+      <div class="contact-val">github.com/JOSESAMUEL14</div>
+    </a>
+  </div>
+</div>
+
 <footer>
   <div class="footer-text">
     Built by <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener">Samuel</a>
@@ -623,153 +608,32 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 </footer>
 
 <script>
-function goTo(id) {{
-  var el = document.getElementById(id);
-  if (!el) return;
-  var top = el.getBoundingClientRect().top + window.pageYOffset - 58;
-  window.scrollTo({{top: top, behavior: 'smooth'}});
-}}
-function toggleMobileNav() {{
-  var m = document.getElementById('mobile-nav');
-  m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
-}}
-function closeMobileNav() {{
-  document.getElementById('mobile-nav').style.display = 'none';
-}}
-function tick() {{
-  var n = new Date();
-  var el = document.getElementById('clk');
-  if (el) el.textContent = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
-}}
-setInterval(tick, 1000); tick();
-function updateMetrics() {{
-  fetch('/stats')
-    .then(function(r) {{ return r.json(); }})
-    .then(function(d) {{
-      var rc = document.getElementById('req-count');
-      var up = document.getElementById('uptime');
-      var hv = document.getElementById('health-val');
-      if (rc) rc.textContent = d.total_requests || '0';
-      if (up) up.textContent = d.uptime || '--';
-      if (hv) hv.textContent = d.status || '--';
-    }})
-    .catch(function() {{}});
-}}
-setInterval(updateMetrics, 5000); updateMetrics();
-function showDeploy() {{ document.getElementById('deployModal').style.display = 'flex'; }}
-function closeModal() {{
-  document.getElementById('deployModal').style.display = 'none';
-  document.getElementById('deploy-status').textContent = '';
-}}
-document.getElementById('deployModal').addEventListener('click', function(e) {{
-  if (e.target === this) closeModal();
-}});
-function confirmDeploy() {{
-  var s = document.getElementById('deploy-status');
-  s.textContent = 'Triggering pipeline...'; s.style.color = '#fbbf24';
-  fetch('/deploy', {{ method: 'POST', headers: {{'Content-Type': 'application/json'}} }})
-    .then(function(r) {{ return r.json(); }})
-    .then(function(d) {{
-      s.textContent = d.success ? '✅ Pipeline triggered! Check GitHub Actions.' : '❌ ' + d.message;
-      s.style.color = d.success ? '#10b981' : '#ef4444';
-    }})
-    .catch(function(e) {{ s.textContent = '❌ ' + e.message; s.style.color = '#ef4444'; }});
-}}
-function checkHealth() {{
-  var box = document.getElementById('health-response');
-  box.className = 'response-box show'; box.textContent = 'Fetching...';
-  fetch('/health')
-    .then(function(r) {{ return r.json(); }})
-    .then(function(d) {{ box.textContent = JSON.stringify(d, null, 2); }})
-    .catch(function(e) {{ box.textContent = 'Error: ' + e.message; }});
-}}
-function checkStats() {{
-  var grid = document.getElementById('stats-display');
-  grid.className = 'stats-display show';
-  fetch('/stats')
-    .then(function(r) {{ return r.json(); }})
-    .then(function(d) {{
-      document.getElementById('stat-req').textContent = d.total_requests || '0';
-      document.getElementById('stat-up').textContent = d.uptime || '--';
-      document.getElementById('stat-status').textContent = d.status || '--';
-    }})
-    .catch(function() {{}});
-}}
-setInterval(checkStats, 5000);
-var obs = new IntersectionObserver(function(entries) {{
-  entries.forEach(function(e) {{
-    if (e.isIntersecting) {{
-      e.target.classList.add('visible');
-      if (e.target.classList.contains('terminal-wrap')) startTerminal();
-      if (e.target.classList.contains('stat-row5')) animateCounter();
-    }}
-  }});
-}}, {{threshold: 0.15}});
-document.querySelectorAll('.fade-in').forEach(function(el) {{ obs.observe(el); }});
-var terminalStarted = false;
-function startTerminal() {{
-  if (terminalStarted) return;
-  terminalStarted = true;
-  var delays = [0,700,1400,2100,2900,3700,4400,5200,5700,6500,7200];
-  for (var i = 0; i <= 10; i++) {{
-    (function(idx, delay) {{
-      var el = document.getElementById('tl'+idx);
-      if (el) setTimeout(function() {{ el.classList.add('show'); }}, delay);
-    }})(i, delays[i]);
-  }}
-  setTimeout(function() {{
-    terminalStarted = false;
-    for (var i = 0; i <= 10; i++) {{
-      var el = document.getElementById('tl'+i);
-      if (el) el.classList.remove('show');
-    }}
-    setTimeout(startTerminal, 1500);
-  }}, 12000);
-}}
-var counterDone = false;
-function animateCounter() {{
-  if (counterDone) return;
-  counterDone = true;
-  var el = document.getElementById('about-req');
-  if (!el) return;
-  var end = 47, start = 0;
-  var timer = setInterval(function() {{
-    start += 1;
-    el.textContent = start;
-    if (start >= end) clearInterval(timer);
-  }}, 30);
-}}
-var cv = document.getElementById('cv');
-var ctx = cv.getContext('2d');
-var W, H, ht = 0;
-function rsz() {{ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }}
-rsz(); window.addEventListener('resize', rsz);
-var S = 28;
-function draw() {{
-  ctx.fillStyle = '#06061a'; ctx.fillRect(0,0,W,H);
-  ht += 0.045;
-  var rows = Math.ceil(H/(S*1.5))+2, cols = Math.ceil(W/(S*1.73))+2;
-  for (var r=0; r<rows; r++) {{
-    for (var c=0; c<cols; c++) {{
-      var x = c*S*1.73+(r%2)*S*0.866, y = r*S*1.5;
-      var v = (Math.sin(ht+c*0.45+r*0.65)+Math.sin(ht*0.85+c*0.75-r*0.45)+Math.sin(ht*1.2-c*0.3+r*0.8))/3;
-      var a = 0.04+v*0.2;
-      ctx.beginPath();
-      for (var i=0; i<6; i++) {{
-        var ang = Math.PI/180*(60*i-30);
-        var px = x+(S-1)*Math.cos(ang), py = y+(S-1)*Math.sin(ang);
-        if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-      }}
-      ctx.closePath();
-      ctx.strokeStyle = 'rgba(6,182,212,'+Math.max(0.03,a)+')';
-      ctx.lineWidth = 0.9; ctx.stroke();
-      if(v>0.45){{ ctx.fillStyle='rgba(124,58,237,'+(v-0.45)*0.25+')'; ctx.fill(); }}
-      if(v>0.72){{ ctx.fillStyle='rgba(6,182,212,'+(v-0.72)*0.5+')'; ctx.fill(); }}
-      if(v>0.88){{ ctx.fillStyle='rgba(255,255,255,'+(v-0.88)*0.12+')'; ctx.fill(); }}
-    }}
-  }}
-  requestAnimationFrame(draw);
-}}
+function goTo(id){{var el=document.getElementById(id);if(!el)return;var top=el.getBoundingClientRect().top+window.pageYOffset-58;window.scrollTo({{top:top,behavior:'smooth'}});}}
+function toggleMobileNav(){{var m=document.getElementById('mobile-nav');m.style.display=(m.style.display==='none'||m.style.display==='')?'block':'none';}}
+function closeMobileNav(){{document.getElementById('mobile-nav').style.display='none';}}
+window.addEventListener('scroll',function(){{var btn=document.getElementById('scrollTop');if(btn)btn.className=window.pageYOffset>400?'scroll-top show':'scroll-top';}});
+function tick(){{var n=new Date();var el=document.getElementById('clk');if(el)el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');}}
+setInterval(tick,1000);tick();
+function updateMetrics(){{fetch('/stats').then(function(r){{return r.json();}}).then(function(d){{var rc=document.getElementById('req-count');var up=document.getElementById('uptime');var hv=document.getElementById('health-val');if(rc)rc.textContent=d.total_requests||'0';if(up)up.textContent=d.uptime||'--';if(hv)hv.textContent=d.status||'--';}}).catch(function(){{}});}}
+setInterval(updateMetrics,5000);updateMetrics();
+function showDeploy(){{document.getElementById('deployModal').style.display='flex';}}
+function closeModal(){{document.getElementById('deployModal').style.display='none';document.getElementById('deploy-status').textContent='';}}
+document.getElementById('deployModal').addEventListener('click',function(e){{if(e.target===this)closeModal();}});
+function confirmDeploy(){{var s=document.getElementById('deploy-status');s.textContent='Triggering pipeline...';s.style.color='#fbbf24';fetch('/deploy',{{method:'POST',headers:{{'Content-Type':'application/json'}}}}).then(function(r){{return r.json();}}).then(function(d){{s.textContent=d.success?'✅ Pipeline triggered! Check GitHub Actions.':'❌ '+d.message;s.style.color=d.success?'#10b981':'#ef4444';}}).catch(function(e){{s.textContent='❌ '+e.message;s.style.color='#ef4444';}});}}
+function checkHealth(){{var box=document.getElementById('health-response');box.className='response-box show';box.textContent='Fetching...';fetch('/health').then(function(r){{return r.json();}}).then(function(d){{box.textContent=JSON.stringify(d,null,2);}}).catch(function(e){{box.textContent='Error: '+e.message;}});}}
+function checkStats(){{var grid=document.getElementById('stats-display');grid.className='stats-display show';fetch('/stats').then(function(r){{return r.json();}}).then(function(d){{document.getElementById('stat-req').textContent=d.total_requests||'0';document.getElementById('stat-up').textContent=d.uptime||'--';document.getElementById('stat-status').textContent=d.status||'--';}}).catch(function(){{}});}}
+setInterval(checkStats,5000);
+var obs=new IntersectionObserver(function(entries){{entries.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('visible');if(e.target.classList.contains('terminal-wrap'))startTerminal();if(e.target.classList.contains('stat-row5'))animateCounter();}}}});}},{{threshold:0.15}});
+document.querySelectorAll('.fade-in').forEach(function(el){{obs.observe(el);}});
+var terminalStarted=false;
+function startTerminal(){{if(terminalStarted)return;terminalStarted=true;var delays=[0,700,1400,2100,2900,3700,4400,5200,5700,6500,7200];for(var i=0;i<=10;i++){{(function(idx,delay){{var el=document.getElementById('tl'+idx);if(el)setTimeout(function(){{el.classList.add('show');}},delay);}})(i,delays[i]);}}setTimeout(function(){{terminalStarted=false;for(var i=0;i<=10;i++){{var el=document.getElementById('tl'+i);if(el)el.classList.remove('show');}}setTimeout(startTerminal,1500);}},12000);}}
+var counterDone=false;
+function animateCounter(){{if(counterDone)return;counterDone=true;var el=document.getElementById('about-req');if(!el)return;var end=47,start=0;var timer=setInterval(function(){{start+=1;el.textContent=start;if(start>=end)clearInterval(timer);}},30);}}
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W,H,ht=0;
+function rsz(){{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}}
+rsz();window.addEventListener('resize',rsz);
+var S=28;
+function draw(){{ctx.fillStyle='#06061a';ctx.fillRect(0,0,W,H);ht+=0.045;var rows=Math.ceil(H/(S*1.5))+2,cols=Math.ceil(W/(S*1.73))+2;for(var r=0;r<rows;r++){{for(var c=0;c<cols;c++){{var x=c*S*1.73+(r%2)*S*0.866,y=r*S*1.5;var v=(Math.sin(ht+c*0.45+r*0.65)+Math.sin(ht*0.85+c*0.75-r*0.45)+Math.sin(ht*1.2-c*0.3+r*0.8))/3;var a=0.04+v*0.2;ctx.beginPath();for(var i=0;i<6;i++){{var ang=Math.PI/180*(60*i-30);var px=x+(S-1)*Math.cos(ang),py=y+(S-1)*Math.sin(ang);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}}ctx.closePath();ctx.strokeStyle='rgba(6,182,212,'+Math.max(0.03,a)+')';ctx.lineWidth=0.9;ctx.stroke();if(v>0.45){{ctx.fillStyle='rgba(124,58,237,'+(v-0.45)*0.25+')';ctx.fill();}}if(v>0.72){{ctx.fillStyle='rgba(6,182,212,'+(v-0.72)*0.5+')';ctx.fill();}}if(v>0.88){{ctx.fillStyle='rgba(255,255,255,'+(v-0.88)*0.12+')';ctx.fill();}}}}}}requestAnimationFrame(draw);}}
 draw();
 </script>
 </body>
