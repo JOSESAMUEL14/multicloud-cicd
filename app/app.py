@@ -57,14 +57,14 @@ body{{font-family:"Exo 2",sans-serif;background:var(--bg);color:#fff;overflow-x:
 #cv{{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}}
 .vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(6,6,26,0.8) 100%)}}
 
-/* ── NAV ── */
+/* NAV */
 nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.75rem 2rem;background:rgba(6,6,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
 .nav-logo{{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}}
 .nav-logo-dots{{display:flex;flex-direction:column;gap:4px;justify-content:center}}
 .nav-logo-dot{{width:8px;height:8px;border-radius:50%}}
-.nav-logo-textblock{{display:flex;flex-direction:column;gap:1px}}
+.nav-logo-textblock{{display:flex;flex-direction:column;gap:2px}}
 .nav-logo-name{{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#fff;line-height:1}}
-.nav-logo-sub{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,0.35);text-transform:uppercase;line-height:1}}
+.nav-logo-sub{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.35);text-transform:uppercase;line-height:1}}
 .nav-links{{display:flex;gap:18px}}
 .nav-link{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 0;transition:color 0.3s}}
 .nav-link:hover{{color:#fff}}
@@ -77,7 +77,7 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .nav-hamburger span{{width:20px;height:1.5px;background:var(--muted);display:block}}
 @keyframes blink{{0%,100%{{opacity:1}}50%{{opacity:0.2}}}}
 
-/* ── MODAL ── */
+/* MODAL */
 .modal{{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px)}}
 .modal.show{{display:flex}}
 .modal-box{{background:#0d0d1a;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center}}
@@ -89,7 +89,7 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .modal-cancel{{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2)}}
 .modal-status{{margin-top:1rem;font-size:11px;color:var(--muted);font-family:"Space Mono",monospace;min-height:16px}}
 
-/* ── SHARED ── */
+/* SHARED */
 .section{{position:relative;z-index:10;padding:5rem 2rem 4rem;max-width:1000px;margin:0 auto}}
 .section-tag{{display:inline-flex;align-items:center;gap:8px;font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:5px 14px;border-radius:100px;border:1px solid var(--border);margin-bottom:1.2rem}}
 .sec-title{{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:-1px;line-height:0.9;margin-bottom:1rem}}
@@ -100,24 +100,22 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .divider{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3rem 0}}
 .fade-in{{opacity:0;transform:translateY(28px);transition:all 0.7s cubic-bezier(.16,1,.3,1)}}
 .fade-in.visible{{opacity:1;transform:translateY(0)}}
-
-/* ── GRID ── */
 .grid-2{{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
 .grid-3{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
 
-/* ── INFO CARDS ── */
+/* INFO CARDS */
 .card{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem;backdrop-filter:blur(20px);transition:all 0.4s cubic-bezier(.16,1,.3,1)}}
 .card:hover{{transform:translateY(-5px);border-color:rgba(255,255,255,0.15);box-shadow:0 24px 60px rgba(0,0,0,0.5)}}
 .card-icon{{font-size:2.2rem;margin-bottom:1rem}}
 .card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;color:#fff}}
 .card-desc{{font-size:0.88rem;color:var(--muted);line-height:1.7}}
 
-/* ── TERMINAL ── */
-.terminal-wrap{{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;margin-bottom:2.5rem;max-width:780px}}
-.terminal-bar{{background:#161b27;padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06)}}
-.t-dot{{width:12px;height:12px;border-radius:50%}}
-.terminal-title{{font-family:"Space Mono",monospace;font-size:11px;color:rgba(255,255,255,0.4);margin-left:10px;letter-spacing:1px}}
-.terminal-body{{padding:1.5rem 1.8rem;font-family:"Space Mono",monospace;font-size:13px;line-height:2;min-height:220px}}
+/* TERMINAL */
+.terminal-wrap{{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:18px;overflow:hidden;margin-bottom:2.5rem;width:100%}}
+.terminal-bar{{background:#161b27;padding:14px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.07)}}
+.t-dot{{width:13px;height:13px;border-radius:50%}}
+.terminal-title{{font-family:"Space Mono",monospace;font-size:12px;color:rgba(255,255,255,0.4);margin-left:12px;letter-spacing:0.5px}}
+.terminal-body{{padding:1.8rem 2.2rem;font-family:"Space Mono",monospace;font-size:14px;line-height:2.1;min-height:260px}}
 .t-line{{opacity:0;transition:opacity 0.4s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .t-line.show{{opacity:1}}
 .t-prompt{{color:rgba(255,255,255,0.45)}}
@@ -131,14 +129,14 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .t-cursor{{display:inline-block;width:8px;height:14px;background:#fff;animation:cur 1s step-end infinite;vertical-align:-2px}}
 @keyframes cur{{0%,100%{{opacity:1}}50%{{opacity:0}}}}
 
-/* ── STAT ROW (5 items) ── */
-.stat-row5{{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem}}
-.stat-card5{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.4rem 1rem;text-align:center;transition:all 0.3s}}
+/* STAT ROW 5 */
+.stat-row5{{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem;margin-bottom:2.5rem}}
+.stat-card5{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem 1rem;text-align:center;transition:all 0.3s}}
 .stat-card5:hover{{background:rgba(255,255,255,0.07);transform:translateY(-3px)}}
-.stat-num5{{font-family:"Space Mono",monospace;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}}
-.stat-label5{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.4}}
+.stat-num5{{font-family:"Space Mono",monospace;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;letter-spacing:-1px}}
+.stat-label5{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:10px;line-height:1.5}}
 
-/* ── PIPE STEPS ── */
+/* PIPE STEPS */
 .pipe-step{{display:flex;gap:1.5rem;margin-bottom:1.5rem;align-items:flex-start;padding:1.2rem;border-radius:18px;transition:background 0.3s;border:1px solid transparent}}
 .pipe-step:hover{{background:rgba(255,255,255,0.03);border-color:var(--border)}}
 .pipe-icon-box{{width:54px;height:54px;border-radius:14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}}
@@ -148,12 +146,12 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .pipe-tag{{display:inline-block;font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:100px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:{p1};margin-top:8px}}
 .pipe-num{{font-family:"Space Mono",monospace;font-size:3rem;font-weight:700;color:rgba(255,255,255,0.06);min-width:70px;line-height:1;text-align:right;flex-shrink:0;align-self:center}}
 
-/* ── ARCHITECTURE DIAGRAM ── */
+/* ARCH */
 .arch-wrap{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}}
 .arch-section-label{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:8px}}
 .arch-section-label::before,.arch-section-label::after{{content:"";flex:1;max-width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--border))}}
 .arch-section-label::after{{background:linear-gradient(90deg,var(--border),transparent)}}
-.arch-row{{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;margin-bottom:0}}
+.arch-row{{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;margin-bottom:0}}
 .arch-node{{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:1rem 1.2rem;text-align:center;min-width:110px;transition:all 0.3s;cursor:default}}
 .arch-node:hover{{background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);transform:translateY(-4px)}}
 .arch-node-icon{{font-size:1.8rem;margin-bottom:6px}}
@@ -162,7 +160,7 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .arch-arrow{{font-size:1.2rem;color:rgba(255,255,255,0.25);padding:0 6px;margin-bottom:28px;flex-shrink:0}}
 .arch-sep{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1.5rem 0}}
 
-/* ── TECH TOOL CARDS ── */
+/* TOOL CARDS */
 .tool-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.5rem;transition:all 0.3s}}
 .tool-card:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.5)}}
 .tool-header{{display:flex;align-items:center;gap:12px;margin-bottom:0.9rem}}
@@ -172,7 +170,7 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .tool-desc{{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:0.5rem}}
 .tool-why{{font-size:10px;color:var(--muted)}}
 
-/* ── DASHBOARD HOME ── */
+/* DASH HOME */
 .dash-wrap{{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4.5rem 1.2rem 2rem}}
 .pill-badge{{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(16px);padding:6px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}}
 .pill-dot{{width:7px;height:7px;border-radius:50%;background:{p1};box-shadow:0 0 10px {p1};animation:blink 2s infinite}}
@@ -191,7 +189,7 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .cta-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.6)}}
 .cta-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
 
-/* ── PIPELINE STRIP ── */
+/* PIPELINE STRIP */
 .pipeline{{width:100%;max-width:880px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:1rem 1.5rem;backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:1rem;overflow-x:auto}}
 .pipeline::before{{content:"PIPELINE";position:absolute;top:7px;left:14px;font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.1)}}
 .pstep{{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:48px}}
@@ -205,7 +203,7 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .pline::after{{content:"";position:absolute;top:0;left:-50%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);animation:sweep 2s linear infinite}}
 @keyframes sweep{{to{{left:150%}}}}
 
-/* ── METRIC CARDS ── */
+/* METRIC CARDS */
 .cards{{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:880px;margin-bottom:1rem}}
 .dcard{{background:rgba(10,12,35,0.9);border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.08);border-top:1px solid rgba(226,232,240,0.2);transition:all 0.5s;cursor:default;transform-style:preserve-3d}}
 .dcard::after{{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#94a3b8,#ffffff,#94a3b8);opacity:0.4;animation:bargl 3s ease-in-out infinite alternate}}
@@ -220,7 +218,7 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .dcard-sub{{font-size:8px;color:rgba(255,255,255,0.2)}}
 .dcard-live{{font-size:8px;color:#10b981;font-weight:600}}
 
-/* ── ACTIONS ── */
+/* ACTIONS */
 .actions{{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px}}
 .btn-action{{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none}}
 .btn-action:hover{{transform:translateY(-3px)}}
@@ -234,7 +232,7 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .chip-white{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
 .chip-mono{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
 
-/* ── DEMO ── */
+/* DEMO */
 .demo-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.8rem;margin-bottom:1.2rem;backdrop-filter:blur(20px)}}
 .demo-card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;display:flex;align-items:center;gap:10px}}
 .demo-card-desc{{font-size:13px;color:var(--muted);margin-bottom:1.2rem;line-height:1.7}}
@@ -252,18 +250,20 @@ h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text
 .stat-val{{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
 .stat-lbl{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:3px}}
 
-/* ── FOOTER ── */
+/* FOOTER */
 footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--border)}}
 .footer-text{{font-family:"Space Mono",monospace;font-size:10px;color:var(--muted);line-height:2}}
 .footer-text a{{color:{p1};text-decoration:none;transition:color 0.3s}}
 .footer-text a:hover{{color:{p2}}}
 
-/* ── MOBILE ── */
-@media(max-width:900px){{
+/* RESPONSIVE */
+@media(max-width:1024px){{
   .stat-row5{{grid-template-columns:repeat(3,1fr)}}
-  .arch-row{{flex-wrap:wrap;gap:6px;justify-content:center}}
-  .arch-arrow{{margin-bottom:0;display:none}}
-  .arch-node{{min-width:80px}}
+}}
+@media(max-width:900px){{
+  .arch-row{{flex-wrap:wrap;gap:8px;justify-content:center}}
+  .arch-arrow{{display:none}}
+  .arch-node{{min-width:85px}}
 }}
 @media(max-width:768px){{
   .nav-links{{display:none}}
@@ -271,22 +271,41 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   .cards{{grid-template-columns:1fr 1fr}}
   .grid-2,.grid-3{{grid-template-columns:1fr}}
   .stat-row5{{grid-template-columns:1fr 1fr}}
-  .pipeline{{padding:0.8rem 0.6rem}}
-  .p-icon{{width:36px;height:36px}}
-  .p-icon i{{font-size:14px}}
-  .p-label{{font-size:6px}}
-  h1{{font-size:2.4rem}}
-  .sec-title{{font-size:2.2rem}}
+  .pipeline{{padding:0.8rem 0.6rem;gap:0}}
+  .p-icon{{width:34px;height:34px}}
+  .p-icon i{{font-size:13px}}
+  .p-label{{font-size:6px;letter-spacing:0}}
+  .pconn{{min-width:6px}}
+  h1{{font-size:2.2rem}}
+  .sec-title{{font-size:2rem;letter-spacing:-0.5px}}
   .section{{padding:4rem 1rem 3rem}}
   .dash-wrap{{padding:4rem 1rem 2rem}}
-  .terminal-body{{font-size:11px;padding:1rem 1.2rem}}
-  .pipe-num{{font-size:2rem;min-width:50px}}
+  .terminal-wrap{{border-radius:12px}}
+  .terminal-body{{font-size:11px;padding:1rem 1.2rem;line-height:1.8;min-height:auto}}
+  .terminal-bar{{padding:10px 14px}}
+  .t-dot{{width:10px;height:10px}}
+  .terminal-title{{font-size:10px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:180px}}
+  .t-line{{white-space:normal;word-break:break-word;font-size:10px}}
+  .pipe-num{{font-size:1.8rem;min-width:44px}}
+  .pipe-icon-box{{width:44px;height:44px;font-size:1.1rem}}
+  .pipe-step{{gap:1rem;padding:0.8rem}}
+  .demo-card{{padding:1.2rem}}
+  .stat-num5{{font-size:clamp(1.5rem,8vw,2.2rem)}}
+  .stat-card5{{padding:1.2rem 0.5rem}}
 }}
 @media(max-width:480px){{
   .cards{{grid-template-columns:1fr 1fr}}
   .stat-row5{{grid-template-columns:1fr 1fr}}
-  .scroll-cta,.actions{{flex-direction:column;align-items:center}}
+  .stat-card5:last-child{{grid-column:span 2}}
+  .scroll-cta,.actions{{flex-direction:column;align-items:stretch;width:100%;max-width:300px}}
+  .cta-btn,.btn-action{{justify-content:center}}
   .pconn{{min-width:4px}}
+  .pipeline::before{{display:none}}
+  .hero-sub{{gap:6px;font-size:8px}}
+  h1{{font-size:1.9rem}}
+  .sec-title{{font-size:1.8rem}}
+  .pipe-step{{flex-wrap:wrap}}
+  .pipe-num{{display:none}}
 }}
 </style>
 </head>
@@ -294,7 +313,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 <canvas id="cv"></canvas>
 <div class="vig"></div>
 
-<!-- ── NAV ── -->
+<!-- NAV -->
 <nav>
   <button class="nav-logo" onclick="goTo('dashboard')" aria-label="Home">
     <div class="nav-logo-dots">
@@ -304,7 +323,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     </div>
     <div class="nav-logo-textblock">
       <span class="nav-logo-name">MultiCloud</span>
-      <span class="nav-logo-sub">AWS &nbsp;·&nbsp; GCP &nbsp;·&nbsp; Azure</span>
+      <span class="nav-logo-sub">AWS · GCP · Azure</span>
     </div>
   </button>
   <div class="nav-links">
@@ -325,7 +344,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </nav>
 
-<!-- Mobile nav -->
+<!-- MOBILE NAV -->
 <div id="mobile-nav" style="display:none;position:fixed;top:52px;left:0;right:0;z-index:99;background:rgba(6,6,26,0.98);border-bottom:1px solid var(--border);padding:1.2rem 2rem;backdrop-filter:blur(20px)">
   <div style="display:flex;flex-direction:column;gap:16px">
     <button class="nav-link" onclick="goTo('dashboard');closeMobileNav()">Home</button>
@@ -351,16 +370,12 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 1 — HOME DASHBOARD         -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 1 HOME -->
 <div id="dashboard" class="dash-wrap">
   <div class="pill-badge"><span class="pill-dot"></span>{t['short']} &nbsp;·&nbsp; {t['label']} &nbsp;·&nbsp; Live</div>
   <div class="hero-eye">Multi · Cloud · Infrastructure</div>
   <h1><span class="w">MULTI</span><span class="a">CLOUD</span><br><span class="w">CI</span><span class="a">/CD</span></h1>
-  <div class="hero-sub">
-    Kubernetes<span class="hero-dot"></span>Docker<span class="hero-dot"></span>GitHub Actions<span class="hero-dot"></span>Terraform<span class="hero-dot"></span>AWS
-  </div>
+  <div class="hero-sub">Kubernetes<span class="hero-dot"></span>Docker<span class="hero-dot"></span>GitHub Actions<span class="hero-dot"></span>Terraform<span class="hero-dot"></span>AWS</div>
   <div class="scroll-cta">
     <button class="cta-btn cta-primary" onclick="goTo('about')"><i class="fa-solid fa-circle-info"></i> Learn More</button>
     <button class="cta-btn cta-green" onclick="goTo('demo')"><i class="fa-solid fa-rocket"></i> Live Demo</button>
@@ -400,16 +415,13 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 2 — ABOUT                  -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 2 ABOUT -->
 <div class="alt-bg">
 <div id="about" class="section">
   <div class="section-tag">About This Project</div>
   <div class="sec-title fade-in"><span class="w">WHAT IS</span><br><span class="a">CI/CD?</span></div>
   <div class="sec-desc fade-in">CI/CD stands for Continuous Integration and Continuous Deployment — the method used by Netflix, Amazon, Google and every modern tech company to ship software fast and reliably.</div>
 
-  <!-- TERMINAL ANIMATION -->
   <div class="terminal-wrap fade-in">
     <div class="terminal-bar">
       <div class="t-dot" style="background:#ef4444"></div>
@@ -417,7 +429,7 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="t-dot" style="background:#10b981"></div>
       <span class="terminal-title">samuel@multicloud-cicd — GitHub Actions — Run #47</span>
     </div>
-    <div class="terminal-body" id="terminal-body">
+    <div class="terminal-body">
       <div class="t-line" id="tl0"><span class="t-prompt">samuel@multicloud:~/multicloud-cicd$</span> <span class="t-cmd">git push origin main</span></div>
       <div class="t-line" id="tl1"><span class="t-muted">Enumerating objects: 5, done. Writing objects: 100%</span></div>
       <div class="t-line" id="tl2"><span class="t-green">✓ GitHub Actions triggered</span><span class="t-badge-blue">Build #47</span></div>
@@ -425,14 +437,13 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="t-line" id="tl4"><span class="t-green">✓ Set up Docker Buildx</span><span class="t-muted"> (1.2s)</span></div>
       <div class="t-line" id="tl5"><span class="t-green">✓ Build Docker image</span><span class="t-muted"> → </span><span class="t-blue">josesamuel14/multicloud-app:latest</span><span class="t-muted"> (9.4s)</span></div>
       <div class="t-line" id="tl6"><span class="t-green">✓ Push to Docker Hub</span><span class="t-muted"> (4.1s)</span></div>
-      <div class="t-line" id="tl7"><span class="t-yellow">&#10003; Deploying to AWS EC2 ap-south-1 (Mumbai)...</span></div>
+      <div class="t-line" id="tl7"><span class="t-yellow">✓ Deploying to AWS EC2 ap-south-1 (Mumbai)...</span></div>
       <div class="t-line" id="tl8"><span class="t-muted">&nbsp;&nbsp;↳ SSH connect → docker pull → restart container</span></div>
       <div class="t-line" id="tl9"><span class="t-green">✓ <strong>Pipeline complete!</strong></span><span class="t-badge">26s total</span><span class="t-muted"> 🚀 Live on multicloud-cicd.onrender.com</span></div>
       <div class="t-line" id="tl10"><span class="t-prompt">samuel@multicloud:~/multicloud-cicd$</span> <span class="t-cursor"></span></div>
     </div>
   </div>
 
-  <!-- STAT ROW — 5 items like image 4 -->
   <div class="stat-row5 fade-in">
     <div class="stat-card5"><div class="stat-num5" id="about-req">0</div><div class="stat-label5">Pipeline<br>Runs</div></div>
     <div class="stat-card5"><div class="stat-num5">60s</div><div class="stat-label5">Deploy<br>Time</div></div>
@@ -453,7 +464,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <div class="card fade-in"><div class="card-icon">🏢</div><div class="card-title">Real World Usage</div><div class="card-desc">Netflix deploys 100+ times daily. Amazon every 11 seconds. Swiggy, Zomato, Freshworks all use CI/CD pipelines like this one.</div></div>
   </div>
 
-  <!-- Samuel card -->
   <div class="card fade-in" style="max-width:520px">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
       <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👨‍💻</div>
@@ -466,22 +476,18 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-github"></i> GitHub</a>
       <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-      <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI/CD%20Project" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-solid fa-envelope"></i> Email</a>
+      <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-solid fa-envelope"></i> Email</a>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 3 — ARCHITECTURE           -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 3 ARCHITECTURE -->
 <div id="architecture" class="section">
   <div class="section-tag">System Design</div>
   <div class="sec-title fade-in"><span class="w">ARCHITECTURE</span><br><span class="a">DIAGRAM</span></div>
   <div class="sec-desc fade-in">How all components connect and communicate in this multi-cloud CI/CD system.</div>
-
   <div class="arch-wrap fade-in">
-    <!-- Row 1: Developer Workflow -->
     <div class="arch-section-label">Developer Workflow</div>
     <div class="arch-row">
       <div class="arch-node"><div class="arch-node-icon">💻</div><div class="arch-node-name">Developer</div><div class="arch-node-desc">Writes code</div></div>
@@ -495,7 +501,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="arch-node" style="background:rgba(36,150,237,0.1);border-color:rgba(36,150,237,0.3)"><div class="arch-node-icon">🐋</div><div class="arch-node-name">Docker Hub</div><div class="arch-node-desc">Registry</div></div>
     </div>
     <div class="arch-sep"></div>
-    <!-- Row 2: Cloud Deployment -->
     <div class="arch-section-label">Cloud Deployment</div>
     <div class="arch-row">
       <div class="arch-node" style="background:rgba(36,150,237,0.1);border-color:rgba(36,150,237,0.3)"><div class="arch-node-icon">🐋</div><div class="arch-node-name">Docker Hub</div><div class="arch-node-desc">Image pulled</div></div>
@@ -507,10 +512,9 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="arch-node"><div class="arch-node-icon">☁️</div><div class="arch-node-name">Render</div><div class="arch-node-desc">24/7 hosting</div></div>
     </div>
     <div class="arch-sep"></div>
-    <!-- Row 3: Monitoring -->
     <div class="arch-section-label">Monitoring Stack</div>
     <div class="arch-row">
-      <div class="arch-node" style="background:rgba(123,66,188,0.1);border-color:rgba(123,66,188,0.3)"><div class="arch-node-icon" style="font-size:1.4rem">🏗️</div><div class="arch-node-name">Terraform</div><div class="arch-node-desc">IaC</div></div>
+      <div class="arch-node" style="background:rgba(123,66,188,0.1);border-color:rgba(123,66,188,0.3)"><div class="arch-node-icon">🏗️</div><div class="arch-node-name">Terraform</div><div class="arch-node-desc">IaC</div></div>
       <div class="arch-arrow">+</div>
       <div class="arch-node" style="background:rgba(230,82,44,0.1);border-color:rgba(230,82,44,0.3)"><div class="arch-node-icon"><i class="fa-solid fa-chart-line" style="color:#E6522C;font-size:1.5rem"></i></div><div class="arch-node-name">Prometheus</div><div class="arch-node-desc">Metrics</div></div>
       <div class="arch-arrow">→</div>
@@ -519,18 +523,15 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="arch-node" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3)"><div class="arch-node-icon">🔔</div><div class="arch-node-name">Alerts</div><div class="arch-node-desc">Anomalies</div></div>
     </div>
   </div>
-
   <div class="grid-2">
-    <div class="card fade-in"><div class="card-icon">🐳</div><div class="card-title">Containerisation</div><div class="card-desc">Flask app packaged in Docker with all dependencies. Runs identically on any machine — laptop or cloud server. No "works on my machine" issues.</div></div>
-    <div class="card fade-in"><div class="card-icon">☸️</div><div class="card-title">Orchestration</div><div class="card-desc">Kubernetes keeps 2 replicas running always. Auto-restarts crashed containers. Rolling updates mean zero downtime during deployments.</div></div>
+    <div class="card fade-in"><div class="card-icon">🐳</div><div class="card-title">Containerisation</div><div class="card-desc">Flask app packaged in Docker with all dependencies. Runs identically on any machine — laptop or cloud server.</div></div>
+    <div class="card fade-in"><div class="card-icon">☸️</div><div class="card-title">Orchestration</div><div class="card-desc">Kubernetes keeps 2 replicas running always. Auto-restarts crashed containers. Rolling updates mean zero downtime.</div></div>
     <div class="card fade-in"><div class="card-icon">🏗️</div><div class="card-title">Infrastructure as Code</div><div class="card-desc">Terraform defines AWS infrastructure in code files. No manual clicking in AWS console — everything provisioned automatically.</div></div>
-    <div class="card fade-in"><div class="card-icon">📊</div><div class="card-title">Observability</div><div class="card-desc">Prometheus scrapes metrics every 15 seconds. Grafana live dashboards show CPU, memory, request rates. Problems caught before users notice.</div></div>
+    <div class="card fade-in"><div class="card-icon">📊</div><div class="card-title">Observability</div><div class="card-desc">Prometheus scrapes metrics every 15 seconds. Grafana live dashboards show CPU, memory, request rates in real time.</div></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 4 — TECH STACK             -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 4 TECH STACK -->
 <div class="alt-bg">
 <div id="techstack" class="section">
   <div class="section-tag">Tools and Technologies</div>
@@ -549,14 +550,11 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
 </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 5 — PIPELINE               -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 5 PIPELINE -->
 <div id="pipeline-section" class="section">
   <div class="section-tag">How It Works</div>
   <div class="sec-title fade-in"><span class="w">THE</span><br><span class="a">PIPELINE</span></div>
   <div class="sec-desc fade-in">From writing a single line of code to seeing it live in production — every step that happens automatically in under 60 seconds.</div>
-
   <div class="pipe-step fade-in"><div class="pipe-icon-box">💻</div><div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask application — adding features, fixing bugs, or updating the UI. Code lives in GitHub accessible to the entire team.</div><div class="pipe-tag">Local Development</div></div><div class="pipe-num">01</div></div>
   <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-github"></i></div><div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly with no manual intervention needed.</div><div class="pipe-tag">GitHub</div></div><div class="pipe-num">02</div></div>
   <div class="pipe-step fade-in"><div class="pipe-icon-box">⚡</div><div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub's free infrastructure to run the pipeline.</div><div class="pipe-tag">GitHub Actions</div></div><div class="pipe-num">03</div></div>
@@ -565,7 +563,6 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   <div class="pipe-step fade-in"><div class="pipe-icon-box">☸️</div><div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — gradually replacing old containers. Zero downtime. Users never notice.</div><div class="pipe-tag">Kubernetes</div></div><div class="pipe-num">06</div></div>
   <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version is live on AWS EC2 Mumbai and Render simultaneously. Total time from git push to live: under 60 seconds. Every time. Automatically.</div><div class="pipe-tag">AWS + Render</div></div><div class="pipe-num">07</div></div>
   <div class="pipe-step fade-in"><div class="pipe-icon-box">📊</div><div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know about problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div><div class="pipe-num">08</div></div>
-
   <div class="card fade-in" style="text-align:center;padding:2.5rem;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08));border-color:rgba(124,58,237,0.2)">
     <div style="font-size:3rem;margin-bottom:0.8rem">⚡</div>
     <div style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">Total Time: Under 60 Seconds</div>
@@ -573,22 +570,18 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
   </div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!-- SECTION 6 — LIVE DEMO              -->
-<!-- ═══════════════════════════════════ -->
+<!-- SECTION 6 DEMO -->
 <div class="alt-bg">
 <div id="demo" class="section">
   <div class="section-tag">Interactive Demo</div>
   <div class="sec-title fade-in"><span class="w">LIVE</span><br><span class="a">DEMO</span></div>
   <div class="sec-desc fade-in">Everything below is real and live. Click any button to interact with the actual running system right now.</div>
-
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-heart-pulse" style="color:#10b981"></i> Health Check</div>
     <div class="demo-card-desc">Returns real system information — cloud provider, region, uptime, and hostname of the actual server running this app right now.</div>
     <button class="demo-btn demo-btn-green" onclick="checkHealth()"><i class="fa-solid fa-heart-pulse"></i> Check Health</button>
     <div class="response-box" id="health-response"></div>
   </div>
-
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-chart-bar" style="color:#eab308"></i> Live Statistics</div>
     <div class="demo-card-desc">Fetches real-time statistics — total HTTP requests served, current uptime, and system status. Data from Prometheus metrics endpoint.</div>
@@ -599,14 +592,12 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
       <div class="stat-item"><div class="stat-val" id="stat-status">--</div><div class="stat-lbl">Status</div></div>
     </div>
   </div>
-
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-rocket" style="color:{p1}"></i> Trigger CI/CD Pipeline</div>
     <div class="demo-card-desc">Click Deploy Now to trigger a real GitHub Actions pipeline run. A new Docker image will be built and deployed automatically. Watch it live on GitHub!</div>
     <button class="demo-btn demo-btn-primary" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
     <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> Watch on GitHub</a>
   </div>
-
   <div class="demo-card fade-in">
     <div class="demo-card-title"><i class="fa-solid fa-code" style="color:#06B6D4"></i> Source Code</div>
     <div class="demo-card-desc">The entire project is open source — Dockerfile, Kubernetes configs, Terraform IaC, GitHub Actions workflow, and monitoring setup.</div>
@@ -625,9 +616,9 @@ footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;borde
     &nbsp;·&nbsp;
     <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener">LinkedIn</a>
     &nbsp;·&nbsp;
-    <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI/CD%20Project">Contact</a>
+    <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project">Contact</a>
     <br><br>
-    <span style="font-size:9px;opacity:0.5">MultiCloud CI/CD Pipeline · Docker · Kubernetes · GitHub Actions · Terraform · AWS · Prometheus · Grafana</span>
+    <span style="font-size:9px;opacity:0.5">MultiCloud CI/CD · Docker · Kubernetes · GitHub Actions · Terraform · AWS · Prometheus · Grafana</span>
   </div>
 </footer>
 
@@ -651,7 +642,6 @@ function tick() {{
   if (el) el.textContent = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
 }}
 setInterval(tick, 1000); tick();
-
 function updateMetrics() {{
   fetch('/stats')
     .then(function(r) {{ return r.json(); }})
@@ -666,7 +656,6 @@ function updateMetrics() {{
     .catch(function() {{}});
 }}
 setInterval(updateMetrics, 5000); updateMetrics();
-
 function showDeploy() {{ document.getElementById('deployModal').style.display = 'flex'; }}
 function closeModal() {{
   document.getElementById('deployModal').style.display = 'none';
@@ -707,7 +696,6 @@ function checkStats() {{
     .catch(function() {{}});
 }}
 setInterval(checkStats, 5000);
-
 var obs = new IntersectionObserver(function(entries) {{
   entries.forEach(function(e) {{
     if (e.isIntersecting) {{
@@ -718,17 +706,16 @@ var obs = new IntersectionObserver(function(entries) {{
   }});
 }}, {{threshold: 0.15}});
 document.querySelectorAll('.fade-in').forEach(function(el) {{ obs.observe(el); }});
-
 var terminalStarted = false;
 function startTerminal() {{
   if (terminalStarted) return;
   terminalStarted = true;
-  var delays = [0,700,1400,2100,2900,3700,4400,5200,5700,6500];
+  var delays = [0,700,1400,2100,2900,3700,4400,5200,5700,6500,7200];
   for (var i = 0; i <= 10; i++) {{
     (function(idx, delay) {{
       var el = document.getElementById('tl'+idx);
       if (el) setTimeout(function() {{ el.classList.add('show'); }}, delay);
-    }})(i, delays[i] || (i*600));
+    }})(i, delays[i]);
   }}
   setTimeout(function() {{
     terminalStarted = false;
@@ -737,24 +724,21 @@ function startTerminal() {{
       if (el) el.classList.remove('show');
     }}
     setTimeout(startTerminal, 1500);
-  }}, 11000);
+  }}, 12000);
 }}
-
 var counterDone = false;
 function animateCounter() {{
   if (counterDone) return;
   counterDone = true;
   var el = document.getElementById('about-req');
   if (!el) return;
-  var end = 47, start = 0, duration = 1400;
-  var step = end / (duration / 16);
+  var end = 47, start = 0;
   var timer = setInterval(function() {{
-    start += step;
-    if (start >= end) {{ start = end; clearInterval(timer); }}
-    el.textContent = Math.floor(start);
-  }}, 16);
+    start += 1;
+    el.textContent = start;
+    if (start >= end) clearInterval(timer);
+  }}, 30);
 }}
-
 var cv = document.getElementById('cv');
 var ctx = cv.getContext('2d');
 var W, H, ht = 0;
