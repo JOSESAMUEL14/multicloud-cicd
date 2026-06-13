@@ -17,7 +17,7 @@ A production-grade Multi-Cloud CI/CD pipeline that automatically builds, tests, 
 | Platform | URL | Status |
 |----------|-----|--------|
 | Render (24/7) | https://multicloud-cicd.onrender.com | ✅ Always Live |
-| AWS EC2 Mumbai | http://3.110.114.237:5000 | ⚡ When Running |
+| AWS EC2 Mumbai || http://15.206.189.12:5000 | ⚡ Desktop/Laptop only |
 
 ---
 
@@ -146,6 +146,9 @@ multicloud-cicd/
 - 🌐 Live Demo: https://multicloud-cicd.onrender.com
 
 ---
+
+> **Note:** AWS URL works on desktop/laptop browsers only. 
+> For mobile access use: https://multicloud-cicd.onrender.com
 
 ## 📝 License
 
