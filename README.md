@@ -84,8 +84,7 @@ docker compose -f monitoring/docker-compose.yml up -d
 Then open:
 - App: http://localhost:5000
 - Prometheus: http://localhost:9090
-- Grafana: http://localhost:3000 (admin/multicloud123)
-
+- Grafana: http://localhost:3000 (admin / password configured in .env)
 ---
 
 ## 📁 Project Structure
