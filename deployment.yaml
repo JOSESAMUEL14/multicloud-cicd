@@ -14,9 +14,24 @@ spec:
     spec:
       containers:
       - name: multicloud-app
-        image: josesamuel14/multicloud-app:8612c1b2297918d2cef1dea3f96ca654b169908c
+        image: multicloud-app:v2
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
         env:
         - name: CLOUD_PROVIDER
           value: "local"
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
