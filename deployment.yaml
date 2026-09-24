@@ -14,13 +14,31 @@ spec:
     spec:
       containers:
       - name: multicloud-app
-        image: multicloud-app:v2
+        image: multicloud-app:nonroot
         imagePullPolicy: Never
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - ALL
+
         ports:
         - containerPort: 5000
+
         env:
         - name: CLOUD_PROVIDER
           value: "local"
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
 
         readinessProbe:
           httpGet:
