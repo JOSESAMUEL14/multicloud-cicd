@@ -33,4 +33,6 @@ jobs:
       with:
         context: ./app
         push: true
-        tags: josesamuel14/multicloud-app:latest
+        tags: |
+          josesamuel14/multicloud-app:latest
+          josesamuel14/multicloud-app:${{ github.sha }}
