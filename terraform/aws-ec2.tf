@@ -1,29 +1,37 @@
-# ── AWS Provider ──
 provider "aws" {
   region = var.aws_region
 }
 
-# ── Variables ──
 variable "aws_region" {
-  default = "ap-south-1"  # Mumbai — closest to India
+  description = "AWS region for the deployment"
+  type        = string
+  default     = "ap-south-1"
 }
 
 variable "app_image" {
-  default = "josesamuel14/multicloud-app:latest"
+  description = "Docker image to deploy"
+  type        = string
+  default     = "josesamuel14/multicloud-app:latest"
 }
 
-# ── Security Group ──
+variable "ssh_cidr" {
+  description = "CIDR block allowed to access SSH"
+  type        = string
+}
+
 resource "aws_security_group" "multicloud_sg" {
   name        = "multicloud-cicd-sg"
-  description = "Allow HTTP and SSH"
+  description = "Allow application traffic and controlled SSH access"
 
+  # SSH access - must be explicitly provided during deployment
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.ssh_cidr]
   }
 
+  # Flask application
   ingress {
     from_port   = 5000
     to_port     = 5000
@@ -31,13 +39,7 @@ resource "aws_security_group" "multicloud_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
+  # Outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -51,22 +53,26 @@ resource "aws_security_group" "multicloud_sg" {
   }
 }
 
-# ── EC2 Instance (Free Tier t2.micro) ──
 resource "aws_instance" "multicloud_app" {
-  ami           = "ami-0f58b397bc5c1f2e8"  # Ubuntu 22.04 Mumbai
-  instance_type = "t2.micro"               # FREE TIER
+  ami           = "ami-0f58b397bc5c1f2e8"
+  instance_type = "t2.micro"
   key_name      = "multicloud-key"
 
-  vpc_security_group_ids = [aws_security_group.multicloud_sg.id]
+  vpc_security_group_ids = [
+    aws_security_group.multicloud_sg.id
+  ]
 
-  # Auto-install Docker and run app on startup
   user_data = <<-SCRIPT
     #!/bin/bash
+
     apt-get update -y
     apt-get install -y docker.io
+
     systemctl start docker
     systemctl enable docker
+
     docker pull ${var.app_image}
+
     docker run -d \
       -p 5000:5000 \
       --name multicloud-app \
@@ -79,28 +85,26 @@ resource "aws_instance" "multicloud_app" {
   tags = {
     Name    = "multicloud-cicd-app"
     Project = "multicloud-cicd"
-    Type    = "free-tier"
+    Type    = "ec2"
   }
 }
 
-# ── Elastic IP (Static IP) ──
 resource "aws_eip" "multicloud_ip" {
   instance = aws_instance.multicloud_app.id
   domain   = "vpc"
 }
 
-# ── Outputs ──
 output "app_url" {
   value       = "http://${aws_eip.multicloud_ip.public_ip}:5000"
-  description = "Your app URL on AWS"
+  description = "AWS application URL"
 }
 
 output "instance_id" {
   value       = aws_instance.multicloud_app.id
-  description = "EC2 Instance ID — use this to stop/delete"
+  description = "EC2 instance ID"
 }
 
 output "public_ip" {
   value       = aws_eip.multicloud_ip.public_ip
-  description = "Public IP of your EC2 instance"
+  description = "Public IP of the EC2 instance"
 }
