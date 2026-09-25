@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - devops-v2
+      - devops-v3
   repository_dispatch:
     types: [manual-deploy]
 
@@ -48,7 +49,20 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./app
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: false
+          load: true
           tags: |
             josesamuel14/multicloud-app:latest
             josesamuel14/multicloud-app:${{ github.sha }}
+
+      - name: Smoke test Docker image
+        run: |
+          docker run -d --name multicloud-app-smoke -p 5000:5000 josesamuel14/multicloud-app:${{ github.sha }}
+          trap 'docker logs multicloud-app-smoke || true; docker rm -f multicloud-app-smoke || true' EXIT
+          curl --fail --retry 10 --retry-delay 2 http://localhost:5000/health
+
+      - name: Push Docker image
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker push josesamuel14/multicloud-app:latest
+          docker push josesamuel14/multicloud-app:${{ github.sha }}
