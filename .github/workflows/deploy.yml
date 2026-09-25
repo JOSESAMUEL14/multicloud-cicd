@@ -61,6 +61,15 @@ jobs:
           trap 'docker logs multicloud-app-smoke || true; docker rm -f multicloud-app-smoke || true' EXIT
           curl --fail --retry-all-errors --retry 10 --retry-delay 2 http://localhost:5000/health
 
+      - name: Scan Docker image for vulnerabilities
+        uses: aquasecurity/trivy-action@0.33.0
+        with:
+          image-ref: josesamuel14/multicloud-app:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
       - name: Push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
