@@ -67,6 +67,7 @@ jobs:
           image-ref: josesamuel14/multicloud-app:${{ github.sha }}
           format: table
           scanners: vuln
+          version: v0.74.0
           exit-code: '1'
           ignore-unfixed: true
           severity: CRITICAL,HIGH
