@@ -25,6 +25,8 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Run tests
+        env:
+          PYTHONPATH: .
         run: pytest tests/test_app.py
 
   build-and-push:
