@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - devops-v2
+      - devops-v3
   repository_dispatch:
     types: [manual-deploy]
 
@@ -48,7 +49,90 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./app
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: false
+          load: true
           tags: |
             josesamuel14/multicloud-app:latest
             josesamuel14/multicloud-app:${{ github.sha }}
+
+      - name: Smoke test Docker image
+        run: |
+          docker run -d --name multicloud-app-smoke -p 5000:5000 josesamuel14/multicloud-app:${{ github.sha }}
+          trap 'docker logs multicloud-app-smoke || true; docker rm -f multicloud-app-smoke || true' EXIT
+          curl --fail --retry-all-errors --retry 10 --retry-delay 2 http://localhost:5000/health
+
+      - name: Scan Docker image for vulnerabilities
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: josesamuel14/multicloud-app:${{ github.sha }}
+          format: table
+          scanners: vuln
+          version: v0.74.0
+          skip-files: /usr/local/lib/python3.11/site-packages/pip/_vendor/bom.cdx.json
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Set up Kubernetes
+        uses: helm/kind-action@v1.14.0
+        with:
+          version: v0.31.0
+          cluster_name: multicloud-ci
+          wait: 60s
+
+      - name: Verify Kubernetes cluster
+        run: |
+          kind get clusters
+          kubectl cluster-info
+          kubectl get nodes -o wide
+
+      - name: Prepare Kubernetes image
+        run: |
+          docker tag josesamuel14/multicloud-app:${{ github.sha }} multicloud-app:nonroot
+          kind load docker-image multicloud-app:nonroot --name multicloud-ci
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      - name: Wait for Kubernetes rollout
+        run: |
+          kubectl rollout status deployment/multicloud-app --timeout=120s
+
+      - name: Verify Kubernetes deployment
+        run: |
+          kubectl get deployment multicloud-app
+          kubectl get pods -l app=multicloud-app
+          kubectl get service multicloud-app-service
+
+          READY=$(kubectl get deployment multicloud-app -o jsonpath='{.status.readyReplicas}')
+          AVAILABLE=$(kubectl get deployment multicloud-app -o jsonpath='{.status.availableReplicas}')
+
+          test "$READY" = "2"
+          test "$AVAILABLE" = "2"
+
+      - name: Verify application health in Kubernetes
+        run: |
+          kubectl port-forward service/multicloud-app-service 5000:5000 > /tmp/port-forward.log 2>&1 &
+          PORT_FORWARD_PID=$!
+          trap 'kill $PORT_FORWARD_PID || true' EXIT
+
+          sleep 5
+
+          curl --fail --retry-all-errors --retry 10 --retry-delay 2 \
+            http://127.0.0.1:5000/health
+
+      - name: Show Kubernetes diagnostics
+        if: always()
+        run: |
+          kubectl get pods -o wide
+          kubectl get deployment multicloud-app
+          kubectl describe deployment multicloud-app
+          kubectl describe pods -l app=multicloud-app
+
+      - name: Push Docker image
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker push josesamuel14/multicloud-app:latest
+          docker push josesamuel14/multicloud-app:${{ github.sha }}
