@@ -73,6 +73,56 @@ jobs:
           ignore-unfixed: true
           severity: CRITICAL,HIGH
 
+      - name: Set up Kubernetes
+        uses: helm/kind-action@v1.13.0
+        with:
+          version: v0.30.0
+
+      - name: Prepare Kubernetes image
+        run: |
+          docker tag josesamuel14/multicloud-app:${{ github.sha }} multicloud-app:nonroot
+          kind load docker-image multicloud-app:nonroot
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      - name: Wait for Kubernetes rollout
+        run: |
+          kubectl rollout status deployment/multicloud-app --timeout=120s
+
+      - name: Verify Kubernetes deployment
+        run: |
+          kubectl get deployment multicloud-app
+          kubectl get pods -l app=multicloud-app
+          kubectl get service multicloud-app-service
+
+          READY=$(kubectl get deployment multicloud-app -o jsonpath='{.status.readyReplicas}')
+          AVAILABLE=$(kubectl get deployment multicloud-app -o jsonpath='{.status.availableReplicas}')
+
+          test "$READY" = "2"
+          test "$AVAILABLE" = "2"
+
+      - name: Verify application health in Kubernetes
+        run: |
+          kubectl port-forward service/multicloud-app-service 5000:5000 > /tmp/port-forward.log 2>&1 &
+          PORT_FORWARD_PID=$!
+          trap 'kill $PORT_FORWARD_PID || true' EXIT
+
+          sleep 5
+
+          curl --fail --retry-all-errors --retry 10 --retry-delay 2 \
+            http://127.0.0.1:5000/health
+
+      - name: Show Kubernetes diagnostics
+        if: always()
+        run: |
+          kubectl get pods -o wide
+          kubectl get deployment multicloud-app
+          kubectl describe deployment multicloud-app
+          kubectl describe pods -l app=multicloud-app
+
       - name: Push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
