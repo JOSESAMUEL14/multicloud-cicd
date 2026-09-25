@@ -127,8 +127,8 @@ GET /health
 HTTP 200
 
 Run locally:
-pip install -r app/requirements.txt
-pytest tests/test_app.py
+pip install -r requirements-dev.txt
+python -m pytest tests/test_app.py
 
 Expected result:
 1 passed
@@ -309,6 +309,8 @@ multicloud-cicd/
 ├── tests/
 │   └── test_app.py
 │
+├── requirements-dev.txt
+│
 ├── monitoring/
 │   ├── docker-compose.yml
 │   └── prometheus.yml
@@ -367,12 +369,7 @@ GitHub:
 https://github.com/JOSESAMUEL14
 LinkedIn:
 https://linkedin.com/in/samueld14
-📜 License
+
+## 📜 License
+
 MIT License
-
-### After saving
-
-Run these **only**:
-
-```cmd
-git diff --check
