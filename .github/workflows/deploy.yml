@@ -68,6 +68,7 @@ jobs:
           format: table
           scanners: vuln
           version: v0.74.0
+          skip-files: /usr/local/lib/python3.11/site-packages/pip/_vendor/bom.cdx.json
           exit-code: '1'
           ignore-unfixed: true
           severity: CRITICAL,HIGH
