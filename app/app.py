@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-import os, platform, socket, time, requests
+from flask import Flask, jsonify, request
+import os, platform, socket, time, requests, hmac
 from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
@@ -7,6 +7,12 @@ metrics = PrometheusMetrics(app)
 metrics.info('app_info', 'MultiCloud CI/CD App', version='1.0.0')
 
 START_TIME = time.time()
+total_requests = 0
+
+@app.before_request
+def count_requests():
+    global total_requests
+    total_requests += 1
 
 def get_uptime():
     seconds = int(time.time() - START_TIME)
@@ -21,624 +27,2547 @@ def home():
     hostname = socket.gethostname()
     python_ver = platform.python_version()
     github_repo = "JOSESAMUEL14/multicloud-cicd"
-    themes = {
-        "aws":    {"p1":"#FF9900","p2":"#FF6B35","label":"Amazon Web Services","short":"AWS"},
-        "gcp":    {"p1":"#4285F4","p2":"#34A853","label":"Google Cloud Platform","short":"GCP"},
-        "render": {"p1":"#7C3AED","p2":"#06B6D4","label":"Render Cloud","short":"RENDER"},
-        "local":  {"p1":"#7C3AED","p2":"#06B6D4","label":"Local Kubernetes","short":"LOCAL"}
-    }
-    t = themes.get(cloud.lower(), themes["local"])
-    p1 = t['p1']
-    p2 = t['p2']
-    cloud_icon = "<i class='fa-brands fa-aws'></i>" if cloud.lower()=="aws" else "<i class='fa-brands fa-google'></i>" if cloud.lower()=="gcp" else "<i class='fa-solid fa-cloud'></i>"
-    cloud_label = "AWS" if cloud.lower()=="aws" else "GCP" if cloud.lower()=="gcp" else "Cloud"
+    
+    cloud_label = "AWS" if cloud.lower()=="aws" else "GCP" if cloud.lower()=="gcp" else "Render" if cloud.lower()=="render" else "Cloud"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Multi-Cloud CI/CD Pipeline by Samuel — Docker, Kubernetes, GitHub Actions, Terraform, AWS">
-<title>MultiCloud CI/CD — Samuel</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Exo+2:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Multi-Cloud CI/CD Deployment System — Release Engineering Architecture & Portfolio Experience by Samuel D">
+<title>Multi-Cloud CI/CD Deployment System — The Complete Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-*{{margin:0;padding:0;box-sizing:border-box}}
-:root{{
-  --p1:{p1};--p2:{p2};
-  --bg:#06061a;
-  --glass:rgba(255,255,255,0.04);
-  --border:rgba(255,255,255,0.08);
-  --muted:rgba(255,255,255,0.4);
-  --card-bg:rgba(15,20,45,0.8);
+:root {{
+  --bg-space: #030712;
+  --bg-charcoal: #0F172A;
+  --bg-surface-3d: rgba(15, 23, 42, 0.88);
+  
+  --orange-launch: #FF6B00;
+  --aws-orange: #FF9900;
+  --docker-blue: #099CEC;
+  --k8s-blue: #326CE5;
+  --github-dark: #1E293B;
+  --sec-green: #10B981;
+  --sec-red: #EF4444;
+  --cyan-beam: #06B6D4;
+  --purple-space: #8B5CF6;
+  
+  --text-main: #F8FAFC;
+  --text-dim: #94A3B8;
+  
+  --border-light: rgba(255, 255, 255, 0.12);
+  --border-orange: rgba(255, 107, 0, 0.4);
+  --border-cyan: rgba(6, 182, 212, 0.4);
+  
+  --shadow-cinematic: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 40px rgba(255, 107, 0, 0.15);
+  
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
 }}
-html{{scroll-behavior:smooth}}
-body{{font-family:"Exo 2",sans-serif;background:var(--bg);color:#fff;overflow-x:hidden}}
-#cv{{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}}
-.vig{{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(6,6,26,0.8) 100%)}}
-nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.75rem 2rem;background:rgba(6,6,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
-.nav-logo{{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}}
-.nav-logo-dots{{display:flex;flex-direction:column;gap:4px;justify-content:center}}
-.nav-logo-dot{{width:8px;height:8px;border-radius:50%}}
-.nav-logo-textblock{{display:flex;flex-direction:column;gap:2px}}
-.nav-logo-name{{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#fff;line-height:1}}
-.nav-logo-sub{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.35);text-transform:uppercase;line-height:1}}
-.nav-links{{display:flex;gap:18px}}
-.nav-link{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 0;transition:color 0.3s}}
-.nav-link:hover{{color:#fff}}
-.nav-right{{display:flex;align-items:center;gap:10px}}
-.nav-github{{color:var(--muted);font-size:18px;transition:color 0.3s;text-decoration:none}}
-.nav-github:hover{{color:#fff}}
-.live-pill{{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);font-family:"Space Mono",monospace;font-size:9px;letter-spacing:2px;color:#10b981}}
-.live-dot{{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 2s infinite}}
-.nav-hamburger{{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px}}
-.nav-hamburger span{{width:20px;height:1.5px;background:var(--muted);display:block}}
-@keyframes blink{{0%,100%{{opacity:1}}50%{{opacity:0.2}}}}
-.modal{{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px)}}
-.modal.show{{display:flex}}
-.modal-box{{background:#0d0d1a;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center}}
-.modal-title{{font-size:1.2rem;font-weight:800;margin-bottom:0.5rem}}
-.modal-sub{{font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}}
-.modal-btns{{display:flex;gap:10px;justify-content:center}}
-.modal-btn{{padding:10px 24px;border-radius:100px;font-size:10px;font-weight:700;cursor:pointer;border:none;font-family:"Space Mono",monospace;letter-spacing:1px;transition:all 0.3s}}
-.modal-confirm{{background:linear-gradient(135deg,{p1},{p2});color:#fff}}
-.modal-cancel{{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2)}}
-.modal-status{{margin-top:1rem;font-size:11px;color:var(--muted);font-family:"Space Mono",monospace;min-height:16px}}
-.section{{position:relative;z-index:10;padding:5rem 2rem 4rem;max-width:1000px;margin:0 auto}}
-.section-tag{{display:inline-flex;align-items:center;gap:8px;font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:5px 14px;border-radius:100px;border:1px solid var(--border);margin-bottom:1.2rem}}
-.sec-title{{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:-1px;line-height:0.9;margin-bottom:1rem}}
-.sec-title .w{{color:#fff}}
-.sec-title .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.sec-desc{{font-size:1rem;color:var(--muted);line-height:1.8;max-width:620px;margin-bottom:2.5rem}}
-.alt-bg{{background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}}
-.divider{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3rem 0}}
-.fade-in{{opacity:0;transform:translateY(28px);transition:all 0.7s cubic-bezier(.16,1,.3,1)}}
-.fade-in.visible{{opacity:1;transform:translateY(0)}}
-.grid-2{{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
-.grid-3{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem}}
-.card{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem;backdrop-filter:blur(20px);transition:all 0.4s cubic-bezier(.16,1,.3,1)}}
-.card:hover{{transform:translateY(-5px);border-color:rgba(255,255,255,0.15);box-shadow:0 24px 60px rgba(0,0,0,0.5)}}
-.card-icon{{font-size:2.2rem;margin-bottom:1rem}}
-.card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;color:#fff}}
-.card-desc{{font-size:0.88rem;color:var(--muted);line-height:1.7}}
-.terminal-wrap{{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:18px;overflow:hidden;margin-bottom:2.5rem;width:100%}}
-.terminal-bar{{background:#161b27;padding:14px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.07)}}
-.t-dot{{width:13px;height:13px;border-radius:50%}}
-.terminal-title{{font-family:"Space Mono",monospace;font-size:12px;color:rgba(255,255,255,0.4);margin-left:12px;letter-spacing:0.5px}}
-.terminal-body{{padding:1.8rem 2.2rem;font-family:"Space Mono",monospace;font-size:14px;line-height:2.1;min-height:260px}}
-.t-line{{opacity:0;transition:opacity 0.4s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-.t-line.show{{opacity:1}}
-.t-prompt{{color:rgba(255,255,255,0.45)}}
-.t-cmd{{color:#fff;font-weight:700}}
-.t-green{{color:#10b981;font-weight:700}}
-.t-blue{{color:#60a5fa}}
-.t-yellow{{color:#fbbf24}}
-.t-muted{{color:rgba(255,255,255,0.38)}}
-.t-badge{{display:inline-block;background:#10b981;color:#000;font-size:11px;padding:1px 10px;border-radius:5px;font-weight:700;margin-left:8px;vertical-align:middle}}
-.t-badge-blue{{display:inline-block;background:#3b82f6;color:#fff;font-size:11px;padding:1px 10px;border-radius:5px;font-weight:700;margin-left:8px;vertical-align:middle}}
-.t-cursor{{display:inline-block;width:8px;height:14px;background:#fff;animation:cur 1s step-end infinite;vertical-align:-2px}}
-@keyframes cur{{0%,100%{{opacity:1}}50%{{opacity:0}}}}
-.stat-row5{{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem;margin-bottom:2.5rem}}
-.stat-card5{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:1.8rem 1rem;text-align:center;transition:all 0.3s}}
-.stat-card5:hover{{background:rgba(255,255,255,0.07);transform:translateY(-3px)}}
-.stat-num5{{font-family:"Space Mono",monospace;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;letter-spacing:-1px}}
-.stat-label5{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:10px;line-height:1.5}}
-.pipe-step{{display:flex;gap:1.5rem;margin-bottom:1.5rem;align-items:flex-start;padding:1.2rem;border-radius:18px;transition:background 0.3s;border:1px solid transparent}}
-.pipe-step:hover{{background:rgba(255,255,255,0.03);border-color:var(--border)}}
-.pipe-icon-box{{width:54px;height:54px;border-radius:14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}}
-.pipe-content{{flex:1}}
-.pipe-title{{font-size:1.1rem;font-weight:800;margin-bottom:6px;color:{p1}}}
-.pipe-desc{{font-size:0.88rem;color:var(--muted);line-height:1.7}}
-.pipe-tag{{display:inline-block;font-family:"Space Mono",monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:100px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:{p1};margin-top:8px}}
-.pipe-num{{font-family:"Space Mono",monospace;font-size:3rem;font-weight:700;color:rgba(255,255,255,0.06);min-width:70px;line-height:1;text-align:right;flex-shrink:0;align-self:center}}
-.arch-wrap{{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}}
-.arch-section-label{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:8px}}
-.arch-section-label::before,.arch-section-label::after{{content:"";flex:1;max-width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--border))}}
-.arch-section-label::after{{background:linear-gradient(90deg,var(--border),transparent)}}
-.arch-row{{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;margin-bottom:0}}
-.arch-node{{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:1rem 1.2rem;text-align:center;min-width:110px;transition:all 0.3s;cursor:default}}
-.arch-node:hover{{background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);transform:translateY(-4px)}}
-.arch-node-icon{{font-size:1.8rem;margin-bottom:6px}}
-.arch-node-name{{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px}}
-.arch-node-desc{{font-size:9px;color:var(--muted)}}
-.arch-arrow{{font-size:1.2rem;color:rgba(255,255,255,0.25);padding:0 6px;margin-bottom:28px;flex-shrink:0}}
-.arch-sep{{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1.5rem 0}}
-.tool-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.5rem;transition:all 0.3s}}
-.tool-card:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.5)}}
-.tool-header{{display:flex;align-items:center;gap:12px;margin-bottom:0.9rem}}
-.tool-icon-box{{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}}
-.tool-name{{font-size:1rem;font-weight:800}}
-.tool-line{{width:40px;height:2px;border-radius:2px;margin-top:4px}}
-.tool-desc{{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:0.5rem}}
-.tool-why{{font-size:10px;color:var(--muted)}}
-.dash-wrap{{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4.5rem 1.2rem 2rem}}
-.pill-badge{{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(16px);padding:6px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}}
-.pill-dot{{width:7px;height:7px;border-radius:50%;background:{p1};box-shadow:0 0 10px {p1};animation:blink 2s infinite}}
-.hero-eye{{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;display:flex;align-items:center;justify-content:center;gap:10px}}
-.hero-eye::before,.hero-eye::after{{content:"";width:35px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2))}}
-.hero-eye::after{{background:linear-gradient(90deg,rgba(255,255,255,0.2),transparent)}}
-h1{{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:-1px;line-height:0.92;margin-bottom:0.6rem;text-align:center}}
-h1 .w{{color:#fff}}
-h1 .a{{background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.hero-sub{{font-family:"Space Mono",monospace;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}}
-.hero-dot{{width:3px;height:3px;border-radius:50%;background:{p1};opacity:0.5;display:inline-block}}
-.scroll-cta{{display:flex;gap:10px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}}
-.cta-btn{{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer}}
-.cta-btn:hover{{transform:translateY(-3px)}}
-.cta-primary{{background:linear-gradient(135deg,{p1},{p2});color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
-.cta-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.6)}}
-.cta-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
-.pipeline{{width:100%;max-width:880px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:1rem 1.5rem;backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:1rem;overflow-x:auto}}
-.pipeline::before{{content:"PIPELINE";position:absolute;top:7px;left:14px;font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.1)}}
-.pstep{{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:48px}}
-.p-icon{{width:46px;height:46px;border-radius:13px;background:transparent;border:2px solid {p1};display:flex;align-items:center;justify-content:center;transition:all 0.4s;box-shadow:0 0 10px rgba(124,58,237,0.2)}}
-.p-icon:hover{{transform:translateY(-5px);box-shadow:0 0 22px rgba(124,58,237,0.5);border-color:{p2}}}
-.p-icon i{{font-size:18px;color:#fff}}
-.p-icon svg{{width:20px;height:20px}}
-.p-label{{font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}}
-.pconn{{flex:1;display:flex;align-items:center;padding-bottom:22px;min-width:8px}}
-.pline{{width:100%;height:1.5px;background:linear-gradient(90deg,{p1},{p2});opacity:0.2;position:relative;overflow:hidden;border-radius:2px}}
-.pline::after{{content:"";position:absolute;top:0;left:-50%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);animation:sweep 2s linear infinite}}
-@keyframes sweep{{to{{left:150%}}}}
-.cards{{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:880px;margin-bottom:1rem}}
-.dcard{{background:rgba(10,12,35,0.9);border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.08);border-top:1px solid rgba(226,232,240,0.2);transition:all 0.5s;cursor:default;transform-style:preserve-3d}}
-.dcard::after{{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#94a3b8,#ffffff,#94a3b8);opacity:0.4;animation:bargl 3s ease-in-out infinite alternate}}
-@keyframes bargl{{from{{opacity:0.2}}to{{opacity:0.7}}}}
-.dcard:hover{{transform:perspective(400px) rotateX(8deg) rotateY(-3deg) translateY(-7px) scale(1.03)}}
-.dcard-top{{display:flex;align-items:center;justify-content:space-between}}
-.dcard-icon{{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#94a3b8,#ffffff);display:flex;align-items:center;justify-content:center;font-size:13px;color:#06061a;transition:transform 0.5s}}
-.dcard:hover .dcard-icon{{transform:rotate(-12deg) scale(1.15)}}
-.dcard-ping{{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 2s infinite}}
-.dcard-label{{font-family:"Space Mono",monospace;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3)}}
-.dcard-value{{font-size:0.95rem;font-weight:800;background:linear-gradient(135deg,#e2e8f0,#ffffff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}}
-.dcard-sub{{font-size:8px;color:rgba(255,255,255,0.2)}}
-.dcard-live{{font-size:8px;color:#10b981;font-weight:600}}
-.actions{{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px}}
-.btn-action{{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none}}
-.btn-action:hover{{transform:translateY(-3px)}}
-.btn-deploy{{background:linear-gradient(135deg,{p1},{p2});color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.3)}}
-.btn-github{{background:var(--glass);border:1px solid var(--border);color:#fff}}
-.btn-health{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
-.btn-metrics{{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.25);color:#eab308}}
-.status-bar{{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;margin-top:0.8rem}}
-.chip{{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:100px;font-family:"Space Mono",monospace;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;backdrop-filter:blur(16px);transition:all 0.3s}}
-.chip-green{{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);color:#10b981}}
-.chip-white{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
-.chip-mono{{background:var(--glass);border:1px solid var(--border);color:var(--muted)}}
-.demo-card{{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:1.8rem;margin-bottom:1.2rem;backdrop-filter:blur(20px)}}
-.demo-card-title{{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;display:flex;align-items:center;gap:10px}}
-.demo-card-desc{{font-size:13px;color:var(--muted);margin-bottom:1.2rem;line-height:1.7}}
-.demo-btn{{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:100px;font-family:"Space Mono",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;margin-right:8px;margin-bottom:8px}}
-.demo-btn:hover{{transform:translateY(-2px)}}
-.demo-btn-green{{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}}
-.demo-btn-yellow{{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);color:#eab308}}
-.demo-btn-primary{{background:linear-gradient(135deg,{p1},{p2});color:#fff}}
-.demo-btn-outline{{background:var(--glass);border:1px solid var(--border);color:rgba(255,255,255,0.7)}}
-.response-box{{display:none;margin-top:0.8rem;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.8rem;font-family:"Space Mono",monospace;font-size:11px;color:#10b981;white-space:pre-wrap;word-break:break-all}}
-.response-box.show{{display:block}}
-.stats-display{{display:none;margin-top:0.8rem;gap:8px}}
-.stats-display.show{{display:grid;grid-template-columns:1fr 1fr 1fr}}
-.stat-item{{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.8rem;text-align:center}}
-.stat-val{{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,{p1},{p2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-.stat-lbl{{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:3px}}
-.contact-card{{display:flex;flex-direction:column;align-items:center;gap:10px;padding:1.8rem 1rem;background:var(--card-bg);border:1px solid var(--border);border-radius:18px;text-decoration:none;transition:all 0.3s}}
-.contact-card:hover{{border-color:rgba(255,255,255,0.2);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.4)}}
-.contact-icon{{font-size:2rem}}
-.contact-label{{font-size:11px;font-family:"Space Mono",monospace;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}}
-.contact-val{{font-size:12px;color:rgba(255,255,255,0.6);text-align:center}}
-.scroll-top{{position:fixed;bottom:2rem;right:2rem;z-index:50;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 4px 20px rgba(124,58,237,0.4);transition:all 0.3s}}
-.scroll-top.show{{display:flex}}
-.scroll-top:hover{{transform:translateY(-3px) scale(1.05)}}
-footer{{position:relative;z-index:10;text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--border)}}
-.footer-text{{font-family:"Space Mono",monospace;font-size:10px;color:var(--muted);line-height:2}}
-.footer-text a{{color:{p1};text-decoration:none;transition:color 0.3s}}
-.footer-text a:hover{{color:{p2}}}
-@media(max-width:1024px){{.stat-row5{{grid-template-columns:repeat(3,1fr)}}}}
-@media(max-width:900px){{
-  .arch-row{{flex-wrap:wrap;gap:8px;justify-content:center}}
-  .arch-arrow{{display:none}}
-  .arch-node{{min-width:85px}}
+
+* {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+html {{ scroll-behavior: smooth; font-family: 'Plus Jakarta Sans', sans-serif; }}
+
+section[id], main[id] {{
+  scroll-margin-top: 100px;
 }}
-@media(max-width:768px){{
-  .nav-links{{display:none}}
-  .nav-hamburger{{display:flex}}
-  .cards{{grid-template-columns:1fr 1fr}}
-  .grid-2,.grid-3{{grid-template-columns:1fr}}
-  .stat-row5{{grid-template-columns:1fr 1fr}}
-  .pipeline{{padding:0.8rem 0.6rem;gap:0}}
-  .p-icon{{width:34px;height:34px}}
-  .p-icon i{{font-size:13px}}
-  .p-label{{font-size:6px;letter-spacing:0}}
-  .pconn{{min-width:6px}}
-  h1{{font-size:2.2rem}}
-  .sec-title{{font-size:2rem;letter-spacing:-0.5px}}
-  .section{{padding:4rem 1rem 3rem}}
-  .dash-wrap{{padding:4rem 1rem 2rem}}
-  .terminal-wrap{{border-radius:12px}}
-  .terminal-body{{font-size:11px;padding:1rem 1.2rem;line-height:1.8;min-height:auto}}
-  .terminal-bar{{padding:10px 14px}}
-  .t-dot{{width:10px;height:10px}}
-  .terminal-title{{font-size:10px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:180px}}
-  .t-line{{white-space:normal;word-break:break-word;font-size:10px}}
-  .pipe-num{{font-size:1.8rem;min-width:44px}}
-  .pipe-icon-box{{width:44px;height:44px;font-size:1.1rem}}
-  .pipe-step{{gap:1rem;padding:0.8rem}}
-  .demo-card{{padding:1.2rem}}
-  .stat-num5{{font-size:clamp(1.5rem,8vw,2.2rem)}}
-  .stat-card5{{padding:1.2rem 0.5rem}}
-  .scroll-top{{bottom:1rem;right:1rem;width:38px;height:38px;font-size:15px}}
+
+body {{
+  background: var(--bg-space);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  perspective: none;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 50% 15%, rgba(255, 107, 0, 0.14), transparent 50%),
+    radial-gradient(circle at 15% 75%, rgba(6, 182, 212, 0.12), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12), transparent 45%),
+    linear-gradient(180deg, #020617 0%, #030712 100%);
+  background-attachment: fixed;
 }}
-@media(max-width:480px){{
-  .cards{{grid-template-columns:1fr 1fr}}
-  .stat-row5{{grid-template-columns:1fr 1fr}}
-  .stat-card5:last-child{{grid-column:span 2}}
-  .scroll-cta,.actions{{flex-direction:column;align-items:stretch;width:100%;max-width:300px}}
-  .cta-btn,.btn-action{{justify-content:center}}
-  .pconn{{min-width:4px}}
-  .pipeline::before{{display:none}}
-  .hero-sub{{gap:6px;font-size:8px}}
-  h1{{font-size:1.9rem}}
-  .sec-title{{font-size:1.8rem}}
-  .pipe-step{{flex-wrap:wrap}}
-  .pipe-num{{display:none}}
+
+/* Atmospheric Stars Background */
+body::before {{
+  content: "";
+  position: fixed;
+  inset: -100px;
+  background-image: 
+    radial-gradient(2px 2px at 40px 60px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 120px 180px, rgba(255, 165, 0, 0.5), transparent),
+    radial-gradient(2px 2px at 280px 90px, rgba(6, 182, 212, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 400px 320px, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 300px 300px;
+  pointer-events: none;
+  z-index: 0;
+  animation: starRotate 140s linear infinite;
+}}
+
+@keyframes starRotate {{
+  0% {{ transform: rotate(0deg); }}
+  100% {{ transform: rotate(360deg); }}
+}}
+
+a {{ color: inherit; text-decoration: none; }}
+
+/* NAVIGATION BAR */
+.nav-space {{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+}}
+
+.nav-inner {{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}}
+
+.brand-space {{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}}
+
+.brand-space-icon {{
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--orange-launch), var(--aws-orange));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  font-size: 20px;
+  box-shadow: 0 0 25px rgba(255, 107, 0, 0.5);
+  transform: rotate(-5deg);
+}}
+
+.brand-space-text h1 {{
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #FFFFFF, #CBD5E1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}}
+
+.brand-space-text span {{
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--orange-launch);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}}
+
+.nav-links-space {{
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}}
+
+.nav-link-item {{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
+  transition: all 0.25s ease;
+}}
+
+.nav-link-item:hover {{
+  color: var(--orange-launch);
+  text-shadow: 0 0 10px rgba(255, 107, 0, 0.6);
+}}
+
+.live-indicator-pill {{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--sec-green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}}
+
+.pulse-dot-green {{
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--sec-green);
+  box-shadow: 0 0 10px var(--sec-green);
+  animation: pulseGreen 2s infinite;
+}}
+
+@keyframes pulseGreen {{
+  0%, 100% {{ transform: scale(0.95); opacity: 0.8; }}
+  50% {{ transform: scale(1.2); opacity: 1; }}
+}}
+
+/* BUTTON STYLES */
+.btn-launch {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 32px;
+  border-radius: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, var(--orange-launch), var(--aws-orange));
+  color: #FFF;
+  box-shadow: 0 12px 35px rgba(255, 107, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}}
+
+.btn-launch:hover {{
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 20px 45px rgba(255, 107, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}}
+
+.btn-explore {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  backdrop-filter: blur(10px);
+}}
+
+.btn-explore:hover {{
+  border-color: var(--cyan-beam);
+  color: var(--cyan-beam);
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+}}
+
+/* CONTAINER & WRAPPER */
+.section-wrapper {{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 110px 32px 80px;
+  position: relative;
+  z-index: 1;
+}}
+
+/* 1. HERO SECTION */
+.hero-space-container {{
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding-top: 30px;
+  transform-style: preserve-3d;
+}}
+
+.hero-status-pill {{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  color: var(--orange-launch);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}}
+
+.hero-headline {{
+  font-size: 62px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  max-width: 920px;
+}}
+
+.hero-headline .text-glow-orange {{
+  background: linear-gradient(135deg, #FFF, var(--orange-launch), var(--aws-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 107, 0, 0.4));
+}}
+
+.hero-subheadline {{
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 720px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}}
+
+.hero-cta-flex {{
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 50px;
+}}
+
+/* ROCKET LAUNCH FACILITY CANVAS */
+.rocket-launch-facility {{
+  width: 100%;
+  max-width: 920px;
+  height: 360px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.6), rgba(3, 7, 18, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-cinematic);
+  transform: rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  transition: transform 0.15s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}}
+
+.rocket-launch-pad {{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-bottom: 35px;
+}}
+
+.rocket-object {{
+  width: 90px;
+  height: 180px;
+  position: relative;
+  transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.7));
+  transform-style: preserve-3d;
+}}
+
+.rocket-object.launching {{
+  transform: translateY(-420px) scale(0.5);
+}}
+
+.rocket-flame {{
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 45px;
+  background: linear-gradient(180deg, #FFF, var(--orange-launch), transparent);
+  border-radius: 50% 50% 20% 20%;
+  filter: blur(2px);
+  box-shadow: 0 0 30px var(--orange-launch);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}}
+
+.rocket-object.launching .rocket-flame {{
+  opacity: 1;
+  animation: flameFlicker 0.1s infinite alternate;
+}}
+
+@keyframes flameFlicker {{
+  0% {{ transform: translateX(-50%) scaleY(1); }}
+  100% {{ transform: translateX(-50%) scaleY(1.3); }}
+}}
+
+.orbit-station-node {{
+  position: absolute;
+  padding: 10px 16px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}}
+
+.st-1 {{ top: 40px; left: 50px; }}
+.st-2 {{ top: 140px; left: 30px; }}
+.st-3 {{ top: 240px; left: 60px; }}
+.st-4 {{ top: 40px; right: 50px; }}
+.st-5 {{ top: 140px; right: 30px; }}
+.st-6 {{ top: 240px; right: 60px; }}
+
+/* STORY SECTIONS HEADER STYLING */
+.story-section {{
+  margin-bottom: 110px;
+}}
+
+.story-header {{
+  text-align: center;
+  margin-bottom: 50px;
+}}
+
+.story-num {{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--orange-launch);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}}
+
+.story-title {{
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}}
+
+.story-desc {{
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}}
+
+/* 2. PROJECT OVERVIEW CARD */
+.project-intro-card {{
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: var(--shadow-cinematic);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: center;
+}}
+
+/* EVOLUTION CARDS GRID */
+.evolution-cards-grid {{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}}
+
+.evolution-card {{
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}}
+
+.evolution-card:hover {{
+  border-color: var(--orange-launch);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(255, 107, 0, 0.2);
+}}
+
+.evolution-icon {{
+  font-size: 24px;
+  color: var(--orange-launch);
+  margin-bottom: 12px;
+}}
+
+/* ARCHITECTURE DIAGRAM FLOW */
+.arch-flow-box {{
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  padding: 32px;
+  margin-top: 40px;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.arch-flow-grid {{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}}
+
+.arch-node {{
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid var(--border-light);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  line-height: 1.3;
+}}
+
+.arch-node.arch-k8s {{
+  border-color: var(--k8s-blue);
+  color: #93C5FD;
+  background: rgba(50, 108, 229, 0.15);
+}}
+
+.arch-node.arch-aws {{
+  border-color: var(--aws-orange);
+  color: #FDBA74;
+  background: rgba(255, 153, 0, 0.15);
+}}
+
+.arch-node.arch-render {{
+  border-color: var(--purple-space);
+  color: #DDD6FE;
+  background: rgba(139, 92, 246, 0.15);
+}}
+
+.arch-arrow {{
+  color: var(--orange-launch);
+  font-weight: 900;
+  font-size: 13px;
+}}
+
+/* 3. 16-STAGE DEPLOYMENT JOURNEY GRID & INTERACTIVE CARDS */
+.journey-16-grid {{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}}
+
+.journey-step-card {{
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 185px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}}
+
+.journey-step-card:hover, .journey-step-card:focus, .journey-step-card.pop-active {{
+  border-color: var(--orange-launch);
+  transform: translateY(-6px) translateZ(15px);
+  box-shadow: 0 15px 35px rgba(255, 107, 0, 0.25);
+}}
+
+.step-num-badge {{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--orange-launch);
+  background: rgba(255, 107, 0, 0.12);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  width: fit-content;
+}}
+
+.step-hover-hint {{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan-beam);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}}
+
+.journey-step-card:hover .step-hover-hint {{
+  opacity: 1;
+  color: var(--orange-launch);
+}}
+
+/* CINEMATIC STAGE POPOVER PANEL */
+.stage-popover {{
+  position: fixed;
+  z-index: 999999;
+  width: 360px;
+  max-width: 90vw;
+  background: rgba(10, 18, 32, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid var(--orange-launch);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 107, 0, 0.3);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}}
+
+.stage-popover.visible {{
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}}
+
+.popover-header {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}}
+
+.popover-stage-pill {{
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 107, 0, 0.14);
+  color: var(--orange-launch);
+  border: 1px solid rgba(255, 107, 0, 0.35);
+}}
+
+.popover-title {{
+  font-size: 15px;
+  font-weight: 850;
+  color: #F8FAFC;
+  letter-spacing: 0.1px;
+  line-height: 1.3;
+}}
+
+.popover-field {{
+  margin-bottom: 13px;
+}}
+
+.popover-label {{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--cyan-beam);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}}
+
+.popover-text {{
+  font-size: 12px;
+  color: #CBD5E1;
+  line-height: 1.55;
+}}
+
+.popover-flow-box {{
+  background: rgba(3, 7, 18, 0.72);
+  border: 1px solid rgba(6, 182, 212, 0.22);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--cyan-beam);
+  font-weight: 700;
+  line-height: 1.5;
+  box-shadow: inset 0 0 18px rgba(6, 182, 212, 0.04);
+}}
+
+/* 4. START -> FINISH SUMMARY BANNER */
+.start-finish-banner {{
+  background: linear-gradient(135deg, rgba(255, 107, 0, 0.12), rgba(6, 182, 212, 0.12));
+  border: 1px solid var(--border-orange);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  margin-top: 36px;
+}}
+
+/* 5. INSIDE THE PIPELINE 3-LAYERS */
+.layers-pipeline-grid {{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}}
+
+.layer-card-3d {{
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(5, 11, 20, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.layer-card-3d h3 {{
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: var(--orange-launch);
+}}
+
+/* 6. CONTAINERIZATION (DOCKER) */
+.docker-assembly-chamber {{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(10, 15, 30, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 28px;
+  padding: 44px;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.container-physical-stack {{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  perspective: 1000px;
+}}
+
+.stack-block-3d {{
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: rotateX(20deg) rotateY(-5deg);
+  transition: transform 0.4s ease, border-color 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}}
+
+.container-physical-stack:hover .stack-block-3d:nth-child(1) {{ transform: rotateX(15deg) translateZ(30px); border-color: var(--orange-launch); }}
+.container-physical-stack:hover .stack-block-3d:nth-child(2) {{ transform: rotateX(15deg) translateZ(15px); border-color: var(--cyan-beam); }}
+.container-physical-stack:hover .stack-block-3d:nth-child(3) {{ transform: rotateX(15deg) translateZ(0px); border-color: var(--purple-space); }}
+
+/* 7. SECURITY SCANNING CHAMBER (TRIVY) */
+.security-laser-vault {{
+  background: linear-gradient(135deg, rgba(20, 10, 30, 0.95), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 28px;
+  padding: 44px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.laser-scan-line {{
+  position: absolute;
+  top: 0; bottom: 0; left: -20%;
+  width: 15%;
+  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.4), transparent);
+  animation: laserSweep 5s linear infinite;
+  pointer-events: none;
+}}
+
+@keyframes laserSweep {{
+  0% {{ left: -20%; }}
+  100% {{ left: 120%; }}
+}}
+
+.sec-checks-grid {{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}}
+
+.sec-check-card {{
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 22px;
+  text-align: center;
+}}
+
+/* 8. KUBERNETES CITY (KIND CI VALIDATION) */
+.k8s-city-vault {{
+  background: linear-gradient(135deg, rgba(5, 11, 20, 0.95), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(50, 108, 229, 0.35);
+  border-radius: 28px;
+  padding: 44px;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.k8s-pods-flex {{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}}
+
+.pod-active-card {{
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid var(--k8s-blue);
+  border-radius: 20px;
+  padding: 28px 40px;
+  text-align: center;
+  box-shadow: 0 0 35px rgba(50, 108, 229, 0.3);
+  transition: transform 0.3s ease;
+}}
+
+.pod-active-card:hover {{
+  transform: scale(1.05);
+}}
+
+/* 9. CLOUD EXPANSE (AWS & RENDER) */
+.cloud-expanse-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}}
+
+.cloud-zone-card {{
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(10, 15, 30, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: var(--shadow-cinematic);
+  position: relative;
+  overflow: hidden;
+}}
+
+.cloud-zone-card.aws-zone {{
+  border-color: rgba(255, 153, 0, 0.35);
+}}
+
+.cloud-zone-card.render-zone {{
+  border-color: rgba(139, 92, 246, 0.35);
+}}
+
+/* 10. OBSERVABILITY CONTROL ROOM */
+.observability-control-room {{
+  background: linear-gradient(135deg, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.95));
+  border: 1px solid var(--border-light);
+  border-radius: 28px;
+  padding: 44px;
+  box-shadow: var(--shadow-cinematic);
+}}
+
+.monitors-grid-3d {{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}}
+
+.monitor-hud-card {{
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  padding: 22px;
+}}
+
+.monitor-val-big {{
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--cyan-beam);
+  margin: 8px 0;
+}}
+
+.terminal-dev-hud {{
+  background: #020617;
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 30px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}}
+
+.terminal-hud-header {{
+  background: #0F172A;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}}
+
+.terminal-hud-body {{
+  padding: 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 2.2;
+  color: #CBD5E1;
+}}
+
+/* 11. WHY THESE TOOLS GRID — 5 COLUMNS ON DESKTOP FOR 15 CARDS (5+5+5 NO GAP) */
+.tools-purpose-grid {{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}}
+
+.tool-purpose-card {{
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  padding: 22px;
+  transition: all 0.3s ease;
+}}
+
+.tool-purpose-card:hover {{
+  border-color: var(--cyan-beam);
+  transform: translateY(-4px);
+}}
+
+/* 12. PROJECT RESULTS CHECKLIST GRID — 3 COLUMNS FOR 15 ITEMS (3+3+3+3+3 NO GAP) */
+.results-check-grid {{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}}
+
+.check-item-card {{
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sec-green);
+}}
+
+/* 13. ABOUT THE BUILDER (PERSONAL PORTFOLIO CARD) */
+.about-builder-section {{
+  margin-top: 140px;
+  margin-bottom: 60px;
+}}
+
+.profile-card-3d {{
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
+  border: 2px solid var(--orange-launch);
+  border-radius: 32px;
+  padding: 48px;
+  box-shadow: 0 30px 90px rgba(255, 107, 0, 0.3);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+}}
+
+.profile-links-flex {{
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}}
+
+.link-btn-social {{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  transition: all 0.25s ease;
+}}
+
+.link-btn-social:hover {{
+  background: var(--orange-launch);
+  color: #FFF;
+  border-color: var(--orange-launch);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(255, 107, 0, 0.4);
+}}
+
+/* MODAL LAUNCH DIALOG - ROBUST Z-INDEX & LAYERING */
+.modal-launch-overlay {{
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(2, 6, 23, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}}
+
+.modal-launch-overlay.active {{
+  display: flex !important;
+}}
+
+.modal-launch-box {{
+  position: relative;
+  z-index: 10000;
+  max-width: 520px;
+  width: 100%;
+  background: linear-gradient(145deg, #0F172A, #030712);
+  border: 2px solid var(--orange-launch);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 30px 90px rgba(255, 107, 0, 0.5), 0 0 50px rgba(0,0,0,0.9);
+  color: var(--text-main);
+}}
+
+/* FOOTER */
+footer {{
+  border-top: 1px solid var(--border-light);
+  padding: 50px 36px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: #020617;
+  line-height: 1.8;
+}}
+
+footer a {{
+  color: var(--orange-launch);
+  transition: color 0.2s ease;
+}}
+
+footer a:hover {{
+  color: var(--cyan-beam);
+  text-decoration: underline;
+}}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 1280px) {{
+  .tools-purpose-grid {{ grid-template-columns: repeat(3, 1fr); }}
+}}
+
+@media (max-width: 1024px) {{
+  .journey-16-grid {{ grid-template-columns: repeat(2, 1fr); }}
+  .evolution-cards-grid {{ grid-template-columns: repeat(2, 1fr); }}
+  .layers-pipeline-grid {{ grid-template-columns: 1fr; }}
+  .docker-assembly-chamber {{ grid-template-columns: 1fr; }}
+  .cloud-expanse-grid {{ grid-template-columns: 1fr; }}
+  .monitors-grid-3d {{ grid-template-columns: 1fr; }}
+  .results-check-grid {{ grid-template-columns: repeat(2, 1fr); }}
+  .profile-card-3d {{ grid-template-columns: 1fr; }}
+}}
+
+@media (max-width: 768px) {{
+  .tools-purpose-grid {{ grid-template-columns: repeat(2, 1fr); }}
+}}
+
+@media (max-width: 640px) {{
+  .nav-links-space {{ display: none; }}
+  .hero-headline {{ font-size: 38px; }}
+  .journey-16-grid {{ grid-template-columns: 1fr; }}
+  .evolution-cards-grid {{ grid-template-columns: 1fr; }}
+  .results-check-grid {{ grid-template-columns: 1fr; }}
+  .tools-purpose-grid {{ grid-template-columns: 1fr; }}
+}}
+
+@media (prefers-reduced-motion: reduce) {{
+  * {{ animation: none !important; transition: none !important; transform: none !important; }}
 }}
 </style>
 </head>
 <body>
-<canvas id="cv"></canvas>
-<div class="vig"></div>
 
-<nav>
-  <button class="nav-logo" onclick="goTo('dashboard')" aria-label="Home">
-    <div class="nav-logo-dots">
-      <div class="nav-logo-dot" style="background:#FF9900"></div>
-      <div class="nav-logo-dot" style="background:#1D9E75"></div>
-      <div class="nav-logo-dot" style="background:#185FA5"></div>
+<!-- NAVIGATION -->
+<nav class="nav-space">
+  <div class="nav-inner">
+    <a href="#top" class="brand-space">
+      <div class="brand-space-icon">
+        <i class="fa-solid fa-rocket"></i>
+      </div>
+      <div class="brand-space-text">
+        <h1>MULTI-CLOUD</h1>
+        <span>CI/CD DEPLOYMENT SYSTEM</span>
+      </div>
+    </a>
+    
+    <ul class="nav-links-space">
+      <li><a href="#overview" class="nav-link-item">Overview</a></li>
+      <li><a href="#evolution" class="nav-link-item">Evolution</a></li>
+      <li><a href="#journey" class="nav-link-item">Journey</a></li>
+      <li><a href="#pipeline" class="nav-link-item">Pipeline</a></li>
+      <li><a href="#k8s" class="nav-link-item">Kubernetes</a></li>
+      <li><a href="#cloud" class="nav-link-item">Cloud</a></li>
+      <li><a href="#observability" class="nav-link-item">Observability</a></li>
+      <li><a href="#builder" class="nav-link-item">About Me</a></li>
+    </ul>
+    
+    <div class="live-indicator-pill">
+      <span class="pulse-dot-green"></span> SYSTEM ONLINE
     </div>
-    <div class="nav-logo-textblock">
-      <span class="nav-logo-name">MultiCloud</span>
-      <span class="nav-logo-sub">AWS · GCP · Azure</span>
-    </div>
-  </button>
-  <div class="nav-links">
-    <button class="nav-link" onclick="goTo('dashboard')">Home</button>
-    <button class="nav-link" onclick="goTo('about')">About</button>
-    <button class="nav-link" onclick="goTo('architecture')">Architecture</button>
-    <button class="nav-link" onclick="goTo('techstack')">Tech Stack</button>
-    <button class="nav-link" onclick="goTo('pipeline-section')">Pipeline</button>
-    <button class="nav-link" onclick="goTo('demo')">Demo</button>
-    <button class="nav-link" onclick="goTo('contact-section')">Contact</button>
-  </div>
-  <div class="nav-right">
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="nav-github"><i class="fa-brands fa-github"></i></a>
-    <div class="live-pill"><span class="live-dot"></span>LIVE</div>
-    <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </nav>
 
-<div id="mobile-nav" style="display:none;position:fixed;top:52px;left:0;right:0;z-index:99;background:rgba(6,6,26,0.98);border-bottom:1px solid var(--border);padding:1.2rem 2rem;backdrop-filter:blur(20px)">
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <button class="nav-link" onclick="goTo('dashboard');closeMobileNav()">Home</button>
-    <button class="nav-link" onclick="goTo('about');closeMobileNav()">About</button>
-    <button class="nav-link" onclick="goTo('architecture');closeMobileNav()">Architecture</button>
-    <button class="nav-link" onclick="goTo('techstack');closeMobileNav()">Tech Stack</button>
-    <button class="nav-link" onclick="goTo('pipeline-section');closeMobileNav()">Pipeline</button>
-    <button class="nav-link" onclick="goTo('demo');closeMobileNav()">Demo</button>
-    <button class="nav-link" onclick="goTo('contact-section');closeMobileNav()">Contact</button>
-  </div>
-</div>
+<!-- MAIN WRAPPER -->
+<main class="section-wrapper" id="top">
 
-<div class="modal" id="deployModal">
-  <div class="modal-box">
-    <div class="modal-title">🚀 Trigger Deployment</div>
-    <div class="modal-sub">This will trigger a real GitHub Actions CI/CD pipeline — building a new Docker image and deploying automatically!</div>
-    <div class="modal-btns">
-      <button class="modal-btn modal-confirm" onclick="confirmDeploy()">Deploy Now</button>
-      <button class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
+  <!-- 1. HERO SECTION -->
+  <section class="hero-space-container">
+    <div class="hero-status-pill">
+      <i class="fa-solid fa-satellite"></i> AUTOMATED DEPLOYMENT FACILITY • V3 RELEASE ENGINEERING
     </div>
-    <div class="modal-status" id="deploy-status"></div>
-  </div>
-</div>
 
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({{top:0,behavior:'smooth'}})" aria-label="Scroll to top">↑</button>
+    <h1 class="hero-headline">
+      MULTI-CLOUD<br>
+      <span class="text-glow-orange">DEPLOYMENT SYSTEM</span>
+    </h1>
 
-<div id="dashboard" class="dash-wrap">
-  <div class="pill-badge"><span class="pill-dot"></span>{t['short']} &nbsp;·&nbsp; {t['label']} &nbsp;·&nbsp; Live</div>
-  <div class="hero-eye">Multi · Cloud · Infrastructure</div>
-  <h1><span class="w">MULTI</span><span class="a">CLOUD</span><br><span class="w">CI</span><span class="a">/CD</span></h1>
-  <div class="hero-sub">Kubernetes<span class="hero-dot"></span>Docker<span class="hero-dot"></span>GitHub Actions<span class="hero-dot"></span>Terraform<span class="hero-dot"></span>AWS</div>
-  <div class="scroll-cta">
-    <button class="cta-btn cta-primary" onclick="goTo('about')"><i class="fa-solid fa-circle-info"></i> Learn More</button>
-    <button class="cta-btn cta-green" onclick="goTo('demo')"><i class="fa-solid fa-rocket"></i> Live Demo</button>
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="cta-btn cta-outline"><i class="fa-brands fa-github"></i> GitHub</a>
-  </div>
-  <div class="pipeline">
-    <div class="pstep"><div class="p-icon"><i class="fa-solid fa-code"></i></div><div class="p-label">Code</div></div>
-    <div class="pconn"><div class="pline"></div></div>
-    <div class="pstep"><div class="p-icon"><i class="fa-brands fa-github"></i></div><div class="p-label">GitHub</div></div>
-    <div class="pconn"><div class="pline"></div></div>
-    <div class="pstep"><div class="p-icon"><i class="fa-brands fa-docker"></i></div><div class="p-label">Docker</div></div>
-    <div class="pconn"><div class="pline"></div></div>
-    <div class="pstep"><div class="p-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M16 2a1.3 1.3 0 0 0-.5.1L5.1 7.2a1.3 1.3 0 0 0-.7 1L3.1 19.7a1.3 1.3 0 0 0 .3 1l7.6 8.6a1.3 1.3 0 0 0 1 .4h8.1a1.3 1.3 0 0 0 1-.4l7.6-8.6a1.3 1.3 0 0 0 .3-1L27.6 8.2a1.3 1.3 0 0 0-.7-1L16.6 2.1A1.3 1.3 0 0 0 16 2zm.1 2.1l9.8 4.8 1.2 10.7-7 7.9h-7.9l-7-7.9 1.2-10.7zm-.1 4a1 1 0 0 0-1 1v6.2l-4 2.4a1 1 0 1 0 1 1.7L16 17l4 2.4a1 1 0 1 0 1-1.7l-4-2.4V9a1 1 0 0 0-1-1z"/></svg></div><div class="p-label">K8s</div></div>
-    <div class="pconn"><div class="pline"></div></div>
-    <div class="pstep"><div class="p-icon">{cloud_icon}</div><div class="p-label">{cloud_label}</div></div>
-  </div>
-  <div class="cards">
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-cloud"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Cloud</div><div class="dcard-value">{cloud.upper()}</div><div class="dcard-sub">Environment</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-location-dot"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Region</div><div class="dcard-value">{region}</div><div class="dcard-sub">Zone</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-microchip"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Requests</div><div class="dcard-value" id="req-count">--</div><div class="dcard-live">↻ live</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-clock"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Uptime</div><div class="dcard-value" id="uptime">--</div><div class="dcard-live">↻ live</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-brands fa-docker"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Container</div><div class="dcard-value">Docker</div><div class="dcard-sub">Registry</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-brands fa-python"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Python</div><div class="dcard-value">{python_ver}</div><div class="dcard-sub">Runtime</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-circle-nodes"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Replicas</div><div class="dcard-value">2 / 2</div><div class="dcard-sub">Healthy</div></div>
-    <div class="dcard"><div class="dcard-top"><div class="dcard-icon"><i class="fa-solid fa-heart-pulse"></i></div><div class="dcard-ping"></div></div><div class="dcard-label">Health</div><div class="dcard-value" id="health-val">--</div><div class="dcard-live">↻ live</div></div>
-  </div>
-  <div class="actions">
-    <button class="btn-action btn-deploy" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
-    <a href="https://github.com/{github_repo}/actions" target="_blank" rel="noopener" class="btn-action btn-github"><i class="fa-brands fa-github"></i> View Pipeline</a>
-    <a href="/health" target="_blank" rel="noopener" class="btn-action btn-health"><i class="fa-solid fa-heart-pulse"></i> Health Check</a>
-    <a href="/metrics" target="_blank" rel="noopener" class="btn-action btn-metrics"><i class="fa-solid fa-chart-bar"></i> Metrics</a>
-  </div>
-  <div class="status-bar">
-    <div class="chip chip-green"><span style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:blink 1.5s infinite;display:inline-block"></span>All Systems Operational</div>
-    <div class="chip chip-white"><i class="fa-solid fa-bolt"></i> Auto-Deploy Active</div>
-    <div class="chip chip-mono" id="clk">--:--:--</div>
-  </div>
-</div>
+    <p class="hero-subheadline">
+      From code commit to validated release — follow software changes physically moving through GitHub Actions, Docker, Trivy Security, Kind Kubernetes, AWS EC2, and Render.
+    </p>
 
-<div class="alt-bg">
-<div id="about" class="section">
-  <div class="section-tag">About This Project</div>
-  <div class="sec-title fade-in"><span class="w">WHAT IS</span><br><span class="a">CI/CD?</span></div>
-  <div class="sec-desc fade-in">CI/CD stands for Continuous Integration and Continuous Deployment — the method used by Netflix, Amazon, Google and every modern tech company to ship software fast and reliably.</div>
-  <div class="terminal-wrap fade-in">
-    <div class="terminal-bar">
-      <div class="t-dot" style="background:#ef4444"></div>
-      <div class="t-dot" style="background:#f59e0b"></div>
-      <div class="t-dot" style="background:#10b981"></div>
-      <span class="terminal-title">samuel@multicloud-cicd — GitHub Actions — Run #47</span>
+    <div class="hero-cta-flex">
+      <button class="btn-launch" onclick="executeInteractiveLaunchSequence(event)">
+        <i class="fa-solid fa-rocket"></i> LAUNCH DEPLOYMENT
+      </button>
+      <button class="btn-explore" onclick="document.getElementById('journey').scrollIntoView({{behavior:'smooth'}})">
+        <i class="fa-solid fa-compass"></i> EXPLORE JOURNEY
+      </button>
     </div>
-    <div class="terminal-body">
-      <div class="t-line" id="tl0"><span class="t-prompt">samuel@multicloud:~/multicloud-cicd$</span> <span class="t-cmd">git push origin main</span></div>
-      <div class="t-line" id="tl1"><span class="t-muted">Enumerating objects: 5, done. Writing objects: 100%</span></div>
-      <div class="t-line" id="tl2"><span class="t-green">✓ GitHub Actions triggered</span><span class="t-badge-blue">Build #47</span></div>
-      <div class="t-line" id="tl3"><span class="t-muted">· Step 1/4 </span><span class="t-blue">Checkout repository...</span><span class="t-muted"> (0.8s)</span></div>
-      <div class="t-line" id="tl4"><span class="t-green">✓ Set up Docker Buildx</span><span class="t-muted"> (1.2s)</span></div>
-      <div class="t-line" id="tl5"><span class="t-green">✓ Build Docker image</span><span class="t-muted"> → </span><span class="t-blue">josesamuel14/multicloud-app:latest</span><span class="t-muted"> (9.4s)</span></div>
-      <div class="t-line" id="tl6"><span class="t-green">✓ Push to Docker Hub</span><span class="t-muted"> (4.1s)</span></div>
-      <div class="t-line" id="tl7"><span class="t-yellow">✓ Deploying to AWS EC2 ap-south-1 (Mumbai)...</span></div>
-      <div class="t-line" id="tl8"><span class="t-muted">&nbsp;&nbsp;↳ SSH connect → docker pull → restart container</span></div>
-      <div class="t-line" id="tl9"><span class="t-green">✓ <strong>Pipeline complete!</strong></span><span class="t-badge">26s total</span><span class="t-muted"> 🚀 Live on multicloud-cicd.onrender.com</span></div>
-      <div class="t-line" id="tl10"><span class="t-prompt">samuel@multicloud:~/multicloud-cicd$</span> <span class="t-cursor"></span></div>
-    </div>
-  </div>
-  <div class="stat-row5 fade-in">
-    <div class="stat-card5"><div class="stat-num5" id="about-req">0</div><div class="stat-label5">Pipeline<br>Runs</div></div>
-    <div class="stat-card5"><div class="stat-num5">60s</div><div class="stat-label5">Deploy<br>Time</div></div>
-    <div class="stat-card5"><div class="stat-num5">8</div><div class="stat-label5">Tools<br>Used</div></div>
-    <div class="stat-card5"><div class="stat-num5">2</div><div class="stat-label5">Cloud<br>Providers</div></div>
-    <div class="stat-card5"><div class="stat-num5">100%</div><div class="stat-label5">Automated</div></div>
-  </div>
-  <div class="divider"></div>
-  <div class="grid-2">
-    <div class="card fade-in"><div class="card-icon">⚡</div><div class="card-title">Continuous Integration</div><div class="card-desc">Every code push automatically builds and tests the application. Bugs caught immediately — no more "it works on my machine" problems. Code is always in a deployable state.</div></div>
-    <div class="card fade-in"><div class="card-icon">🚀</div><div class="card-title">Continuous Deployment</div><div class="card-desc">After CI passes, the new version deploys to production automatically. Push code — users see it in 60 seconds. Zero manual steps, zero human error.</div></div>
-  </div>
-  <div class="grid-3">
-    <div class="card fade-in"><div class="card-icon">😰</div><div class="card-title">Without CI/CD</div><div class="card-desc">Deployments take hours. Bugs discovered late. Manual server configuration. Teams move slowly with fear of breaking things.</div></div>
-    <div class="card fade-in"><div class="card-icon">✅</div><div class="card-title">With CI/CD</div><div class="card-desc">Deployments take 60 seconds. Bugs caught instantly. Infrastructure as code. Teams ship with confidence multiple times a day.</div></div>
-    <div class="card fade-in"><div class="card-icon">🏢</div><div class="card-title">Real World Usage</div><div class="card-desc">Netflix deploys 100+ times daily. Amazon every 11 seconds. Swiggy, Zomato, Freshworks all use CI/CD pipelines like this one.</div></div>
-  </div>
-  <div class="card fade-in" style="max-width:520px">
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
-      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,{p1},{p2});display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👨‍💻</div>
-      <div>
-        <div style="font-size:1.05rem;font-weight:800">Samuel</div>
-        <div style="font-size:12px;color:var(--muted)">Aspiring DevOps and Cloud Engineer</div>
-        <div style="font-size:12px;color:var(--muted)">Final Year CSE · Prathyusha Engineering College</div>
+
+    <!-- 3D ROCKET LAUNCH CANVAS -->
+    <div class="rocket-launch-facility">
+      <div class="orbit-station-node st-1" id="st-code"><i class="fa-solid fa-code"></i> Code Commit</div>
+      <div class="orbit-station-node st-2" id="st-github"><i class="fa-brands fa-github"></i> GitHub Actions</div>
+      <div class="orbit-station-node st-3" id="st-docker"><i class="fa-brands fa-docker"></i> Docker Build</div>
+      <div class="orbit-station-node st-4" id="st-trivy"><i class="fa-solid fa-shield-halved"></i> Trivy Scan</div>
+      <div class="orbit-station-node st-5" id="st-k8s"><i class="fa-solid fa-dharmachakra"></i> Kind K8s</div>
+      <div class="orbit-station-node st-6" id="st-cloud"><i class="fa-solid fa-cloud"></i> AWS + Render</div>
+
+      <div class="rocket-launch-pad">
+        <div class="rocket-object" id="mainRocket">
+          <svg viewBox="0 0 100 200" width="100%" height="100%">
+            <defs>
+              <linearGradient id="rocketBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="100%" stop-color="#CBD5E1" />
+              </linearGradient>
+              <linearGradient id="rocketNoseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF6B00" />
+                <stop offset="100%" stop-color="#FF9900" />
+              </linearGradient>
+            </defs>
+            <path d="M50 10 Q65 50 65 70 L35 70 Q35 50 50 10 Z" fill="url(#rocketNoseGrad)" />
+            <rect x="35" y="70" width="30" height="80" rx="4" fill="url(#rocketBodyGrad)" />
+            <circle cx="50" cy="100" r="8" fill="#099CEC" stroke="#1E293B" stroke-width="2" />
+            <path d="M35 120 L15 160 L35 150 Z" fill="#FF6B00" />
+            <path d="M65 120 L85 160 L65 150 Z" fill="#FF6B00" />
+            <rect x="42" y="150" width="16" height="10" fill="#475569" />
+          </svg>
+          <div class="rocket-flame"></div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--orange-launch); font-weight: 800; margin-top: 14px;">
+          DEPLOYMENT ROCKET V3
+        </div>
       </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-github"></i> GitHub</a>
-      <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-      <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:9px;text-decoration:none"><i class="fa-solid fa-envelope"></i> Email</a>
+  </section>
+
+  <!-- 2. PROJECT OVERVIEW & INTRODUCTION -->
+  <section class="story-section" id="overview">
+    <div class="story-header">
+      <div class="story-num">PROJECT OVERVIEW</div>
+      <h2 class="story-title">What Is This System?</h2>
+      <p class="story-desc">A production-style DevOps architecture demonstrating automated software release delivery.</p>
+    </div>
+
+    <div class="project-intro-card">
+      <div>
+        <h3 style="font-size: 26px; font-weight: 900; margin-bottom: 14px;">Automated Release Engineering</h3>
+        <p style="font-size: 15px; color: var(--text-dim); line-height: 1.7; margin-bottom: 20px;">
+          This project demonstrates a production-style CI/CD pipeline built with <strong>Python Flask</strong>, <strong>Docker</strong>, <strong>Kubernetes (Kind)</strong>, <strong>GitHub Actions</strong>, <strong>Trivy Security</strong>, <strong>Terraform IaC</strong>, <strong>AWS EC2</strong>, and <strong>Render</strong>. Every code modification passes thorough automated quality gates before release image publication.
+        </p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a class="btn-launch" href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-github"></i> VIEW SOURCE CODE
+          </a>
+          <a class="btn-explore" href="https://multicloud-cicd.onrender.com/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-globe"></i> OPEN LIVE DEMO
+          </a>
+        </div>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.4); border-radius: 20px; padding: 24px; border: 1px solid var(--border-light);">
+        <h4 style="font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--orange-launch); margin-bottom: 12px;">PROJECT CORE HIGHLIGHTS</h4>
+        <ul style="font-size: 13px; color: var(--text-dim); line-height: 2; list-style: none;">
+          <li>✓ Automated Pytest Suite Execution</li>
+          <li>✓ Container Build & Smoke Validation</li>
+          <li>✓ Trivy Security Vulnerability Scan</li>
+          <li>✓ Kind Kubernetes CI Cluster Verification</li>
+          <li>✓ 2 Pod Replicas Availability Check</li>
+          <li>✓ Traceable Release Images on Docker Hub</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. NEW SECTION: FROM FOUNDATION TO RELEASE ENGINEERING -->
+  <section class="story-section" id="evolution">
+    <div class="story-header">
+      <div class="story-num">PROJECT EVOLUTION</div>
+      <h2 class="story-title">From Foundation to Release Engineering</h2>
+      <p class="story-desc">
+        This system evolved from an initial Flask-based CI/CD implementation into a broader release-engineering project. The current version preserves the core application and deployment capabilities while adding stronger automated validation, containerization, security scanning, Kubernetes validation, infrastructure-as-code, cloud environments, and observability.
+      </p>
+    </div>
+
+    <!-- VISUAL PROGRESSION DIAGRAM -->
+    <div class="arch-flow-box">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--orange-launch); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-align: center;">
+        ENGINEERING PROGRESSION
+      </div>
+      <div class="arch-flow-grid">
+        <div class="arch-node">PROJECT FOUNDATION</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Python Flask Application</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">CI/CD Automation</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Containerization</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node arch-k8s">Kubernetes Validation</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Security Scanning</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node arch-aws">Infrastructure as Code</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node arch-render">Cloud Environments</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Observability</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node" style="border-color: var(--orange-launch); color: var(--orange-launch);">RELEASE ENGINEERING</div>
+      </div>
+    </div>
+
+    <!-- WHAT THE EVOLUTION ADDS (8 CARDS) -->
+    <div class="evolution-cards-grid">
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-code"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--text-main);">FOUNDATION</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Python Flask application and existing service functionality.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-brands fa-github"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--cyan-beam);">AUTOMATION</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">GitHub Actions CI workflow and automated testing.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-brands fa-docker"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--docker-blue);">CONTAINERIZATION</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Docker image build and container smoke validation.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--sec-red);">SECURITY</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Trivy vulnerability scanning during CI.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-dharmachakra"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--k8s-blue);">KUBERNETES</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Kind-based CI validation, rollout checks, and replica verification.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: #844FBA;">INFRASTRUCTURE</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Terraform-managed cloud infrastructure.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-cloud"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--aws-orange);">CLOUD</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">AWS EC2 as a cloud deployment target and Render as the public live demo environment.</p>
+      </div>
+
+      <div class="evolution-card">
+        <div class="evolution-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--purple-space);">OBSERVABILITY</h4>
+        <p style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">Prometheus / Grafana monitoring and metrics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 16-STAGE HOW THE DEPLOYMENT WORKS (INTERACTIVE HOVER/TAP POPOVER CARDS) -->
+  <section class="story-section" id="journey">
+    <div class="story-header">
+      <div class="story-num">THE 16-STAGE JOURNEY</div>
+      <h2 class="story-title">How The Deployment Works</h2>
+      <p class="story-desc">From code commit to validated release — hover or tap any stage to inspect its physical workflow, rationale, and output.</p>
+    </div>
+
+    <div class="journey-16-grid">
+      <!-- 01 -->
+      <div class="journey-step-card" data-stage="01" tabindex="0"
+           onmouseenter="showStagePopover(this, '01')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '01')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '01', event)">
+        <span class="step-num-badge">01 — COMMIT</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Code Commit</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Developer changes application code.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 02 -->
+      <div class="journey-step-card" data-stage="02" tabindex="0"
+           onmouseenter="showStagePopover(this, '02')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '02')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '02', event)">
+        <span class="step-num-badge">02 — GITHUB</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">GitHub Repository</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Code is pushed to the repository.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 03 -->
+      <div class="journey-step-card" data-stage="03" tabindex="0"
+           onmouseenter="showStagePopover(this, '03')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '03')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '03', event)">
+        <span class="step-num-badge">03 — GITHUB ACTIONS</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">GitHub Actions</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">CI workflow starts.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 04 -->
+      <div class="journey-step-card" data-stage="04" tabindex="0"
+           onmouseenter="showStagePopover(this, '04')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '04')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '04', event)">
+        <span class="step-num-badge">04 — PYTEST</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Pytest Execution</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Automated tests run.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 05 -->
+      <div class="journey-step-card" data-stage="05" tabindex="0"
+           onmouseenter="showStagePopover(this, '05')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '05')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '05', event)">
+        <span class="step-num-badge">05 — DOCKER BUILD</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Docker Build</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Application container image is built.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 06 -->
+      <div class="journey-step-card" data-stage="06" tabindex="0"
+           onmouseenter="showStagePopover(this, '06')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '06')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '06', event)">
+        <span class="step-num-badge">06 — DOCKER SMOKE TEST</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Docker Smoke Test</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Container health endpoint is checked.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 07 -->
+      <div class="journey-step-card" data-stage="07" tabindex="0"
+           onmouseenter="showStagePopover(this, '07')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '07')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '07', event)">
+        <span class="step-num-badge">07 — TRIVY SCAN</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Trivy Security Scan</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Container is scanned for vulnerabilities.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 08 -->
+      <div class="journey-step-card" data-stage="08" tabindex="0"
+           onmouseenter="showStagePopover(this, '08')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '08')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '08', event)">
+        <span class="step-num-badge">08 — KIND K8S CHECK</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Kind K8s CI Check</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Image is validated in a Kind Kubernetes cluster.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 09 -->
+      <div class="journey-step-card" data-stage="09" tabindex="0"
+           onmouseenter="showStagePopover(this, '09')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '09')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '09', event)">
+        <span class="step-num-badge">09 — ROLLOUT</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Rollout Check</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Kubernetes deployment rollout is checked.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 10 -->
+      <div class="journey-step-card" data-stage="10" tabindex="0"
+           onmouseenter="showStagePopover(this, '10')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '10')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '10', event)">
+        <span class="step-num-badge">10 — 2 REPLICAS READY</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">2 Replicas Ready</h4>
+        <p style="font-size: 12px; color: var(--sec-green); margin-top: 4px; font-weight: 700;">Expected replicas are verified.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 11 -->
+      <div class="journey-step-card" data-stage="11" tabindex="0"
+           onmouseenter="showStagePopover(this, '11')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '11')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '11', event)">
+        <span class="step-num-badge">11 — HEALTH CHECK</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Health Check</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Service health endpoint is verified.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 12 -->
+      <div class="journey-step-card" data-stage="12" tabindex="0"
+           onmouseenter="showStagePopover(this, '12')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '12')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '12', event)">
+        <span class="step-num-badge">12 — RELEASE IMAGE / SHA</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Release Image / SHA</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Validated image is tagged/published according to CI.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- SECTION LABEL FOR STAGES 13-16 -->
+      <div style="grid-column: 1 / -1; margin-top: 14px; margin-bottom: 2px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800; color: var(--purple-space); text-transform: uppercase; letter-spacing: 2px; background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 8px; display: inline-block;">
+          Post-validation environments & observability
+        </span>
+      </div>
+
+      <!-- 13 -->
+      <div class="journey-step-card" data-stage="13" tabindex="0"
+           onmouseenter="showStagePopover(this, '13')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '13')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '13', event)">
+        <span class="step-num-badge">13 — AWS EC2</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">AWS EC2</h4>
+        <p style="font-size: 12px; color: var(--aws-orange); margin-top: 4px;">Terraform-managed cloud deployment target.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 14 -->
+      <div class="journey-step-card" data-stage="14" tabindex="0"
+           onmouseenter="showStagePopover(this, '14')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '14')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '14', event)">
+        <span class="step-num-badge">14 — RENDER</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Render</h4>
+        <p style="font-size: 12px; color: var(--purple-space); margin-top: 4px;">Public live demonstration environment.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 15 -->
+      <div class="journey-step-card" data-stage="15" tabindex="0"
+           onmouseenter="showStagePopover(this, '15')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '15')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '15', event)">
+        <span class="step-num-badge">15 — OBSERVABILITY</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Observability</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Prometheus / Grafana provide monitoring and metrics.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+
+      <!-- 16 -->
+      <div class="journey-step-card" data-stage="16" tabindex="0"
+           onmouseenter="showStagePopover(this, '16')" onmouseleave="hideStagePopover()"
+           onfocus="showStagePopover(this, '16')" onblur="hideStagePopover()"
+           onclick="toggleStagePopover(this, '16', event)">
+        <span class="step-num-badge">16 — LIVE SYSTEM</span>
+        <h4 style="font-size: 15px; font-weight: 800; margin-top: 10px;">Live System</h4>
+        <p style="font-size: 12px; color: var(--sec-green); margin-top: 4px; font-weight: 700;">Validated system available through project environment.</p>
+        <div class="step-hover-hint"><i class="fa-solid fa-circle-info"></i> Hover/Tap for Details</div>
+      </div>
+    </div>
+
+    <!-- 5. START -> FINISH SUMMARY BANNER -->
+    <div class="start-finish-banner">
+      <h3 style="font-size: 26px; font-weight: 900; margin-bottom: 8px; color: var(--text-main);">FROM CODE TO VALIDATED RELEASE</h3>
+      <p style="font-size: 14px; color: var(--text-dim);">Every CI validation stage is automated and traceable across GitHub Actions runners, Kind CI clusters, and release registries.</p>
+    </div>
+  </section>
+
+  <!-- 6. INSIDE THE PIPELINE — 3 LAYERS -->
+  <section class="story-section" id="pipeline">
+    <div class="story-header">
+      <div class="story-num">PIPELINE ARCHITECTURE</div>
+      <h2 class="story-title">Inside The Pipeline</h2>
+      <p class="story-desc">The three distinct layers of automation handling software delivery.</p>
+    </div>
+
+    <div class="layers-pipeline-grid">
+      <!-- Layer 1 -->
+      <div class="layer-card-3d">
+        <h3>LAYER 1 — BUILD</h3>
+        <ul style="font-size: 13px; color: var(--text-dim); line-height: 2.2; list-style: none;">
+          <li>• Python Flask Application</li>
+          <li>• Pytest Unit Testing</li>
+          <li>• Docker Image Containerization</li>
+        </ul>
+      </div>
+
+      <!-- Layer 2 -->
+      <div class="layer-card-3d">
+        <h3 style="color: var(--cyan-beam);">LAYER 2 — VALIDATE</h3>
+        <ul style="font-size: 13px; color: var(--text-dim); line-height: 2.2; list-style: none;">
+          <li>• Docker Smoke Test</li>
+          <li>• Trivy Security Scan</li>
+          <li>• Kind Kubernetes CI Cluster</li>
+          <li>• Rollout Check</li>
+          <li>• 2 Replicas Ready</li>
+          <li>• Health Endpoint Check</li>
+        </ul>
+      </div>
+
+      <!-- Layer 3 -->
+      <div class="layer-card-3d">
+        <h3 style="color: var(--purple-space);">LAYER 3 — RELEASE</h3>
+        <ul style="font-size: 13px; color: var(--text-dim); line-height: 2.2; list-style: none;">
+          <li>• Docker Image / SHA Tagging</li>
+          <li>• AWS EC2 / Render Environments</li>
+          <li>• Prometheus Telemetry</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CONTAINERIZATION (DOCKER) -->
+  <section class="story-section">
+    <div class="docker-assembly-chamber">
+      <div class="container-physical-stack">
+        <div class="stack-block-3d">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fa-solid fa-layer-group" style="color: var(--orange-launch); font-size: 22px;"></i>
+            <div>
+              <strong style="font-size: 14px;">Application Code Layer</strong>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">app/app.py & HTML assets</div>
+            </div>
+          </div>
+          <span class="station-badge">Top Layer</span>
+        </div>
+
+        <div class="stack-block-3d">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fa-brands fa-python" style="color: var(--cyan-beam); font-size: 22px;"></i>
+            <div>
+              <strong style="font-size: 14px;">Python & Dependencies</strong>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">Flask & Prometheus Exporter</div>
+            </div>
+          </div>
+          <span class="station-badge">Mid Layer</span>
+        </div>
+
+        <div class="stack-block-3d">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fa-brands fa-linux" style="color: var(--docker-blue); font-size: 22px;"></i>
+            <div>
+              <strong style="font-size: 14px;">Base Linux OS Image</strong>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">python:3.11-slim runtime</div>
+            </div>
+          </div>
+          <span class="station-badge">Base Layer</span>
+        </div>
+      </div>
+
+      <div>
+        <i class="fa-brands fa-docker" style="font-size: 54px; color: var(--docker-blue); margin-bottom: 16px;"></i>
+        <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 12px;">Docker Container Packaging</h3>
+        <p style="color: var(--text-dim); font-size: 14px; line-height: 1.7;">
+          Source code is packaged into a minimal container image, smoke-tested, and published to Docker Hub registry with SHA tagging.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. SECURITY SCANNING (TRIVY) -->
+  <section class="story-section">
+    <div class="security-laser-vault">
+      <div class="laser-scan-line"></div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 24px; font-weight: 900; color: var(--sec-red);">TRIVY SECURITY SCANNER</h3>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); margin-top: 4px;">AUTOMATED CONTAINER VULNERABILITY CHECK</div>
+        </div>
+        <span class="station-badge" style="font-size: 12px; padding: 6px 14px;">✓ TRIVY SECURITY GATE</span>
+      </div>
+
+      <div class="sec-checks-grid">
+        <div class="sec-check-card">
+          <i class="fa-solid fa-shield-cat" style="font-size: 26px; color: var(--sec-red); margin-bottom: 10px;"></i>
+          <h4 style="font-size: 14px; font-weight: 800;">Trivy Scan</h4>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">HIGH/CRITICAL Check</div>
+        </div>
+
+        <div class="sec-check-card">
+          <i class="fa-solid fa-robot" style="font-size: 26px; color: var(--cyan-beam); margin-bottom: 10px;"></i>
+          <h4 style="font-size: 14px; font-weight: 800;">GitHub Actions</h4>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Automated CI</div>
+        </div>
+
+        <div class="sec-check-card">
+          <i class="fa-solid fa-vial-circle-check" style="font-size: 26px; color: var(--sec-green); margin-bottom: 10px;"></i>
+          <h4 style="font-size: 14px; font-weight: 800;">Pytest</h4>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Unit Testing</div>
+        </div>
+
+        <div class="sec-check-card">
+          <i class="fa-solid fa-user-shield" style="font-size: 26px; color: var(--orange-launch); margin-bottom: 10px;"></i>
+          <h4 style="font-size: 14px; font-weight: 800;">Non-Root User</h4>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Hardened Container</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. KUBERNETES CITY (KIND CI VALIDATION) -->
+  <section class="story-section" id="k8s">
+    <div class="k8s-city-vault">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <span class="station-badge" style="color: var(--k8s-blue); background: rgba(50, 108, 229, 0.15); border-color: rgba(50, 108, 229, 0.4);">
+            CI VALIDATION CLUSTER
+          </span>
+          <h3 style="font-size: 26px; font-weight: 900; margin-top: 10px;">2 Pod Replicas Verified</h3>
+        </div>
+        <i class="fa-solid fa-dharmachakra" style="font-size: 42px; color: var(--k8s-blue);"></i>
+      </div>
+
+      <div class="k8s-pods-flex">
+        <div class="pod-active-card">
+          <i class="fa-solid fa-cubes" style="font-size: 32px; color: var(--k8s-blue); margin-bottom: 8px;"></i>
+          <h4 style="font-size: 16px; font-weight: 800;">POD 01</h4>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--sec-green); margin-top: 6px;">● RUNNING (1/1)</div>
+        </div>
+
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--cyan-beam); font-weight: 800;">
+          ⚡ ROLLOUT VERIFIED ⚡
+        </div>
+
+        <div class="pod-active-card">
+          <i class="fa-solid fa-cubes" style="font-size: 32px; color: var(--k8s-blue); margin-bottom: 8px;"></i>
+          <h4 style="font-size: 16px; font-weight: 800;">POD 02</h4>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--sec-green); margin-top: 6px;">● RUNNING (1/1)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CLOUD INFRASTRUCTURE (AWS & RENDER) -->
+  <section class="story-section" id="cloud">
+    <div class="story-header">
+      <div class="story-num">INFRASTRUCTURE TARGETS</div>
+      <h2 class="story-title">Cloud Environments</h2>
+      <p class="story-desc">Distinguishing between Terraform-managed cloud targets and public live demo environments.</p>
+    </div>
+
+    <div class="cloud-expanse-grid">
+      <!-- AWS Card -->
+      <div class="cloud-zone-card aws-zone">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <i class="fa-brands fa-aws" style="font-size: 36px; color: var(--aws-orange);"></i>
+          <span class="station-badge" style="color: var(--aws-orange); background: rgba(255, 153, 0, 0.12); border-color: rgba(255, 153, 0, 0.3);">Terraform-managed target</span>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 900;">AWS EC2 Target</h3>
+        <p style="font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.6;">
+          AWS EC2 cloud compute deployment target with Terraform IaC configuration stored under version control in <code>/terraform</code>.
+        </p>
+        <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim);">
+          Region: ap-south-1 (Mumbai) • Terraform Managed
+        </div>
+      </div>
+
+      <!-- Render Card -->
+      <div class="cloud-zone-card render-zone">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <i class="fa-solid fa-globe" style="font-size: 32px; color: var(--purple-space);"></i>
+          <span class="station-badge">Public live demo</span>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 900;">Render Cloud</h3>
+        <p style="font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.6;">
+          Hosts the active public demonstration web app, serving continuous delivery updates directly from the main branch.
+        </p>
+        <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--cyan-beam);">
+          URL: multicloud-cicd.onrender.com
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. OBSERVABILITY CONTROL ROOM -->
+  <section class="story-section" id="observability">
+    <div class="story-header">
+      <div class="story-num">OBSERVABILITY CONTROL ROOM</div>
+      <h2 class="story-title">Metrics & Telemetry</h2>
+      <p class="story-desc">Real-time application telemetry reading from Flask <code>/stats</code> and Prometheus endpoints.</p>
+    </div>
+
+    <div class="observability-control-room">
+      <div class="monitors-grid-3d">
+        <div class="monitor-hud-card">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">SYSTEM STATUS</div>
+          <div class="monitor-val-big" id="mon-status" style="color: var(--sec-green);">HEALTHY</div>
+          <div style="font-size: 11px; color: var(--text-dim);">/health endpoint response</div>
+        </div>
+
+        <div class="monitor-hud-card">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">PROCESS UPTIME</div>
+          <div class="monitor-val-big" id="mon-uptime">--:--:--</div>
+          <div style="font-size: 11px; color: var(--text-dim);">Flask runtime duration</div>
+        </div>
+
+        <div class="monitor-hud-card">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);">REQUESTS SERVED</div>
+          <div class="monitor-val-big" id="mon-requests" style="color: var(--orange-launch);">0</div>
+          <div style="font-size: 11px; color: var(--text-dim);">HTTP requests count</div>
+        </div>
+      </div>
+
+      <div class="terminal-dev-hud">
+        <div class="terminal-hud-header">
+          <div><i class="fa-solid fa-terminal"></i> devops-terminal · release-log</div>
+          <div>RELEASE VERIFIED</div>
+        </div>
+        <div class="terminal-hud-body">
+          <div><span style="color: var(--orange-launch); font-weight: 700;">$</span> pipeline launch sequence initialized</div>
+          <div><span style="color: var(--cyan-beam);">→</span> git push origin main verified</div>
+          <div><span style="color: var(--sec-green);">✓</span> pytest suite passed (automated unit tests verified)</div>
+          <div><span style="color: var(--sec-green);">✓</span> docker build completed with SHA tag</div>
+          <div><span style="color: var(--sec-green);">✓</span> trivy scan passed (vulnerability gate verified)</div>
+          <div><span style="color: var(--sec-green);">✓</span> kind CI cluster deployment & 2 replicas verified</div>
+          <div><span style="color: var(--sec-green);">✓</span> release image published to docker hub</div>
+          <div><span style="color: var(--orange-launch); font-weight: 700;">STATUS</span> <span style="background: rgba(16, 185, 129, 0.2); color: var(--sec-green); padding: 2px 8px; border-radius: 4px;">CI/CD RELEASE VERIFIED</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. WHY THESE TOOLS? (TECHNOLOGY ECOSYSTEM — EXACTLY 15 CARDS, 5+5+5 NO GAP) -->
+  <section class="story-section" id="stack">
+    <div class="story-header">
+      <div class="story-num">TECHNOLOGY ECOSYSTEM</div>
+      <h2 class="story-title">Why These Tools?</h2>
+      <p class="story-desc">The specific role of each technology integrated across the architecture.</p>
+    </div>
+
+    <div class="tools-purpose-grid">
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #3776AB;"><i class="fa-brands fa-python"></i> Python + Flask</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Application web backend engine.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--purple-space);"><i class="fa-solid fa-vial"></i> Pytest</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Automated application testing.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--docker-blue);"><i class="fa-brands fa-docker"></i> Docker</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Application containerization.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--cyan-beam);"><i class="fa-brands fa-github"></i> GitHub Actions</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">CI/CD automation runner.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--sec-red);"><i class="fa-solid fa-shield-halved"></i> Trivy</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Container security scanning.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--k8s-blue);"><i class="fa-solid fa-dharmachakra"></i> Kubernetes</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Container orchestration validation.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--orange-launch);"><i class="fa-solid fa-cube"></i> Kind</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">CI validation cluster.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #844FBA;"><i class="fa-solid fa-cubes-stacked"></i> Terraform</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Infrastructure as Code.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--aws-orange);"><i class="fa-brands fa-aws"></i> AWS EC2</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Terraform-managed cloud target.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #099CEC;"><i class="fa-solid fa-box"></i> Docker Hub</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Container image registry.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #E6522C;"><i class="fa-solid fa-chart-line"></i> Prometheus</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Metrics collection engine.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #F46800;"><i class="fa-solid fa-chart-area"></i> Grafana</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Metrics visualization UI.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--sec-green);"><i class="fa-solid fa-microchip"></i> Node Exporter</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Host-level metrics collector.</p>
+      </div>
+
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: var(--purple-space);"><i class="fa-solid fa-globe"></i> Render</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Public live demo.</p>
+      </div>
+
+      <!-- 15TH CARD: LINUX -->
+      <div class="tool-purpose-card">
+        <h4 style="font-size: 15px; font-weight: 800; color: #FCC624;"><i class="fa-brands fa-linux"></i> Linux</h4>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">Operating system and command-line environment used for DevOps workflows and deployment operations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. PROJECT RESULTS / CAPABILITIES (EXACTLY 15 ITEMS, 3+3+3+3+3 NO GAP) -->
+  <section class="story-section">
+    <div class="story-header">
+      <div class="story-num">PROJECT CAPABILITIES</div>
+      <h2 class="story-title">What This Project Demonstrates</h2>
+      <p class="story-desc">Key engineering practices validated in this implementation.</p>
+    </div>
+
+    <div class="results-check-grid">
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> CI/CD automation</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Automated testing</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Docker containerization</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Container smoke testing</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Security scanning</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Kubernetes validation</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Rolling deployment verification</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Replica verification</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Health checks</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Infrastructure as Code</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Cloud infrastructure</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Monitoring and observability</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Git/GitHub workflow</div>
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Release validation</div>
+      <!-- 15TH CAPABILITY: RELEASE IMAGE PUBLICATION -->
+      <div class="check-item-card"><i class="fa-solid fa-circle-check"></i> Release Image Publication</div>
+    </div>
+  </section>
+
+  <!-- 14. ABOUT THE BUILDER (PERSONAL PORTFOLIO CARD) -->
+  <section class="about-builder-section" id="builder">
+    <div class="profile-card-3d">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--orange-launch); font-weight: 800; letter-spacing: 2px; margin-bottom: 8px;">
+          ABOUT THE BUILDER
+        </div>
+        <h2 style="font-size: 38px; font-weight: 900; margin-bottom: 8px;">SAMUEL D</h2>
+        <div style="font-size: 15px; color: var(--cyan-beam); font-weight: 700; margin-bottom: 16px;">
+          Final-Year B.E. Computer Science and Engineering Student • Prathyusha Engineering College
+        </div>
+        
+        <p style="font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 20px;">
+          Aspiring DevOps & Cloud Engineer. "I build practical cloud and DevOps systems focused on automation, containerization, CI/CD, Kubernetes, and cloud infrastructure."
+        </p>
+
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-main);">
+          <strong>Focus Areas:</strong> Cloud Engineering • DevOps • CI/CD • Docker • Kubernetes • AWS • Terraform • Observability
+        </div>
+
+        <div class="profile-links-flex">
+          <a class="link-btn-social" href="https://www.linkedin.com/in/samueld14/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-linkedin"></i> LINKEDIN
+          </a>
+          <a class="link-btn-social" href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-github"></i> GITHUB
+          </a>
+          <a class="link-btn-social" href="https://leetcode.com/u/josesamuel14/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-code"></i> LEETCODE
+          </a>
+          <a class="link-btn-social" href="https://mail.google.com/mail/?view=cm&fs=1&to=Josesamueld2005@gmail.com" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-envelope"></i> EMAIL
+          </a>
+        </div>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.5); border-radius: 24px; padding: 32px; border: 1px solid var(--border-light); text-align: center;">
+        <i class="fa-solid fa-paper-plane" style="font-size: 48px; color: var(--orange-launch); margin-bottom: 16px;"></i>
+        <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 10px;">LET'S BUILD SOMETHING</h3>
+        <p style="font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">
+          Open to Cloud & DevOps engineering opportunities, infrastructure automation, and technical collaboration.
+        </p>
+        <a class="btn-launch" href="https://www.linkedin.com/in/samueld14/" target="_blank" rel="noopener noreferrer" style="width: 100%;">
+          <i class="fa-brands fa-linkedin"></i> GET IN TOUCH
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- GLOBAL INTERACTIVE STAGE POPOVER -->
+<div id="stagePopover" class="stage-popover" aria-hidden="true">
+  <div class="popover-header-flex">
+    <span class="popover-badge" id="pop-num">STAGE 01</span>
+    <span class="popover-title-main" id="pop-title-main">Code Commit</span>
+  </div>
+  <div class="popover-section">
+    <div class="popover-sec-title"><i class="fa-solid fa-circle-info"></i> WHAT HAPPENS?</div>
+    <div class="popover-text" id="pop-happens"></div>
+  </div>
+  <div class="popover-section">
+    <div class="popover-sec-title"><i class="fa-solid fa-bullseye"></i> WHY?</div>
+    <div class="popover-text" id="pop-why"></div>
+  </div>
+  <div class="popover-section">
+    <div class="popover-sec-title"><i class="fa-solid fa-diagram-project"></i> SIMPLE FLOW</div>
+    <div class="popover-flow-box" id="pop-flow"></div>
+  </div>
+  <div class="popover-section">
+    <div class="popover-sec-title"><i class="fa-solid fa-square-check"></i> RESULT</div>
+    <div class="popover-result-text" id="pop-result"></div>
+  </div>
+</div>
+
+<!-- LAUNCH MODAL DIALOG (VISITOR DEMO + OWNER MODES) -->
+<div id="launchModal" class="modal-launch-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-launch-box">
+    <!-- MODAL MODE TABS -->
+    <div class="modal-mode-tabs" style="display: flex; background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; margin-bottom: 20px; gap: 4px; border: 1px solid var(--border-light);">
+      <button id="tabDemoBtn" class="modal-tab-btn active" type="button" onclick="switchLaunchModalMode('demo')" style="flex: 1; padding: 10px; border-radius: 9px; border: none; background: var(--orange-launch); color: #000; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-play"></i> VISITOR DEMO MODE
+      </button>
+      <button id="tabOwnerBtn" class="modal-tab-btn" type="button" onclick="switchLaunchModalMode('owner')" style="flex: 1; padding: 10px; border-radius: 9px; border: none; background: transparent; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-lock"></i> OWNER MODE
+      </button>
+    </div>
+
+    <!-- 1. VISITOR DEMO MODE PANEL -->
+    <div id="modal-panel-demo" class="modal-mode-panel" style="display: block;">
+      <h3 id="modalTitle" style="font-size: 21px; font-weight: 900; margin-bottom: 10px; color: var(--orange-launch); display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-satellite-dish"></i> INTERACTIVE PIPELINE DEMO
+      </h3>
+      <p style="color: var(--text-dim); font-size: 13.5px; line-height: 1.6; margin-bottom: 18px;">
+        Simulate software changes progressing physically through all 16 CI/CD stages right in your browser. No secrets or tokens needed.
+      </p>
+
+      <div id="demoProgressBox" class="demo-progress-container" style="display: none; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-light); border-radius: 12px; padding: 14px; margin: 18px 0;">
+        <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; margin-bottom: 4px;">
+          <span id="demoStageName" style="color: var(--orange-launch); font-weight: 700;">INITIALIZING...</span>
+          <span id="demoStagePercent" style="color: var(--cyan-beam);">0%</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 999px; overflow: hidden; margin: 10px 0;">
+          <div id="demoProgressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--orange-launch), var(--cyan-beam)); border-radius: 999px; transition: width 0.3s ease;"></div>
+        </div>
+        <div id="demoStageLog" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan-beam); line-height: 1.5; min-height: 36px;">
+          Preparing simulation runner...
+        </div>
+      </div>
+
+      <div style="background: rgba(255, 107, 0, 0.08); border: 1px dashed rgba(255, 107, 0, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--orange-launch); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-triangle-exclamation"></i> SIMULATION — NO REAL DEPLOYMENT TRIGGERED
+        </div>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">
+          This demo runs purely in your browser for educational demonstration and does not dispatch GitHub Actions workflows.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button class="btn-explore" type="button" onclick="closeLaunchModal()">CLOSE</button>
+        <button id="btn-start-demo" class="btn-launch" type="button" onclick="startVisitorDemoSimulation()">
+          <i class="fa-solid fa-play"></i> START SIMULATION
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. OWNER MODE PANEL -->
+    <div id="modal-panel-owner" class="modal-mode-panel" style="display: none;">
+      <h3 style="font-size: 21px; font-weight: 900; margin-bottom: 10px; color: var(--orange-launch); display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-lock"></i> OWNER DEPLOYMENT DISPATCH
+      </h3>
+      <p style="color: var(--text-dim); font-size: 13.5px; line-height: 1.6; margin-bottom: 18px;">
+        Trigger the real GitHub Actions CI/CD workflow via server-side repository dispatch on <code>JOSESAMUEL14/multicloud-cicd</code>.
+      </p>
+
+      <div style="margin-bottom: 18px; text-align: left;">
+        <label for="triggerKeyInput" style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--cyan-beam); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">
+          <i class="fa-solid fa-key" style="margin-right: 4px;"></i> Security Trigger Key (Required If Configured)
+        </label>
+        <input type="password" id="triggerKeyInput" placeholder="Enter server trigger key if enabled" autocomplete="off"
+               style="width: 100%; padding: 12px 16px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-light); color: #FFF; font-family: 'JetBrains Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s;"
+               onfocus="this.style.borderColor='var(--orange-launch)'" onblur="this.style.borderColor='var(--border-light)'">
+      </div>
+
+      <div id="owner-resp-box" style="display: none; background: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 14px; margin-bottom: 18px; text-align: left; border: 1px solid var(--border-light);">
+        <div id="owner-resp-header" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 800; margin-bottom: 6px;"></div>
+        <div id="owner-resp-body"></div>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button class="btn-explore" type="button" onclick="closeLaunchModal()">CANCEL</button>
+        <button id="btn-confirm-owner" class="btn-launch" type="button" onclick="confirmOwnerDeploymentLaunch()">
+          <i class="fa-solid fa-rocket"></i> CONFIRM LAUNCH
+        </button>
+      </div>
     </div>
   </div>
 </div>
-</div>
 
-<div id="architecture" class="section">
-  <div class="section-tag">System Design</div>
-  <div class="sec-title fade-in"><span class="w">ARCHITECTURE</span><br><span class="a">DIAGRAM</span></div>
-  <div class="sec-desc fade-in">How all components connect and communicate in this multi-cloud CI/CD system.</div>
-  <div class="arch-wrap fade-in">
-    <div class="arch-section-label">Developer Workflow</div>
-    <div class="arch-row">
-      <div class="arch-node"><div class="arch-node-icon">💻</div><div class="arch-node-name">Developer</div><div class="arch-node-desc">Writes code</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node"><div class="arch-node-icon"><i class="fa-brands fa-github" style="font-size:1.6rem"></i></div><div class="arch-node-name">GitHub</div><div class="arch-node-desc">git push</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3)"><div class="arch-node-icon">⚡</div><div class="arch-node-name">GH Actions</div><div class="arch-node-desc">CI/CD trigger</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(36,150,237,0.1);border-color:rgba(36,150,237,0.3)"><div class="arch-node-icon"><i class="fa-brands fa-docker" style="color:#2496ED;font-size:1.6rem"></i></div><div class="arch-node-name">Docker Build</div><div class="arch-node-desc">Image created</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(36,150,237,0.1);border-color:rgba(36,150,237,0.3)"><div class="arch-node-icon">🐋</div><div class="arch-node-name">Docker Hub</div><div class="arch-node-desc">Registry</div></div>
-    </div>
-    <div class="arch-sep"></div>
-    <div class="arch-section-label">Cloud Deployment</div>
-    <div class="arch-row">
-      <div class="arch-node" style="background:rgba(36,150,237,0.1);border-color:rgba(36,150,237,0.3)"><div class="arch-node-icon">🐋</div><div class="arch-node-name">Docker Hub</div><div class="arch-node-desc">Image pulled</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(50,108,229,0.1);border-color:rgba(50,108,229,0.3)"><div class="arch-node-icon">☸️</div><div class="arch-node-name">Kubernetes</div><div class="arch-node-desc">Orchestration</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(255,153,0,0.1);border-color:rgba(255,153,0,0.3)"><div class="arch-node-icon"><i class="fa-brands fa-aws" style="color:#FF9900;font-size:1.6rem"></i></div><div class="arch-node-name">AWS EC2</div><div class="arch-node-desc">Mumbai</div></div>
-      <div class="arch-arrow">+</div>
-      <div class="arch-node"><div class="arch-node-icon">☁️</div><div class="arch-node-name">Render</div><div class="arch-node-desc">24/7 hosting</div></div>
-    </div>
-    <div class="arch-sep"></div>
-    <div class="arch-section-label">Monitoring Stack</div>
-    <div class="arch-row">
-      <div class="arch-node" style="background:rgba(123,66,188,0.1);border-color:rgba(123,66,188,0.3)"><div class="arch-node-icon">🏗️</div><div class="arch-node-name">Terraform</div><div class="arch-node-desc">IaC</div></div>
-      <div class="arch-arrow">+</div>
-      <div class="arch-node" style="background:rgba(230,82,44,0.1);border-color:rgba(230,82,44,0.3)"><div class="arch-node-icon"><i class="fa-solid fa-chart-line" style="color:#E6522C;font-size:1.5rem"></i></div><div class="arch-node-name">Prometheus</div><div class="arch-node-desc">Metrics</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(244,104,0,0.1);border-color:rgba(244,104,0,0.3)"><div class="arch-node-icon"><i class="fa-solid fa-chart-bar" style="color:#F46800;font-size:1.5rem"></i></div><div class="arch-node-name">Grafana</div><div class="arch-node-desc">Dashboards</div></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-node" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3)"><div class="arch-node-icon">🔔</div><div class="arch-node-name">Alerts</div><div class="arch-node-desc">Anomalies</div></div>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="card fade-in"><div class="card-icon">🐳</div><div class="card-title">Containerisation</div><div class="card-desc">Flask app packaged in Docker with all dependencies. Runs identically on any machine — laptop or cloud server.</div></div>
-    <div class="card fade-in"><div class="card-icon">☸️</div><div class="card-title">Orchestration</div><div class="card-desc">Kubernetes keeps 2 replicas running always. Auto-restarts crashed containers. Rolling updates mean zero downtime.</div></div>
-    <div class="card fade-in"><div class="card-icon">🏗️</div><div class="card-title">Infrastructure as Code</div><div class="card-desc">Terraform defines AWS infrastructure in code files. No manual clicking in AWS console — everything provisioned automatically.</div></div>
-    <div class="card fade-in"><div class="card-icon">📊</div><div class="card-title">Observability</div><div class="card-desc">Prometheus scrapes metrics every 15 seconds. Grafana live dashboards show CPU, memory, request rates in real time.</div></div>
-  </div>
-</div>
-
-<div class="alt-bg">
-<div id="techstack" class="section">
-  <div class="section-tag">Tools and Technologies</div>
-  <div class="sec-title fade-in"><span class="w">THE TECH</span><br><span class="a">STACK</span></div>
-  <div class="sec-desc fade-in">8 industry-standard tools — each chosen because it is used by real companies in production environments worldwide.</div>
-  <div class="grid-2">
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(36,150,237,0.15);border:1px solid rgba(36,150,237,0.3)"><i class="fa-brands fa-docker" style="color:#2496ED;font-size:22px"></i></div><div><div class="tool-name">Docker</div><div class="tool-line" style="background:linear-gradient(90deg,#2496ED,transparent)"></div></div></div><div class="tool-desc">Containerisation platform. Packages app and all dependencies into portable containers that run anywhere.</div><div class="tool-why"><span style="color:#2496ED;font-weight:700">Why:</span> Industry standard. Every major company uses Docker.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(50,108,229,0.15);border:1px solid rgba(50,108,229,0.3)"><i class="fa-solid fa-ship" style="color:#326CE5;font-size:22px"></i></div><div><div class="tool-name">Kubernetes</div><div class="tool-line" style="background:linear-gradient(90deg,#326CE5,transparent)"></div></div></div><div class="tool-desc">Container orchestration. Manages, scales, and auto-heals containers across servers without manual intervention.</div><div class="tool-why"><span style="color:#326CE5;font-weight:700">Why:</span> Most in-demand DevOps skill in 2025.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"><i class="fa-brands fa-github" style="color:#fff;font-size:22px"></i></div><div><div class="tool-name">GitHub Actions</div><div class="tool-line" style="background:linear-gradient(90deg,#fff,transparent)"></div></div></div><div class="tool-desc">CI/CD automation built into GitHub. Runs pipelines automatically on every code push — free for public repos.</div><div class="tool-why"><span style="color:#fff;font-weight:700">Why:</span> Free, integrated, used by millions of developers.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(123,66,188,0.15);border:1px solid rgba(123,66,188,0.3)"><i class="fa-solid fa-layer-group" style="color:#7B42BC;font-size:22px"></i></div><div><div class="tool-name">Terraform</div><div class="tool-line" style="background:linear-gradient(90deg,#7B42BC,transparent)"></div></div></div><div class="tool-desc">Infrastructure as Code. Defines and provisions cloud resources automatically with repeatable code.</div><div class="tool-why"><span style="color:#7B42BC;font-weight:700">Why:</span> Most popular IaC tool. Works on any cloud provider.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(255,153,0,0.15);border:1px solid rgba(255,153,0,0.3)"><i class="fa-brands fa-aws" style="color:#FF9900;font-size:22px"></i></div><div><div class="tool-name">AWS EC2</div><div class="tool-line" style="background:linear-gradient(90deg,#FF9900,transparent)"></div></div></div><div class="tool-desc">Amazon Web Services virtual server. Runs the containerised application in Mumbai cloud region.</div><div class="tool-why"><span style="color:#FF9900;font-weight:700">Why:</span> Largest cloud provider. Fundamental for cloud roles.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(230,82,44,0.15);border:1px solid rgba(230,82,44,0.3)"><i class="fa-solid fa-chart-line" style="color:#E6522C;font-size:22px"></i></div><div><div class="tool-name">Prometheus</div><div class="tool-line" style="background:linear-gradient(90deg,#E6522C,transparent)"></div></div></div><div class="tool-desc">Open source monitoring. Scrapes and stores metrics from applications every 15 seconds automatically.</div><div class="tool-why"><span style="color:#E6522C;font-weight:700">Why:</span> Industry standard for cloud-native monitoring.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(244,104,0,0.15);border:1px solid rgba(244,104,0,0.3)"><i class="fa-solid fa-chart-bar" style="color:#F46800;font-size:22px"></i></div><div><div class="tool-name">Grafana</div><div class="tool-line" style="background:linear-gradient(90deg,#F46800,transparent)"></div></div></div><div class="tool-desc">Visualisation platform. Creates beautiful live dashboards from Prometheus and other data sources.</div><div class="tool-why"><span style="color:#F46800;font-weight:700">Why:</span> Most popular open source dashboard tool worldwide.</div></div>
-    <div class="tool-card fade-in"><div class="tool-header"><div class="tool-icon-box" style="background:rgba(55,118,171,0.15);border:1px solid rgba(55,118,171,0.3)"><i class="fa-brands fa-python" style="color:#3776AB;font-size:22px"></i></div><div><div class="tool-name">Python Flask</div><div class="tool-line" style="background:linear-gradient(90deg,#3776AB,transparent)"></div></div></div><div class="tool-desc">Lightweight web framework powering the dashboard with REST API endpoints for health, metrics, and deploy.</div><div class="tool-why"><span style="color:#3776AB;font-weight:700">Why:</span> Simple, fast, perfect for microservices and APIs.</div></div>
-  </div>
-</div>
-</div>
-
-<div id="pipeline-section" class="section">
-  <div class="section-tag">How It Works</div>
-  <div class="sec-title fade-in"><span class="w">THE</span><br><span class="a">PIPELINE</span></div>
-  <div class="sec-desc fade-in">From writing a single line of code to seeing it live in production — every step that happens automatically in under 60 seconds.</div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">💻</div><div class="pipe-content"><div class="pipe-title">Developer Writes Code</div><div class="pipe-desc">Developer makes changes to the Flask application — adding features, fixing bugs, or updating the UI. Code lives in GitHub.</div><div class="pipe-tag">Local Development</div></div><div class="pipe-num">01</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-github"></i></div><div class="pipe-content"><div class="pipe-title">Push to GitHub</div><div class="pipe-desc">Developer runs git push origin main. This single action triggers the entire automated pipeline instantly.</div><div class="pipe-tag">GitHub</div></div><div class="pipe-num">02</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">⚡</div><div class="pipe-content"><div class="pipe-title">GitHub Actions Triggers</div><div class="pipe-desc">GitHub detects the push and starts the CI/CD workflow automatically. A virtual Ubuntu server spins up on GitHub's free infrastructure.</div><div class="pipe-tag">GitHub Actions</div></div><div class="pipe-num">03</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-docker" style="color:#2496ED"></i></div><div class="pipe-content"><div class="pipe-title">Docker Image Built</div><div class="pipe-desc">GitHub Actions reads the Dockerfile and builds a new Docker image. Tagged with unique commit SHA — every version is traceable.</div><div class="pipe-tag">Docker</div></div><div class="pipe-num">04</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">🐋</div><div class="pipe-content"><div class="pipe-title">Image Pushed to Docker Hub</div><div class="pipe-desc">The built image is pushed to Docker Hub registry — available worldwide as josesamuel14/multicloud-app:latest.</div><div class="pipe-tag">Docker Hub</div></div><div class="pipe-num">05</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">☸️</div><div class="pipe-content"><div class="pipe-title">Kubernetes Rolling Update</div><div class="pipe-desc">Kubernetes pulls the new image and performs a Rolling Update — replacing old containers gradually. Zero downtime.</div><div class="pipe-tag">Kubernetes</div></div><div class="pipe-num">06</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box"><i class="fa-brands fa-aws" style="color:#FF9900"></i></div><div class="pipe-content"><div class="pipe-title">Live on AWS and Render</div><div class="pipe-desc">New version is live on AWS EC2 Mumbai and Render simultaneously. Total time: under 60 seconds. Every time. Automatically.</div><div class="pipe-tag">AWS + Render</div></div><div class="pipe-num">07</div></div>
-  <div class="pipe-step fade-in"><div class="pipe-icon-box">📊</div><div class="pipe-content"><div class="pipe-title">Prometheus Monitors</div><div class="pipe-desc">Prometheus scrapes metrics every 15 seconds. Grafana shows live dashboards. Engineers know problems before users do.</div><div class="pipe-tag">Prometheus + Grafana</div></div><div class="pipe-num">08</div></div>
-  <div class="card fade-in" style="text-align:center;padding:2.5rem;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(6,182,212,0.08));border-color:rgba(124,58,237,0.2)">
-    <div style="font-size:3rem;margin-bottom:0.8rem">⚡</div>
-    <div style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">Total Time: Under 60 Seconds</div>
-    <div style="font-size:14px;color:var(--muted)">From git push to live in production — fully automated, zero manual steps, zero downtime</div>
-  </div>
-</div>
-
-<div class="alt-bg">
-<div id="demo" class="section">
-  <div class="section-tag">Interactive Demo</div>
-  <div class="sec-title fade-in"><span class="w">LIVE</span><br><span class="a">DEMO</span></div>
-  <div class="sec-desc fade-in">Everything below is real and live. Click any button to interact with the actual running system right now.</div>
-  <div class="demo-card fade-in">
-    <div class="demo-card-title"><i class="fa-solid fa-heart-pulse" style="color:#10b981"></i> Health Check</div>
-    <div class="demo-card-desc">Returns real system information — cloud provider, region, uptime, and hostname of the actual server running right now.</div>
-    <button class="demo-btn demo-btn-green" onclick="checkHealth()"><i class="fa-solid fa-heart-pulse"></i> Check Health</button>
-    <div class="response-box" id="health-response"></div>
-  </div>
-  <div class="demo-card fade-in">
-    <div class="demo-card-title"><i class="fa-solid fa-chart-bar" style="color:#eab308"></i> Live Statistics</div>
-    <div class="demo-card-desc">Fetches real-time statistics — total HTTP requests served, current uptime, and system status from Prometheus metrics.</div>
-    <button class="demo-btn demo-btn-yellow" onclick="checkStats()"><i class="fa-solid fa-chart-bar"></i> Fetch Live Stats</button>
-    <div class="stats-display" id="stats-display">
-      <div class="stat-item"><div class="stat-val" id="stat-req">--</div><div class="stat-lbl">Requests</div></div>
-      <div class="stat-item"><div class="stat-val" id="stat-up">--</div><div class="stat-lbl">Uptime</div></div>
-      <div class="stat-item"><div class="stat-val" id="stat-status">--</div><div class="stat-lbl">Status</div></div>
-    </div>
-  </div>
-  <div class="demo-card fade-in">
-    <div class="demo-card-title"><i class="fa-solid fa-rocket" style="color:{p1}"></i> Trigger CI/CD Pipeline</div>
-    <div class="demo-card-desc">Click Deploy Now to trigger a real GitHub Actions pipeline run. New Docker image built and deployed. Watch live on GitHub!</div>
-    <button class="demo-btn demo-btn-primary" onclick="showDeploy()"><i class="fa-solid fa-rocket"></i> Trigger Deploy</button>
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> Watch on GitHub</a>
-  </div>
-  <div class="demo-card fade-in">
-    <div class="demo-card-title"><i class="fa-solid fa-code" style="color:#06B6D4"></i> Source Code</div>
-    <div class="demo-card-desc">The entire project is open source — Dockerfile, Kubernetes configs, Terraform IaC, GitHub Actions workflow, and monitoring setup.</div>
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener" class="demo-btn demo-btn-outline"><i class="fa-brands fa-github"></i> View GitHub Repo</a>
-    <a href="/metrics" target="_blank" rel="noopener" class="demo-btn demo-btn-yellow"><i class="fa-solid fa-chart-line"></i> Raw Metrics</a>
-  </div>
-</div>
-</div>
-
-<div id="contact-section" class="section" style="text-align:center">
-  <div class="section-tag" style="margin:0 auto 1.2rem">Get In Touch</div>
-
-  <div class="sec-title fade-in" style="text-align:center">
-    <span class="w">LET'S</span><br>
-    <span class="a">CONNECT</span>
-  </div>
-  <div class="grid-3 fade-in" style="max-width:700px;margin:0 auto 2rem">
-    <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project" class="contact-card">
-      <i class="fa-solid fa-envelope contact-icon" style="color:{p1}"></i>
-      <div class="contact-label">Email</div>
-      <div class="contact-val">Josesamueld2005@gmail.com</div>
-    </a>
-    <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener" class="contact-card">
-      <i class="fa-brands fa-linkedin contact-icon" style="color:#0077b5"></i>
-      <div class="contact-label">LinkedIn</div>
-      <div class="contact-val">linkedin.com/in/samueld14</div>
-    </a>
-    <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener" class="contact-card">
-      <i class="fa-brands fa-github contact-icon" style="color:#fff"></i>
-      <div class="contact-label">GitHub</div>
-      <div class="contact-val">github.com/JOSESAMUEL14</div>
-    </a>
-  </div>
-</div>
-
+<!-- FOOTER -->
 <footer>
-  <div class="footer-text">
-    Built by <a href="https://github.com/JOSESAMUEL14" target="_blank" rel="noopener">Samuel</a>
-    &nbsp;·&nbsp;
-    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener">GitHub</a>
-    &nbsp;·&nbsp;
-    <a href="https://linkedin.com/in/samueld14" target="_blank" rel="noopener">LinkedIn</a>
-    &nbsp;·&nbsp;
-    <a href="mailto:Josesamueld2005@gmail.com?subject=Regarding%20MultiCloud%20CI%2FCD%20Project">Contact</a>
-    <br><br>
-    <span style="font-size:9px;opacity:0.5">MultiCloud CI/CD · Docker · Kubernetes · GitHub Actions · Terraform · AWS · Prometheus · Grafana</span>
-  </div>
+  <p style="font-weight: 700; color: #FFF; font-size: 13px; margin-bottom: 8px;">
+    Multi-Cloud CI/CD Deployment System • Developed by Samuel D
+  </p>
+  <p style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+    <a href="https://multicloud-cicd.onrender.com/" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-globe"></i> Live Demo (Render)</a>
+    <a href="https://github.com/JOSESAMUEL14/multicloud-cicd" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub Repository</a>
+    <a href="https://leetcode.com/u/josesamuel14/" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-code"></i> LeetCode</a>
+    <a href="https://www.linkedin.com/in/samueld14/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Josesamueld2005@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-envelope"></i> Josesamueld2005@gmail.com</a>
+  </p>
 </footer>
 
 <script>
-function goTo(id){{var el=document.getElementById(id);if(!el)return;var top=el.getBoundingClientRect().top+window.pageYOffset-58;window.scrollTo({{top:top,behavior:'smooth'}});}}
-function toggleMobileNav(){{var m=document.getElementById('mobile-nav');m.style.display=(m.style.display==='none'||m.style.display==='')?'block':'none';}}
-function closeMobileNav(){{document.getElementById('mobile-nav').style.display='none';}}
-window.addEventListener('scroll',function(){{var btn=document.getElementById('scrollTop');if(btn)btn.className=window.pageYOffset>400?'scroll-top show':'scroll-top';}});
-function tick(){{var n=new Date();var el=document.getElementById('clk');if(el)el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');}}
-setInterval(tick,1000);tick();
-function updateMetrics(){{fetch('/stats').then(function(r){{return r.json();}}).then(function(d){{var rc=document.getElementById('req-count');var up=document.getElementById('uptime');var hv=document.getElementById('health-val');if(rc)rc.textContent=d.total_requests||'0';if(up)up.textContent=d.uptime||'--';if(hv)hv.textContent=d.status||'--';}}).catch(function(){{}});}}
-setInterval(updateMetrics,5000);updateMetrics();
-function showDeploy(){{document.getElementById('deployModal').style.display='flex';}}
-function closeModal(){{document.getElementById('deployModal').style.display='none';document.getElementById('deploy-status').textContent='';}}
-document.getElementById('deployModal').addEventListener('click',function(e){{if(e.target===this)closeModal();}});
-function confirmDeploy(){{var s=document.getElementById('deploy-status');s.textContent='Triggering pipeline...';s.style.color='#fbbf24';fetch('/deploy',{{method:'POST',headers:{{'Content-Type':'application/json'}}}}).then(function(r){{return r.json();}}).then(function(d){{s.textContent=d.success?'✅ Pipeline triggered! Check GitHub Actions.':'❌ '+d.message;s.style.color=d.success?'#10b981':'#ef4444';}}).catch(function(e){{s.textContent='❌ '+e.message;s.style.color='#ef4444';}});}}
-function checkHealth(){{var box=document.getElementById('health-response');box.className='response-box show';box.textContent='Fetching...';fetch('/health').then(function(r){{return r.json();}}).then(function(d){{box.textContent=JSON.stringify(d,null,2);}}).catch(function(e){{box.textContent='Error: '+e.message;}});}}
-function checkStats(){{var grid=document.getElementById('stats-display');grid.className='stats-display show';fetch('/stats').then(function(r){{return r.json();}}).then(function(d){{document.getElementById('stat-req').textContent=d.total_requests||'0';document.getElementById('stat-up').textContent=d.uptime||'--';document.getElementById('stat-status').textContent=d.status||'--';}}).catch(function(){{}});}}
-setInterval(checkStats,5000);
-var obs=new IntersectionObserver(function(entries){{entries.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('visible');if(e.target.classList.contains('terminal-wrap'))startTerminal();if(e.target.classList.contains('stat-row5'))animateCounter();}}}});}},{{threshold:0.15}});
-document.querySelectorAll('.fade-in').forEach(function(el){{obs.observe(el);}});
-var terminalStarted=false;
-function startTerminal(){{if(terminalStarted)return;terminalStarted=true;var delays=[0,700,1400,2100,2900,3700,4400,5200,5700,6500,7200];for(var i=0;i<=10;i++){{(function(idx,delay){{var el=document.getElementById('tl'+idx);if(el)setTimeout(function(){{el.classList.add('show');}},delay);}})(i,delays[i]);}}setTimeout(function(){{terminalStarted=false;for(var i=0;i<=10;i++){{var el=document.getElementById('tl'+i);if(el)el.classList.remove('show');}}setTimeout(startTerminal,1500);}},12000);}}
-var counterDone=false;
-function animateCounter(){{if(counterDone)return;counterDone=true;var el=document.getElementById('about-req');if(!el)return;var end=47,start=0;var timer=setInterval(function(){{start+=1;el.textContent=start;if(start>=end)clearInterval(timer);}},30);}}
-var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W,H,ht=0;
-function rsz(){{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}}
-rsz();window.addEventListener('resize',rsz);
-var S=28;
-function draw(){{ctx.fillStyle='#06061a';ctx.fillRect(0,0,W,H);ht+=0.045;var rows=Math.ceil(H/(S*1.5))+2,cols=Math.ceil(W/(S*1.73))+2;for(var r=0;r<rows;r++){{for(var c=0;c<cols;c++){{var x=c*S*1.73+(r%2)*S*0.866,y=r*S*1.5;var v=(Math.sin(ht+c*0.45+r*0.65)+Math.sin(ht*0.85+c*0.75-r*0.45)+Math.sin(ht*1.2-c*0.3+r*0.8))/3;var a=0.04+v*0.2;ctx.beginPath();for(var i=0;i<6;i++){{var ang=Math.PI/180*(60*i-30);var px=x+(S-1)*Math.cos(ang),py=y+(S-1)*Math.sin(ang);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}}ctx.closePath();ctx.strokeStyle='rgba(6,182,212,'+Math.max(0.03,a)+')';ctx.lineWidth=0.9;ctx.stroke();if(v>0.45){{ctx.fillStyle='rgba(124,58,237,'+(v-0.45)*0.25+')';ctx.fill();}}if(v>0.72){{ctx.fillStyle='rgba(6,182,212,'+(v-0.72)*0.5+')';ctx.fill();}}if(v>0.88){{ctx.fillStyle='rgba(255,255,255,'+(v-0.88)*0.12+')';ctx.fill();}}}}}}requestAnimationFrame(draw);}}
-draw();
+/* 1. 16 STAGE EXPLANATIONS DATA DICTIONARY */
+const STAGE_DETAILS = {{
+  "01": {{
+    title: "Code Commit",
+    happens: "The developer changes the Flask application or project files and creates a Git commit.",
+    why: "Git records the change so the exact version of the code can be tracked.",
+    flow: "Code Change → Git Commit",
+    result: "A traceable version of the project is ready to be pushed."
+  }},
+  "02": {{
+    title: "GitHub Repository",
+    happens: "The committed code is pushed to the GitHub repository.",
+    why: "GitHub becomes the central source repository and provides the trigger for the CI workflow.",
+    flow: "Local Repository → GitHub",
+    result: "The new code is available to the CI system."
+  }},
+  "03": {{
+    title: "GitHub Actions",
+    happens: "GitHub Actions detects the push or dispatch event and starts the automated workflow.",
+    why: "Every change must be automatically validated without manual intervention.",
+    flow: "GitHub Event → Actions Runner",
+    result: "The CI pipeline begins execution in an isolated Ubuntu runner."
+  }},
+  "04": {{
+    title: "Pytest Suite",
+    happens: "The test suite runs unit tests for endpoints, metrics, and health checks.",
+    why: "Tests confirm the application works correctly before any container image is built.",
+    flow: "Flask Code → Pytest Execution",
+    result: "Zero regression errors verified across the codebase."
+  }},
+  "05": {{
+    title: "Docker Build",
+    happens: "Docker builds the container image containing Python, Flask, dependencies, and app code.",
+    why: "Containers make the runtime environment identical everywhere.",
+    flow: "Dockerfile → Docker Image",
+    result: "An immutable application container image is created."
+  }},
+  "06": {{
+    title: "Docker Smoke Test",
+    happens: "The newly built container is started and its health endpoint is checked.",
+    why: "A smoke test quickly verifies that the container can start and respond correctly.",
+    flow: "Docker Image → Container → /health",
+    result: "Basic container functionality is verified."
+  }},
+  "07": {{
+    title: "Trivy Vulnerability Scan",
+    happens: "Trivy scans the container image for security vulnerabilities and CVEs.",
+    why: "Security vulnerabilities must be caught before deployment.",
+    flow: "Container Image → Trivy Audit",
+    result: "A secure container image with no blocking CVEs."
+  }},
+  "08": {{
+    title: "Kind K8s Cluster",
+    happens: "An ephemeral Kubernetes cluster is created using Kind directly on the CI runner.",
+    why: "Testing inside real Kubernetes validates Kubernetes manifests before cloud release.",
+    flow: "CI Runner → Kind Cluster Started",
+    result: "A temporary Kubernetes testing environment is ready."
+  }},
+  "09": {{
+    title: "K8s Deployment Rollout",
+    happens: "Kubernetes manifests (Deployment and Service) are applied to the Kind cluster.",
+    why: "This verifies that manifests are syntactically valid and apply cleanly.",
+    flow: "k8s/deployment.yaml → kubectl apply",
+    result: "Kubernetes begins creating pods and services."
+  }},
+  "10": {{
+    title: "2 Pod Replicas Ready",
+    happens: "Kubernetes schedules and runs two replica pods of the application.",
+    why: "Running multiple replicas provides high availability and fault tolerance.",
+    flow: "Deployment → 2 Pods Running",
+    result: "Two healthy pods are verified running in the cluster."
+  }},
+  "11": {{
+    title: "K8s In-Cluster Health",
+    happens: "The CI runner connects through the Kubernetes Service to verify the application inside the cluster.",
+    why: "This proves that routing, ports, and service load balancing work.",
+    flow: "K8s Service → Pod Endpoint → 200 OK",
+    result: "Cluster networking and application health verified."
+  }},
+  "12": {{
+    title: "Docker Hub SHA Tag",
+    happens: "The verified Docker image is pushed to Docker Hub with an immutable Git commit SHA tag.",
+    why: "SHA tags ensure exact traceability and make rollback fast and reliable.",
+    flow: "Verified Image → Docker Hub (SHA Tag)",
+    result: "The release image is securely stored in the container registry."
+  }},
+  "13": {{
+    title: "AWS EC2 Target",
+    happens: "The deployment pipeline targets the AWS EC2 virtual machine provisioned by Terraform.",
+    why: "AWS provides enterprise cloud compute capacity.",
+    flow: "Image Registry → AWS EC2 Container",
+    result: "The application runs in the AWS cloud environment."
+  }},
+  "14": {{
+    title: "Render Cloud Target",
+    happens: "The application is deployed to the Render managed cloud platform.",
+    why: "Render provides a public live demo environment with zero server maintenance.",
+    flow: "Docker Hub → Render Web Service",
+    result: "The public live demo is updated and accessible."
+  }},
+  "15": {{
+    title: "Prometheus Observability",
+    happens: "Prometheus monitors the application using the /metrics endpoint.",
+    why: "Observability provides visibility into throughput, latencies, and uptime.",
+    flow: "App /metrics → Prometheus Scraper",
+    result: "Live metrics and telemetry are collected for monitoring."
+  }},
+  "16": {{
+    title: "Live System Online",
+    happens: "The entire deployment is complete and serving live traffic across targets.",
+    why: "Users can now interact with the verified release of the project.",
+    flow: "End-to-End Pipeline → Production Release",
+    result: "A resilient, secure, multi-cloud system is live."
+  }}
+}};
+
+/* 2. POPOVER INTERACTION ENGINE (VIEWPORT POSITIONING & PINNING) */
+const popover = document.getElementById('stagePopover');
+const stageCards = document.querySelectorAll('.journey-step-card');
+let currentPinnedStage = null;
+let currentHoveredCard = null;
+
+function renderPopoverData(stageId) {{
+  const data = STAGE_DETAILS[stageId];
+  if (!data) return;
+  const numEl = document.getElementById('pop-num') || document.getElementById('pop-stage-num');
+  if (numEl) numEl.textContent = 'STAGE ' + stageId;
+  const titleEl = document.getElementById('pop-title-main');
+  if (titleEl) titleEl.textContent = data.title;
+  const happensEl = document.getElementById('pop-happens');
+  if (happensEl) happensEl.textContent = data.happens;
+  const whyEl = document.getElementById('pop-why');
+  if (whyEl) whyEl.textContent = data.why;
+  const flowEl = document.getElementById('pop-flow');
+  if (flowEl) flowEl.textContent = data.flow;
+  const resultEl = document.getElementById('pop-result');
+  if (resultEl) resultEl.textContent = data.result;
+}}
+
+function positionPopover(card) {{
+  if (!card) return;
+  const rect = card.getBoundingClientRect();
+  const popWidth = 360;
+  const popHeight = popover.offsetHeight || 260;
+  const margin = 14;
+
+  let top = rect.bottom + margin;
+  let left = rect.left + (rect.width / 2) - (popWidth / 2);
+
+  if (top + popHeight > window.innerHeight - margin) {{
+    top = rect.top - popHeight - margin;
+  }}
+
+  if (top < margin) {{
+    top = margin;
+  }}
+
+  if (left + popWidth > window.innerWidth - margin) {{
+    left = window.innerWidth - popWidth - margin;
+  }}
+  if (left < margin) {{
+    left = margin;
+  }}
+
+  popover.style.top = `${{top}}px`;
+  popover.style.left = `${{left}}px`;
+}}
+
+function showPopoverForCard(card) {{
+  const stageId = card.getAttribute('data-stage');
+  renderPopoverData(stageId);
+  popover.classList.add('visible');
+  popover.setAttribute('aria-hidden', 'false');
+  positionPopover(card);
+}}
+
+function hidePopover() {{
+  if (currentPinnedStage) return;
+  popover.classList.remove('visible');
+  popover.setAttribute('aria-hidden', 'true');
+  currentHoveredCard = null;
+}}
+
+
+
+window.addEventListener('scroll', () => {{
+  const target = currentPinnedStage 
+    ? document.querySelector(`.journey-step-card[data-stage="${{currentPinnedStage}}"]`)
+    : currentHoveredCard;
+  if (target && popover.classList.contains('visible')) {{
+    positionPopover(target);
+  }}
+}}, {{ passive: true }});
+
+window.addEventListener('resize', () => {{
+  const target = currentPinnedStage 
+    ? document.querySelector(`.journey-step-card[data-stage="${{currentPinnedStage}}"]`)
+    : currentHoveredCard;
+  if (target && popover.classList.contains('visible')) {{
+    positionPopover(target);
+  }}
+}});
+
+document.addEventListener('keydown', (e) => {{
+  if (e.key === 'Escape') {{
+    currentPinnedStage = null;
+    stageCards.forEach(c => c.classList.remove('active'));
+    hidePopover();
+    const modal = document.getElementById('launchModal');
+    if (modal && modal.classList.contains('active')) {{
+      closeLaunchModal();
+    }}
+  }}
+}});
+
+document.addEventListener('click', (e) => {{
+  if (currentPinnedStage && !e.target.closest('.journey-step-card') && !e.target.closest('#stagePopover')) {{
+    currentPinnedStage = null;
+    stageCards.forEach(c => c.classList.remove('active'));
+    hidePopover();
+  }}
+}});
+
+/* 3. REAL MONOTONIC PROCESS UPTIME TIMER */
+let serverBaseSeconds = 0;
+let clientEpochAtFetch = Date.now();
+
+function formatSecondsToHMS(totalSecs) {{
+  const hours = Math.floor(totalSecs / 3600);
+  const minutes = Math.floor((totalSecs % 3600) / 60);
+  const seconds = Math.floor(totalSecs % 60);
+  return `${{String(hours).padStart(2, '0')}}:${{String(minutes).padStart(2, '0')}}:${{String(seconds).padStart(2, '0')}}`;
+}}
+
+function updateUptimeDisplay() {{
+  const uptEl = document.getElementById('mon-uptime');
+  if (!uptEl) return;
+  const elapsedSinceFetch = Math.floor((Date.now() - clientEpochAtFetch) / 1000);
+  const currentTotal = serverBaseSeconds + Math.max(0, elapsedSinceFetch);
+  uptEl.textContent = formatSecondsToHMS(currentTotal);
+}}
+
+setInterval(updateUptimeDisplay, 1000);
+
+function pollServerStats() {{
+  fetch('/stats')
+    .then(r => r.json())
+    .then(d => {{
+      if (d.total_requests !== undefined) {{
+        const reqEl = document.getElementById('mon-requests');
+        if (reqEl) reqEl.textContent = d.total_requests;
+      }}
+      if (d.start_time) {{
+        const nowSec = Date.now() / 1000;
+        serverBaseSeconds = Math.max(0, Math.floor(nowSec - d.start_time));
+        clientEpochAtFetch = Date.now();
+      }} else if (d.uptime_seconds !== undefined) {{
+        serverBaseSeconds = d.uptime_seconds;
+        clientEpochAtFetch = Date.now();
+      }}
+      updateUptimeDisplay();
+    }})
+    .catch(() => {{}});
+}}
+
+pollServerStats();
+setInterval(pollServerStats, 15000);
+
+/* 4. LAUNCH MODAL ENGINE (DEMO MODE & OWNER MODE) */
+let demoSimulationTimer = null;
+let isDemoRunning = false;
+
+function executeInteractiveLaunchSequence(e) {{
+  if (e) e.preventDefault();
+  openLaunchModal();
+}}
+
+function openLaunchModal() {{
+  const modal = document.getElementById('launchModal');
+  modal.classList.add('active');
+  switchLaunchModalMode('demo');
+}}
+
+function closeLaunchModal() {{
+  const modal = document.getElementById('launchModal');
+  modal.classList.remove('active');
+  if (demoSimulationTimer) {{
+    clearInterval(demoSimulationTimer);
+    isDemoRunning = false;
+  }}
+}}
+
+let hoverTimer = null;
+
+function showStagePopover(cardEl, stageId) {{
+  if (currentPinnedStage) return;
+  currentHoveredCard = cardEl;
+  if (hoverTimer) clearTimeout(hoverTimer);
+  hoverTimer = setTimeout(() => {{
+    if (currentHoveredCard === cardEl && !currentPinnedStage) {{
+      showPopoverForCard(cardEl);
+    }}
+  }}, 2000);
+}}
+
+function hideStagePopover() {{
+  if (hoverTimer) {{ clearTimeout(hoverTimer); hoverTimer = null; }}
+  hidePopover();
+}}
+
+function toggleStagePopover(cardEl, stageId, evt) {{
+  if (evt) evt.stopPropagation();
+  if (hoverTimer) {{ clearTimeout(hoverTimer); hoverTimer = null; }}
+  if (currentPinnedStage === stageId) {{
+    currentPinnedStage = null;
+    stageCards.forEach(c => c.classList.remove('active'));
+    popover.classList.remove('visible');
+    popover.setAttribute('aria-hidden', 'true');
+    currentHoveredCard = null;
+  }} else {{
+    currentPinnedStage = stageId;
+    stageCards.forEach(c => c.classList.remove('active'));
+    cardEl.classList.add('active');
+    showPopoverForCard(cardEl);
+  }}
+}}
+
+function switchLaunchModalMode(mode) {{
+  const tabDemo = document.getElementById('tabDemoBtn');
+  const tabOwner = document.getElementById('tabOwnerBtn');
+  const panelDemo = document.getElementById('modal-panel-demo');
+  const panelOwner = document.getElementById('modal-panel-owner');
+
+  if (mode === 'demo') {{
+    tabDemo.classList.add('active');
+    tabDemo.style.background = 'var(--orange-launch)';
+    tabDemo.style.color = '#000';
+    tabOwner.classList.remove('active');
+    tabOwner.style.background = 'transparent';
+    tabOwner.style.color = 'var(--text-dim)';
+    panelDemo.classList.add('active');
+    panelDemo.style.display = 'block';
+    panelOwner.classList.remove('active');
+    panelOwner.style.display = 'none';
+  }} else {{
+    tabOwner.classList.add('active');
+    tabOwner.style.background = 'var(--orange-launch)';
+    tabOwner.style.color = '#000';
+    tabDemo.classList.remove('active');
+    tabDemo.style.background = 'transparent';
+    tabDemo.style.color = 'var(--text-dim)';
+    panelOwner.classList.add('active');
+    panelOwner.style.display = 'block';
+    panelDemo.classList.remove('active');
+    panelDemo.style.display = 'none';
+  }}
+}}
+
+/* VISITOR DEMO MODE SIMULATION (NO /deploy CALL) */
+const DEMO_STAGES = [
+  {{ num: "01", name: "Code Commit", log: "Local git commit recorded on development branch." }},
+  {{ num: "02", name: "GitHub Repository", log: "Code pushed to branch; GitHub webhook verifies trigger events." }},
+  {{ num: "03", name: "GitHub Actions", log: "Ubuntu runner initialized; Python 3.12 environment established." }},
+  {{ num: "04", name: "Pytest Suite", log: "Running pytest unit & integration tests... 100% PASSED." }},
+  {{ num: "05", name: "Docker Build", log: "Container image built with commit SHA tag from Dockerfile." }},
+  {{ num: "06", name: "Docker Smoke Test", log: "Local container started; /health endpoint returned 200 OK." }},
+  {{ num: "07", name: "Trivy Vulnerability Scan", log: "Security scan completed with 0 critical CVE vulnerabilities." }},
+  {{ num: "08", name: "Kind K8s Cluster", log: "Spinning up ephemeral Kind Kubernetes test cluster in runner..." }},
+  {{ num: "09", name: "K8s Deployment Rollout", log: "Applying k8s/deployment.yaml manifests to cluster..." }},
+  {{ num: "10", name: "2 Pod Replicas Ready", log: "2/2 pod replicas transitioned to healthy and ready status." }},
+  {{ num: "11", name: "K8s In-Cluster Health", log: "In-cluster port forward test against service endpoint verified." }},
+  {{ num: "12", name: "Docker Hub SHA Tag", log: "Image pushed to Docker Hub registry with immutable SHA tag." }},
+  {{ num: "13", name: "AWS EC2 Target", log: "Terraform-provisioned AWS EC2 host notified of updated image." }},
+  {{ num: "14", name: "Render Cloud Target", log: "Render deployment webhook executed; rolling update completed." }},
+  {{ num: "15", name: "Prometheus Observability", log: "Prometheus metric scraper confirmed active on /metrics." }},
+  {{ num: "16", name: "Live System Online", log: "All 16 stages complete! Release online and healthy across targets." }}
+];
+
+function startVisitorDemoSimulation() {{
+  if (isDemoRunning) return;
+  isDemoRunning = true;
+
+  const progressBox = document.getElementById('demoProgressBox');
+  const startBtn = document.getElementById('btn-start-demo');
+  const stageName = document.getElementById('demoStageName');
+  const stagePercent = document.getElementById('demoStagePercent');
+  const progressBar = document.getElementById('demoProgressBar');
+  const stageLog = document.getElementById('demoStageLog');
+
+  progressBox.style.display = 'block';
+  startBtn.disabled = true;
+  startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> RUNNING SIMULATION...';
+
+  triggerRocketAnimation();
+
+  let index = 0;
+  progressBar.style.width = '0%';
+
+  demoSimulationTimer = setInterval(() => {{
+    if (index >= DEMO_STAGES.length) {{
+      clearInterval(demoSimulationTimer);
+      isDemoRunning = false;
+      startBtn.disabled = false;
+      startBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> RE-RUN SIMULATION';
+      stageName.textContent = 'DEMO COMPLETE — 100%';
+      stagePercent.textContent = '100%';
+      progressBar.style.width = '100%';
+      stageLog.innerHTML = '<span style="color: var(--sec-green); font-weight: 700;">✓ SIMULATION COMPLETED: All 16 CI/CD stages verified in-browser.</span>';
+      return;
+    }}
+
+    const s = DEMO_STAGES[index];
+    const pct = Math.round(((index + 1) / DEMO_STAGES.length) * 100);
+    stageName.textContent = `STAGE ${{s.num}} — ${{s.name.toUpperCase()}}`;
+    stagePercent.textContent = `${{pct}}%`;
+    progressBar.style.width = `${{pct}}%`;
+    stageLog.innerHTML = `<span style="color: #FFF;">${{s.log}}</span>`;
+
+    index++;
+  }}, 500);
+}}
+
+/* OWNER MODE REAL DISPATCH */
+function confirmOwnerDeploymentLaunch() {{
+  const confirmBtn = document.getElementById('btn-confirm-owner');
+  const keyInput = document.getElementById('triggerKeyInput');
+  const triggerKey = keyInput ? keyInput.value.trim() : '';
+  const respBox = document.getElementById('owner-resp-box');
+  const respHeader = document.getElementById('owner-resp-header');
+  const respBody = document.getElementById('owner-resp-body');
+
+  if (confirmBtn) confirmBtn.disabled = true;
+  confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> TRIGGERING CI/CD...';
+
+  respBox.style.display = 'block';
+  respHeader.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> DISPATCHING REPOSITORY EVENT...';
+  respHeader.style.color = 'var(--cyan-beam)';
+  respBody.innerHTML = '<p style="color: var(--text-dim);">Sending repository dispatch to GitHub Actions API...</p>';
+
+  fetch('/deploy', {{
+    method: 'POST',
+    headers: {{ 'Content-Type': 'application/json' }},
+    body: JSON.stringify({{ trigger_key: triggerKey, event_type: 'manual-deploy' }})
+  }})
+  .then(r => r.json())
+  .then(d => {{
+    if (confirmBtn) {{
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> CONFIRM LAUNCH';
+    }}
+
+    if (d.success) {{
+      respHeader.innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--sec-green);"></i> DEPLOYMENT TRIGGERED';
+      respHeader.style.color = 'var(--sec-green)';
+      respBody.innerHTML = '<p style="margin-bottom: 10px; font-weight: 700; color: var(--text-main);">' + (d.message || 'GitHub Actions workflow triggered successfully.') + '</p>' +
+        '<p style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6;">GitHub Actions has received the deployment event and started CI validation stages.</p>' +
+        '<a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions" target="_blank" rel="noopener noreferrer" class="btn-launch" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9)); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); text-decoration: none; font-size: 11.5px; padding: 10px 20px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">' +
+        '<i class="fa-brands fa-github"></i> VIEW GITHUB ACTIONS</a>';
+      triggerRocketAnimation();
+    }} else {{
+      respHeader.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: var(--aws-orange);"></i> DEPLOYMENT TRIGGER FAILED';
+      respHeader.style.color = 'var(--aws-orange)';
+      respBody.innerHTML = '<p style="font-weight: 700; margin-bottom: 6px; color: var(--text-main);">' + (d.message || 'GitHub rejected the workflow trigger.') + '</p><p style="color: var(--text-dim); font-size: 12px;">No workflow was dispatched.</p>';
+    }}
+  }})
+  .catch(e => {{
+    if (confirmBtn) {{
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> CONFIRM LAUNCH';
+    }}
+    respHeader.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: var(--sec-red);"></i> NETWORK / SERVER ERROR';
+    respHeader.style.color = 'var(--sec-red)';
+    respBody.innerHTML = '<p style="color: var(--text-dim); font-size: 13px;">Unable to contact the server /deploy route.</p>';
+  }});
+}}
+
+function triggerRocketAnimation() {{
+  const rocket = document.getElementById('mainRocket');
+  if (rocket) {{
+    rocket.classList.add('launching');
+    setTimeout(() => {{
+      rocket.classList.remove('launching');
+    }}, 3000);
+  }}
+}}
+
+document.getElementById('launchModal').addEventListener('click', e => {{
+  if (e.target === e.currentTarget) closeLaunchModal();
+}});
 </script>
+
 </body>
 </html>"""
 
@@ -660,47 +2589,76 @@ def health():
 def stats():
     data = {
         "status": "HEALTHY",
-        "total_requests": 0,
+        "total_requests": total_requests,
         "uptime": get_uptime(),
+        "uptime_seconds": int(time.time() - START_TIME),
+        "start_time": START_TIME,
         "cloud": os.getenv("CLOUD_PROVIDER", "local"),
         "hostname": socket.gethostname()
     }
-    try:
-        txt = requests.get("http://127.0.0.1:5000/metrics", timeout=1).text
-        total = 0
-        for line in txt.split('\n'):
-            if 'flask_http_request_total' in line and not line.startswith('#'):
-                try:
-                    total += float(line.split(' ')[-1])
-                except Exception:
-                    pass
-        data["total_requests"] = int(total)
-    except Exception:
-        pass
-    return jsonify(data)
+    return jsonify(data), 200
 
 
 @app.route("/deploy", methods=["POST"])
 def deploy():
-    token = os.getenv("GITHUB_TOKEN", "")
+    req_data = request.get_json(silent=True) or {}
+    
+    expected_trigger_key = os.getenv("DEPLOY_TRIGGER_KEY", "").strip()
+    if expected_trigger_key:
+        provided_key = str(req_data.get("trigger_key", "")).strip()
+        if not hmac.compare_digest(provided_key, expected_trigger_key):
+            return jsonify({
+                "success": False,
+                "message": "Deployment trigger key is invalid or required for this environment."
+            }), 200
+
+    token = os.getenv("GITHUB_TOKEN", "").strip()
     if not token:
-        return jsonify({"success": False, "message": "GITHUB_TOKEN not configured"})
+        return jsonify({
+            "success": False,
+            "message": "GitHub token is not configured on this server."
+        }), 200
+
     try:
         r = requests.post(
             "https://api.github.com/repos/JOSESAMUEL14/multicloud-cicd/dispatches",
             headers={
-                "Authorization": "Bearer " + token,
-                "Accept": "application/vnd.github.v3+json",
-                "Content-Type": "application/json"
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "Content-Type": "application/json",
+                "User-Agent": "MultiCloud-CICD-App"
             },
             json={"event_type": "manual-deploy"},
             timeout=10
         )
         if r.status_code == 204:
-            return jsonify({"success": True, "message": "Pipeline triggered!"})
-        return jsonify({"success": False, "message": "GitHub API error: " + str(r.status_code)})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
+            return jsonify({
+                "success": True,
+                "message": "GitHub Actions workflow triggered successfully.",
+                "workflow": "manual-deploy",
+                "actions_url": "https://github.com/JOSESAMUEL14/multicloud-cicd/actions"
+            }), 200
+        elif r.status_code in (401, 403):
+            return jsonify({
+                "success": False,
+                "message": "GitHub rejected the workflow trigger. Check server token permissions."
+            }), 200
+        elif r.status_code == 404:
+            return jsonify({
+                "success": False,
+                "message": "GitHub repository not found or token lacks repository access."
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "message": f"GitHub API returned status {r.status_code}."
+            }), 200
+    except Exception:
+        return jsonify({
+            "success": False,
+            "message": "Unable to communicate with GitHub API server-side."
+        }), 200
 
 
 if __name__ == "__main__":
