@@ -6,6 +6,8 @@ on:
       - main
       - devops-v2
       - devops-v3
+      - v4-aws-ec2-deployment
+
   repository_dispatch:
     types: [manual-deploy]
 
@@ -57,9 +59,18 @@ jobs:
 
       - name: Smoke test Docker image
         run: |
-          docker run -d --name multicloud-app-smoke -p 5000:5000 josesamuel14/multicloud-app:${{ github.sha }}
+          docker run -d \
+            --name multicloud-app-smoke \
+            -p 5000:5000 \
+            josesamuel14/multicloud-app:${{ github.sha }}
+
           trap 'docker logs multicloud-app-smoke || true; docker rm -f multicloud-app-smoke || true' EXIT
-          curl --fail --retry-all-errors --retry 10 --retry-delay 2 http://localhost:5000/health
+
+          curl --fail \
+            --retry-all-errors \
+            --retry 10 \
+            --retry-delay 2 \
+            http://localhost:5000/health
 
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@v0.36.0
@@ -88,8 +99,13 @@ jobs:
 
       - name: Prepare Kubernetes image
         run: |
-          docker tag josesamuel14/multicloud-app:${{ github.sha }} multicloud-app:nonroot
-          kind load docker-image multicloud-app:nonroot --name multicloud-ci
+          docker tag \
+            josesamuel14/multicloud-app:${{ github.sha }} \
+            multicloud-app:nonroot
+
+          kind load docker-image \
+            multicloud-app:nonroot \
+            --name multicloud-ci
 
       - name: Deploy to Kubernetes
         run: |
@@ -98,7 +114,9 @@ jobs:
 
       - name: Wait for Kubernetes rollout
         run: |
-          kubectl rollout status deployment/multicloud-app --timeout=120s
+          kubectl rollout status \
+            deployment/multicloud-app \
+            --timeout=120s
 
       - name: Verify Kubernetes deployment
         run: |
@@ -106,21 +124,32 @@ jobs:
           kubectl get pods -l app=multicloud-app
           kubectl get service multicloud-app-service
 
-          READY=$(kubectl get deployment multicloud-app -o jsonpath='{.status.readyReplicas}')
-          AVAILABLE=$(kubectl get deployment multicloud-app -o jsonpath='{.status.availableReplicas}')
+          READY=$(kubectl get deployment multicloud-app \
+            -o jsonpath='{.status.readyReplicas}')
+
+          AVAILABLE=$(kubectl get deployment multicloud-app \
+            -o jsonpath='{.status.availableReplicas}')
 
           test "$READY" = "2"
           test "$AVAILABLE" = "2"
 
       - name: Verify application health in Kubernetes
         run: |
-          kubectl port-forward service/multicloud-app-service 5000:5000 > /tmp/port-forward.log 2>&1 &
+          kubectl port-forward \
+            service/multicloud-app-service \
+            5000:5000 \
+            > /tmp/port-forward.log 2>&1 &
+
           PORT_FORWARD_PID=$!
+
           trap 'kill $PORT_FORWARD_PID || true' EXIT
 
           sleep 5
 
-          curl --fail --retry-all-errors --retry 10 --retry-delay 2 \
+          curl --fail \
+            --retry-all-errors \
+            --retry 10 \
+            --retry-delay 2 \
             http://127.0.0.1:5000/health
 
       - name: Show Kubernetes diagnostics
@@ -136,3 +165,149 @@ jobs:
         run: |
           docker push josesamuel14/multicloud-app:latest
           docker push josesamuel14/multicloud-app:${{ github.sha }}
+
+  deploy-to-ec2:
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy exact Git SHA to AWS EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            set -e
+
+            NEW_IMAGE="josesamuel14/multicloud-app:${{ github.sha }}"
+            CONTAINER_NAME="multicloud-app"
+
+            echo "=========================================="
+            echo "AWS EC2 DEPLOYMENT"
+            echo "=========================================="
+
+            echo "New image:"
+            echo "$NEW_IMAGE"
+
+            echo "------------------------------------------"
+            echo "Pulling new Docker image..."
+            echo "------------------------------------------"
+
+            docker pull "$NEW_IMAGE"
+
+            echo "------------------------------------------"
+            echo "Detecting currently deployed image..."
+            echo "------------------------------------------"
+
+            OLD_IMAGE=$(docker inspect \
+              --format='{{.Config.Image}}' \
+              "$CONTAINER_NAME" 2>/dev/null || true)
+
+            echo "Previous image: ${OLD_IMAGE:-none}"
+
+            echo "------------------------------------------"
+            echo "Stopping existing container..."
+            echo "------------------------------------------"
+
+            docker stop "$CONTAINER_NAME" || true
+
+            echo "------------------------------------------"
+            echo "Removing existing container..."
+            echo "------------------------------------------"
+
+            docker rm "$CONTAINER_NAME" || true
+
+            echo "------------------------------------------"
+            echo "Starting new container..."
+            echo "------------------------------------------"
+
+            docker run -d \
+              --name "$CONTAINER_NAME" \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              -e CLOUD_PROVIDER=aws \
+              -e CLOUD_REGION=ap-south-1 \
+              "$NEW_IMAGE"
+
+            echo "------------------------------------------"
+            echo "Waiting for application..."
+            echo "------------------------------------------"
+
+            sleep 5
+
+            echo "------------------------------------------"
+            echo "Checking application health..."
+            echo "------------------------------------------"
+
+            if curl \
+              --fail \
+              --retry 10 \
+              --retry-delay 3 \
+              http://localhost:5000/health; then
+
+              echo ""
+              echo "=========================================="
+              echo "EC2 DEPLOYMENT SUCCESSFUL"
+              echo "=========================================="
+
+            else
+
+              echo ""
+              echo "=========================================="
+              echo "NEW DEPLOYMENT FAILED"
+              echo "STARTING ROLLBACK"
+              echo "=========================================="
+
+              echo "------------------------------------------"
+              echo "Removing failed container..."
+              echo "------------------------------------------"
+
+              docker rm -f "$CONTAINER_NAME" || true
+
+              if [ -n "$OLD_IMAGE" ]; then
+
+                echo "------------------------------------------"
+                echo "Rolling back to previous image..."
+                echo "------------------------------------------"
+
+                docker run -d \
+                  --name "$CONTAINER_NAME" \
+                  --restart unless-stopped \
+                  -p 5000:5000 \
+                  -e CLOUD_PROVIDER=aws \
+                  -e CLOUD_REGION=ap-south-1 \
+                  "$OLD_IMAGE"
+
+                echo "------------------------------------------"
+                echo "Waiting for rollback..."
+                echo "------------------------------------------"
+
+                sleep 5
+
+                echo "------------------------------------------"
+                echo "Checking rollback health..."
+                echo "------------------------------------------"
+
+                curl \
+                  --fail \
+                  --retry 10 \
+                  --retry-delay 3 \
+                  http://localhost:5000/health
+
+                echo ""
+                echo "=========================================="
+                echo "ROLLBACK SUCCESSFUL"
+                echo "=========================================="
+
+              else
+
+                echo "No previous image available for rollback."
+
+              fi
+
+              exit 1
+
+            fi
