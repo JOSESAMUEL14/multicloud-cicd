@@ -1091,18 +1091,54 @@ git branch
 
 🔒 Branch & Version Safety
 
-The project uses separate branches to protect stable versions.
+The project uses separate branches to protect stable versions and keep development work isolated.
 
+Branch Structure
+
+<table>
+  <thead>
+    <tr>
+      <th>Branch</th>
+      <th>Purpose</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>main</code></td>
+      <td>Stable recruiter-facing project</td>
+      <td>🟢 Stable</td>
+    </tr>
+    <tr>
+      <td><code>v1-stable</code></td>
+      <td>Original V1 implementation</td>
+      <td>🔒 Preserved</td>
+    </tr>
+    <tr>
+      <td><code>devops-v3</code></td>
+      <td>V3 development and portfolio UI</td>
+      <td>📦 Preserved</td>
+    </tr>
+    <tr>
+      <td><code>v4-aws-ec2-deployment</code></td>
+      <td>V4 AWS EC2 deployment development</td>
+      <td>🛠️ Development</td>
+    </tr>
+  </tbody>
+</table>
+
+Version Flow
+
+v1-stable
+    │
+    ▼
+devops-v3
+    │
+    ▼
+v4-aws-ec2-deployment
+    │
+    ▼
 main
-│
-├── v1-stable
-│   └── Original V1 preserved
-│
-├── devops-v3
-│   └── V3 development preserved
-│
-└── v4-aws-ec2-deployment
-    └── V4 AWS deployment development
 
 Version History
 
@@ -1298,61 +1334,33 @@ Documentation
 
 🎯 Project Objective
 
-The objective of this project is to demonstrate how a software application can move through a practical DevOps lifecycle:
+The objective of this project is to demonstrate how a software application can move through a practical DevOps lifecycle.
 
-┌───────────────┐
-│     CODE      │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│     TEST      │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│     BUILD     │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│  CONTAINERIZE │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│     SCAN      │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│   VALIDATE    │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│    PUBLISH    │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│    DEPLOY     │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│    VERIFY     │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│   MONITOR     │
-└───────┬───────┘
-        │
-        ▼
-┌───────────────┐
-│    RECOVER    │
-└───────────────┘
+DevOps Lifecycle
+
+<table>
+  <tr>
+    <td align="center"><strong>01</strong><br>💻<br><strong>CODE</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>02</strong><br>🧪<br><strong>TEST</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>03</strong><br>🐳<br><strong>BUILD</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>04</strong><br>📦<br><strong>CONTAINERIZE</strong></td>
+  </tr>
+  <tr>
+    <td colspan="7" align="center">↓</td>
+  </tr>
+  <tr>
+    <td align="center"><strong>08</strong><br>🔄<br><strong>RECOVER</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>07</strong><br>📊<br><strong>MONITOR</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>06</strong><br>🚀<br><strong>DEPLOY</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>05</strong><br>🔒<br><strong>SCAN &amp; VALIDATE</strong></td>
+  </tr>
+</table>
 
 The project emphasizes practical DevOps engineering rather than simply collecting a large number of technologies.
 
