@@ -1,499 +1,976 @@
-# Multi-Cloud CI/CD Pipeline
+🚀 Multi-Cloud CI/CD Pipeline
 
-[![CI/CD Pipeline](https://github.com/JOSESAMUEL14/multicloud-cicd/actions/workflows/deploy.yml/badge.svg)](https://github.com/JOSESAMUEL14/multicloud-cicd/actions/workflows/deploy.yml)
+<p align="center">
+  <strong>A production-style DevOps project for automated testing, containerization, security scanning, Kubernetes validation, cloud deployment, and monitoring.</strong>
+</p>
 
-A Flask-based DevOps project demonstrating containerization, CI/CD, Kubernetes deployment, Terraform-based AWS infrastructure, and Prometheus/Grafana monitoring.
+<p align="center">
+  <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions">
+    <img src="https://github.com/JOSESAMUEL14/multicloud-cicd/actions/workflows/deploy.yml/badge.svg" alt="CI/CD Pipeline">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.11-blue?logo=python" alt="Python 3.11">
+  <img src="https://img.shields.io/badge/Docker-Containerized-blue?logo=docker" alt="Docker">
+  <img src="https://img.shields.io/badge/Kubernetes-Kind-blue?logo=kubernetes" alt="Kubernetes">
+  <img src="https://img.shields.io/badge/AWS-EC2-orange?logo=amazonaws" alt="AWS EC2">
+  <img src="https://img.shields.io/badge/Terraform-IaC-purple?logo=terraform" alt="Terraform">
+  <img src="https://img.shields.io/badge/Trivy-Security-red" alt="Trivy">
+  <img src="https://img.shields.io/badge/Prometheus-Monitoring-orange?logo=prometheus" alt="Prometheus">
+  <img src="https://img.shields.io/badge/Grafana-Observability-orange?logo=grafana" alt="Grafana">
+</p>
 
+🌐 Project Links
 
----
+<table>
+  <tr>
+    <td width="50%">
+      <h3>🌍 Live Application</h3>
+      <strong>Render Demo</strong><br><br>
+      <a href="https://multicloud-cicd.onrender.com">🚀 Open Live Application</a>
+    </td>
+    <td width="50%">
+      <h3>⚙️ CI/CD Pipeline</h3>
+      <strong>GitHub Actions</strong><br><br>
+      <a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions">🔄 View Pipeline Runs</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>💻 Source Code</h3>
+      <strong>GitHub Repository</strong><br><br>
+      <a href="https://github.com/JOSESAMUEL14/multicloud-cicd">📂 View Repository</a>
+    </td>
+    <td width="50%">
+      <h3>🐳 Container Registry</h3>
+      <strong>Docker Hub</strong><br><br>
+      <a href="https://hub.docker.com/r/josesamuel14/multicloud-app">📦 View Docker Image</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>☁️ AWS EC2 Demo</h3>
+      <strong>Current EC2 Deployment</strong><br><br>
+      <a href="http://13.201.186.250:5000">🚀 Open AWS EC2 Application</a>
+      <br><br>
+      <sub>Live-demo instance. Public IP may change after stop/start.</sub>
+    </td>
+    <td width="50%">
+      <h3>📖 Project Documentation</h3>
+      <strong>GitHub README</strong><br><br>
+      <a href="https://github.com/JOSESAMUEL14/multicloud-cicd#readme">📘 View Documentation</a>
+    </td>
+  </tr>
+</table>
 
-## 🚀 Project Overview
+⚠️ AWS demo note: The current EC2 public IP is 13.201.186.250. The instance is not kept running continuously, and AWS can assign a different public IP after a stop/start cycle. Therefore, the AWS URL is intended for live demonstrations rather than as a permanent endpoint.
 
-This project demonstrates a complete DevOps workflow around a Flask application:
+🎯 Project Overview
 
-```text
-Developer
-    │
-    ▼
-GitHub Repository
-    │
-    ▼
+Multi-Cloud CI/CD Pipeline is a Flask-based DevOps project that demonstrates a practical software delivery lifecycle from source code to containerized deployment and runtime verification.
+
+The project combines:
+
+🧪 Automated testing with Pytest
+
+🐳 Docker containerization
+
+🔒 Trivy vulnerability scanning
+
+☸️ Kubernetes validation using Kind
+
+📦 Docker Hub image publishing
+
+☁️ AWS EC2 deployment
+
+🔐 Immutable Git SHA image deployment
+
+❤️ Automated health verification
+
+🔄 Deployment rollback logic
+
+📊 Prometheus monitoring
+
+📈 Grafana dashboards
+
+🖥️ Node Exporter system metrics
+
+🏗️ Terraform infrastructure as code
+
+🔀 Git/GitHub version control
+
+The goal is to demonstrate how these technologies work together as one automated DevOps workflow rather than simply listing tools.
+
+☁️ AWS EC2 Deployment
+
+The application has been successfully deployed to AWS EC2 through the automated CI/CD pipeline.
+
+The EC2 instance is started only when a live demonstration is required to avoid unnecessary continuous cloud usage.
+
+Live Demonstration Flow
+
+Git Push
+   │
+   ▼
 GitHub Actions
-    │
-    ├── Run Python tests
-    │
-    ├── Build Docker image
-    │
-    ├── Docker smoke test
-    │
-    ├── Trivy vulnerability scan
-    │
-    ├── Create local Kubernetes cluster
-    │
-    ├── Deploy application to Kubernetes
-    │
-    ├── Verify Kubernetes rollout
-    │
-    └── Verify application health
-             │
-             └── main → Push image to Docker Hub
+   │
+   ▼
+Automated Tests
+   │
+   ▼
+Docker Build
+   │
+   ▼
+Trivy Security Scan
+   │
+   ▼
+Kind Kubernetes Validation
+   │
+   ▼
+Docker Hub
+   │
+   ▼
+AWS EC2
+   │
+   ▼
+Pull Exact Git SHA Image
+   │
+   ▼
+Replace Existing Container
+   │
+   ▼
+/health Verification
+   │
+   ▼
+Deployment Verified
 
-The application can also be run locally using Docker Compose and deployed to a local Kubernetes cluster.
+AWS Runtime
 
-AWS infrastructure is defined separately using Terraform.
+AWS EC2
+   │
+   ▼
+Docker
+   │
+   ▼
+multicloud-app
+   │
+   ▼
+Flask Application
+   │
+   ▼
+Port 5000
+   │
+   ▼
+/health
+
+Runtime Configuration
+
+CLOUD_PROVIDER=aws
+CLOUD_REGION=ap-south-1
+Application Port=5000
+
+Live Demonstration Contact
+
+💼 LinkedIn: linkedin.com/in/samueld14
+
+💻 GitHub: github.com/JOSESAMUEL14
+
+📧 Email: Josesamueld2005@gmail.com
+
+🧭 DevOps Workflow
+
+                         👨‍💻 Developer
+                              │
+                              ▼
+                    💻 GitHub Repository
+                              │
+                              ▼
+                     ⚙️ GitHub Actions
+                              │
+               ┌──────────────┼──────────────┐
+               │              │              │
+               ▼              ▼              ▼
+          🧪 Pytest      🐳 Docker Build  🔒 Trivy
+               │              │              │
+               └──────────────┼──────────────┘
+                              │
+                              ▼
+                    ☸️ Kind Kubernetes
+                       Validation
+                              │
+                              ▼
+                         📦 Docker Hub
+                              │
+                              ▼
+                           ☁️ AWS EC2
+                              │
+                              ▼
+                       🐳 Docker Container
+                              │
+                              ▼
+                           ❤️ /health
+                              │
+                              ▼
+                     ✅ Deployment Verified
 
 🏗️ Architecture
-                         GitHub
-                           │
-                           ▼
-                    GitHub Actions
-                           │
-             ┌─────────────┴─────────────┐
-             │                           │
-          Tests                     Docker Build
-             │                           │
-             └─────────────┬─────────────┘
-                           │
-                    Docker Smoke Test
-                           │
-                           ▼
-                  Trivy Security Scan
-                           │
-                           ▼
-                 Local Kubernetes
-                    (Kind in CI)
-                           │
-                           ▼
-                 Containerized Flask App
-                           │
-                 ┌─────────┴─────────┐
-                 │                   │
-                 ▼                   ▼
-             2 replicas        Health Probes
-                 │                   │
-                 └─────────┬─────────┘
-                           │
-                           ▼
-                       /metrics
-                           │
-                           ▼
-                      Prometheus
-                           │
-                           ▼
-                        Grafana
 
-                    Node Exporter
-                           │
-                           ▼
-                      Prometheus
-🛠️ Tech Stack
-Technology	Purpose
-Python / Flask	Web application and REST API
-Docker	Application containerization
-GitHub Actions	CI/CD automation
-Docker Hub	Container image registry
-Kubernetes	Container orchestration
-Kind	Local Kubernetes cluster
-Terraform	AWS infrastructure as code
-AWS EC2	Cloud deployment target
-Prometheus	Metrics collection
-Grafana	Monitoring dashboard
-Node Exporter	System metrics
-Trivy	Container vulnerability scanning
-Git/GitHub	Version control
-🔄 CI/CD Pipeline
+┌──────────────────────┐
+│      Developer       │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│       GitHub         │
+└──────────┬───────────┘
+           │
+           ▼
+┌────────────────────────────┐
+│      GitHub Actions        │
+└─────────────┬──────────────┘
+              │
+      ┌───────┼────────┐
+      │       │        │
+      ▼       ▼        ▼
+┌─────────┐ ┌────────┐ ┌─────────┐
+│ Pytest  │ │ Docker │ │  Trivy  │
+│  Tests  │ │ Build  │ │  Scan   │
+└────┬────┘ └───┬────┘ └────┬────┘
+     │          │           │
+     └──────────┼───────────┘
+                │
+                ▼
+      ┌────────────────────┐
+      │  Kind Kubernetes   │
+      │     Validation     │
+      └─────────┬──────────┘
+                │
+                ▼
+        ┌──────────────┐
+        │  Docker Hub  │
+        └──────┬───────┘
+               │
+               ▼
+        ┌──────────────┐
+        │   AWS EC2    │
+        │    Docker    │
+        └──────┬───────┘
+               │
+               ▼
+        ┌──────────────┐
+        │  Flask App   │
+        │   Port 5000  │
+        └──────┬───────┘
+               │
+               ▼
+            /health
 
-The GitHub Actions workflow validates the application through automated testing, Docker build validation, security scanning, and Kubernetes deployment validation.
+🛠️ Technology Stack
 
-The workflow runs for:
+<table>
+  <thead>
+    <tr>
+      <th>Technology</th>
+      <th>Category</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Python / Flask</td>
+      <td>Application</td>
+      <td>Web application and REST API</td>
+    </tr>
+    <tr>
+      <td>Docker</td>
+      <td>Containerization</td>
+      <td>Application packaging and runtime</td>
+    </tr>
+    <tr>
+      <td>GitHub Actions</td>
+      <td>CI/CD</td>
+      <td>Continuous integration and deployment automation</td>
+    </tr>
+    <tr>
+      <td>Docker Hub</td>
+      <td>Registry</td>
+      <td>Container image storage and publishing</td>
+    </tr>
+    <tr>
+      <td>Kubernetes / Kind</td>
+      <td>Orchestration</td>
+      <td>CI/CD deployment validation</td>
+    </tr>
+    <tr>
+      <td>Terraform</td>
+      <td>Infrastructure as Code</td>
+      <td>AWS infrastructure configuration</td>
+    </tr>
+    <tr>
+      <td>AWS EC2</td>
+      <td>Cloud</td>
+      <td>Cloud deployment target</td>
+    </tr>
+    <tr>
+      <td>Prometheus</td>
+      <td>Monitoring</td>
+      <td>Time-series metric collection</td>
+    </tr>
+    <tr>
+      <td>Grafana</td>
+      <td>Observability</td>
+      <td>Monitoring dashboards</td>
+    </tr>
+    <tr>
+      <td>Node Exporter</td>
+      <td>System Metrics</td>
+      <td>Host and OS metrics</td>
+    </tr>
+    <tr>
+      <td>Trivy</td>
+      <td>Security</td>
+      <td>Container vulnerability scanning</td>
+    </tr>
+    <tr>
+      <td>Git / GitHub</td>
+      <td>Version Control</td>
+      <td>Source control and collaboration</td>
+    </tr>
+  </tbody>
+</table>
 
-main
-devops-v2
-devops-v3
-Pipeline Flow
-Push
-  ↓
-Checkout
-  ↓
-Python 3.11 setup
-  ↓
-Install dependencies
-  ↓
-Run pytest
-  ↓
-Build Docker image
-  ↓
-Docker smoke test
-  ↓
-Trivy vulnerability scan
-  ↓
-Create Kind Kubernetes cluster
-  ↓
-Load Docker image
-  ↓
-Deploy Kubernetes manifests
-  ↓
-Wait for rollout
-  ↓
-Verify 2/2 replicas
-  ↓
-Verify application health
-  ↓
-Show Kubernetes diagnostics
-  ↓
-Push Docker image on main
+🔄 Complete CI/CD Pipeline
 
-The workflow is defined in:
+The GitHub Actions workflow performs multiple validation and deployment stages before considering the deployment successful.
+
+Pipeline Stages
+
+01. Push to GitHub
+        │
+        ▼
+02. Checkout source code
+        │
+        ▼
+03. Setup Python 3.11
+        │
+        ▼
+04. Install dependencies
+        │
+        ▼
+05. Run Pytest
+        │
+        ▼
+06. Build Docker image
+        │
+        ▼
+07. Docker smoke test
+        │
+        ▼
+08. Trivy vulnerability scan
+        │
+        ▼
+09. Create Kind Kubernetes cluster
+        │
+        ▼
+10. Load Docker image into Kind
+        │
+        ▼
+11. Deploy Kubernetes manifests
+        │
+        ▼
+12. Wait for rollout
+        │
+        ▼
+13. Verify 2/2 replicas
+        │
+        ▼
+14. Verify application health
+        │
+        ▼
+15. Show Kubernetes diagnostics
+        │
+        ▼
+16. Publish Docker image on main
+        │
+        ▼
+17. SSH into AWS EC2
+        │
+        ▼
+18. Pull exact Git SHA image
+        │
+        ▼
+19. Replace existing container
+        │
+        ▼
+20. Start new container
+        │
+        ▼
+21. Verify /health endpoint
+        │
+        ▼
+22. Deployment successful
+
+Workflow File
 
 .github/workflows/deploy.yml
-Docker Image Publishing
 
-Docker images are pushed to Docker Hub only when changes reach main.
+☁️ AWS EC2 Deployment — V4
 
-Two image tags are published:
+V4 extends the existing CI/CD pipeline with automated deployment directly to AWS EC2.
 
-latest
-Git commit SHA
+The AWS deployment runs after changes reach the main branch and the earlier CI validation stages succeed.
 
-The Git commit SHA provides an immutable image reference in addition to the latest tag.
+V4 Deployment Flow
 
-Development branches build and validate the image without publishing it to Docker Hub.
+GitHub Push
+     │
+     ▼
+GitHub Actions
+     │
+     ▼
+Run Tests
+     │
+     ▼
+Build Docker Image
+     │
+     ▼
+Docker Smoke Test
+     │
+     ▼
+Trivy Security Scan
+     │
+     ▼
+Kubernetes Validation
+     │
+     ▼
+Docker Hub
+     │
+     ▼
+AWS EC2
+     │
+     ▼
+Pull Git SHA Image
+     │
+     ▼
+Stop Previous Application
+     │
+     ▼
+Start New Container
+     │
+     ▼
+/health Check
+     │
+     ▼
+SUCCESS
 
-🧪 Automated Testing
+🔐 Immutable Git SHA Deployment
 
-The project includes a Flask health test:
+The AWS deployment does not rely only on the mutable latest tag.
 
-tests/test_app.py
+Instead, it uses the exact Git commit SHA.
 
-The test verifies:
+Example:
+
+josesamuel14/multicloud-app:fedae7b99f755f833196e396a214e32248a8dd91
+
+Benefits
+
+🔎 Traceability — connects the running container to a specific source commit.
+
+🔐 Immutable Reference — identifies an exact image rather than a moving tag.
+
+🔄 Easier Rollback — the previous image reference can be reused.
+
+🧪 Better Debugging — deployment issues can be traced to a specific revision.
+
+📌 Reproducibility — the same image reference can be deployed again.
+
+The EC2 runtime was successfully verified using an image tagged with the exact Git commit SHA.
+
+❤️ Deployment Verification
+
+A deployment is considered successful only after the EC2 application responds successfully to:
 
 GET /health
-     ↓
-HTTP 200
 
-Run locally:
+Example response:
 
-pip install -r requirements-dev.txt
-python -m pytest tests/test_app.py
+{
+  "cloud": "aws",
+  "region": "ap-south-1",
+  "status": "healthy"
+}
 
-Expected result:
+The /health endpoint is used as the final runtime verification step.
 
-1 passed
+🔄 Deployment Rollback
+
+The EC2 deployment script records the previously running Docker image before replacing the application container.
+
+Normal Deployment
+
+New Image
+    │
+    ▼
+Pull Image
+    │
+    ▼
+Stop Previous Container
+    │
+    ▼
+Start New Container
+    │
+    ▼
+/health
+    │
+    ▼
+Healthy
+    │
+    ▼
+✅ Deployment Successful
+
+Failure Path
+
+New Image
+    │
+    ▼
+Start New Container
+    │
+    ▼
+/health
+    │
+    ▼
+❌ Failure
+    │
+    ▼
+Remove Failed Container
+    │
+    ▼
+Start Previous Image
+    │
+    ▼
+Rollback Health Check
+    │
+    ▼
+Previous Version Restored
+
+The rollback mechanism is implemented in the deployment workflow.
+
+Validation note: A deliberate failure-path test is planned as a future validation step.
+
 🐳 Docker
 
 The Flask application is packaged using:
 
 app/Dockerfile
 
-The container runs as a non-root user:
+Container Configuration
 
-UID 10001
+Base Image: Python 3.11 slim
+Runtime User: UID 10001
+Application Port: 5000
 
-This reduces unnecessary container privileges.
+Build Locally
 
-The Docker image uses Python 3.11 slim and installs only the application dependencies.
+docker build -t multicloud-app:v4 ./app
 
-Build locally:
-
-docker build -t multicloud-app:v3 ./app
-
-Run:
+Run Locally
 
 docker run -d \
   --name multicloud-app \
   -p 5000:5000 \
-  multicloud-app:v3
+  multicloud-app:v4
 
-Test:
+Verify Runtime
 
 curl http://localhost:5000/health
-🔒 Docker Vulnerability Scanning
+
+🔒 Trivy Security Scanning
 
 The CI pipeline uses Trivy to scan the Docker image.
 
-The scan checks for:
+The pipeline checks:
 
-HIGH
-CRITICAL
+HIGH severity vulnerabilities
 
-severity vulnerabilities.
+CRITICAL severity vulnerabilities
 
 Unfixed vulnerabilities are ignored so that vulnerabilities without an available fix do not unnecessarily block the pipeline.
 
-The pipeline also excludes the embedded pip SBOM file that can contain stale dependency metadata and cause duplicate vulnerability findings.
+The embedded pip SBOM file is excluded to avoid duplicate or stale dependency metadata findings.
 
-The installed Python packages are still scanned.
+The installed Python packages remain subject to vulnerability scanning.
 
-☸️ Kubernetes
+☸️ Kubernetes Validation
 
-The Kubernetes deployment is defined in:
+The project uses Kubernetes for deployment validation through Kind (Kubernetes in Docker).
+
+Configuration Files
 
 deployment.yaml
 service.yaml
 kind-config.yaml
 
-Current deployment configuration includes:
+Current Deployment
+
+The Kubernetes deployment includes:
 
 2 replicas
+
 Readiness probe
+
 Liveness probe
-CPU and memory requests/limits
+
+CPU requests
+
+CPU limits
+
+Memory requests
+
+Memory limits
+
 Non-root execution
+
 runAsUser: 10001
+
 Dropped Linux capabilities
+
 Disabled privilege escalation
 
-The application is exposed locally through a NodePort.
-
-Apply:
+Apply Manifests
 
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 
-Check:
+Check Resources
 
 kubectl get pods
 kubectl get deployment
 kubectl get service
 
-Check rollout:
+Check Rollout
 
 kubectl rollout status deployment/multicloud-app
-Kubernetes Health Probes
+
+❤️ Kubernetes Health Probes
 
 The application provides:
 
 /health
 
-Kubernetes uses this endpoint for:
+Kubernetes uses this endpoint for both readiness and liveness checks.
 
 Readiness Probe
-
-Determines whether the application is ready to receive traffic.
 
 readinessProbe:
   httpGet:
     path: /health
     port: 5000
-Liveness Probe
 
-Determines whether the application is still running correctly.
+The readiness probe determines whether the application is ready to receive traffic.
+
+Liveness Probe
 
 livenessProbe:
   httpGet:
     path: /health
     port: 5000
-Kubernetes Resource Management
 
-Each application pod has resource requests and limits.
+The liveness probe determines whether the application is still running correctly.
 
-Example:
+🔄 Kubernetes Self-Healing
 
-resources:
-  requests:
-    cpu: "100m"
-    memory: "128Mi"
+The deployment was tested for pod failure and recovery.
 
-  limits:
-    cpu: "500m"
-    memory: "256Mi"
-Kubernetes Reliability Validation
+2 replicas running
+       │
+       ▼
+Delete one application pod
+       │
+       ▼
+Kubernetes detects missing replica
+       │
+       ▼
+Replacement pod created
+       │
+       ▼
+Deployment returns to 2/2
 
-The Kubernetes deployment was tested for pod failure and recovery.
-
-Validation performed:
-
-Deployment configured with 2 replicas
-A running application pod was manually deleted
-Kubernetes automatically created a replacement pod
-Deployment returned to 2/2 ready replicas
-Readiness and liveness probes continued to use /health
-
-This validates Kubernetes self-healing behavior for the application deployment.
-
-Example recovery check:
-
-kubectl get pods
-kubectl get deployment multicloud-app
-
-Expected state after recovery:
+Expected State
 
 Deployment: 2/2 available
 Pods:       2/2 Running
-☁️ Terraform / AWS
 
-AWS infrastructure is defined in:
+This demonstrates Kubernetes controller-based self-healing.
+
+📊 Monitoring & Observability
+
+The local monitoring stack contains:
+
+                    ┌─────────────────┐
+                    │    Flask App    │
+                    │    /metrics     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Prometheus    │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │     Grafana     │
+                    └─────────────────┘
+
+
+                    ┌─────────────────┐
+                    │  Node Exporter  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Prometheus    │
+                    └─────────────────┘
+
+Services
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Port</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Flask App</td>
+      <td>5000</td>
+      <td>Application and health endpoints</td>
+    </tr>
+    <tr>
+      <td>Prometheus</td>
+      <td>9090</td>
+      <td>Metrics collection and queries</td>
+    </tr>
+    <tr>
+      <td>Grafana</td>
+      <td>3000</td>
+      <td>Monitoring dashboards</td>
+    </tr>
+    <tr>
+      <td>Node Exporter</td>
+      <td>9100</td>
+      <td>Host and system metrics</td>
+    </tr>
+  </tbody>
+</table>
+
+Prometheus scrapes metrics every 15 seconds.
+
+📡 Prometheus
+
+Prometheus monitors application and infrastructure metrics.
+
+Expected Targets
+
+multicloud-app
+prometheus
+node-exporter
+
+Prometheus Targets
+
+Open:
+
+http://localhost:9090/targets
+
+Expected state:
+
+UP
+
+Prometheus Health
+
+Open:
+
+http://localhost:9090/-/healthy
+
+📈 Grafana
+
+Grafana is used for observability and visualization.
+
+Grafana credentials are provided through .env.
+
+Create .env
+
+GRAFANA_ADMIN_PASSWORD=your-secure-password
+
+⚠️ Security: Never commit .env or real credentials to GitHub.
+
+Start Monitoring
+
+docker compose --env-file .env -f monitoring/docker-compose.yml up -d
+
+Check Monitoring Containers
+
+docker compose --env-file .env -f monitoring/docker-compose.yml ps
+
+🏗️ Terraform / AWS Infrastructure
+
+Terraform configuration:
 
 terraform/aws-ec2.tf
 
-The configuration defines:
+The configuration demonstrates:
 
 AWS provider
-EC2 instance
-Security group
-Elastic IP
-Docker installation through EC2 user data
-Application container startup
+
+EC2
+
+Security Group
+
+Elastic IP resource configuration
+
+Docker installation
+
+EC2 user data
+
+Application startup
+
+Terraform variables
+
 Terraform outputs
 
-The default AWS region is:
+Important: The Terraform configuration demonstrates Elastic IP resource configuration, but the currently used EC2 instance does not have a permanent Elastic IP. Its public IP can therefore change after a stop/start cycle.
+
+Default AWS Region
 
 ap-south-1
 
-The SSH CIDR is provided as an input variable:
+SSH CIDR Variable
 
 variable "ssh_cidr" {
   description = "CIDR block allowed to access SSH"
   type        = string
 }
 
-This avoids permanently hardcoding an SSH source range in the Terraform configuration.
-
-Important
-
-The Terraform configuration is provided for infrastructure-as-code demonstration.
+Infrastructure Safety
 
 Do not run:
 
 terraform apply
 
-unless you understand the AWS resources and possible charges.
+unless the AWS resources, Terraform state, instance configuration, and potential cloud usage are understood.
 
-AWS free-tier eligibility depends on the AWS account, region, resource usage, and current AWS pricing rules.
+AWS free-tier and credit eligibility depends on the account, region, resource usage, and current AWS pricing rules.
 
-📊 Monitoring
+🧪 Automated Testing
 
-The local monitoring stack contains:
+Test file:
 
-Flask App
-    │
-    │ /metrics
-    ▼
-Prometheus
-    │
-    ▼
-Grafana
+tests/test_app.py
 
-Node Exporter
-    │
-    ▼
-Prometheus
+The test verifies:
 
-Services:
+GET /health
+      │
+      ▼
+HTTP 200
 
-Service	Port
-Flask App	5000
-Prometheus	9090
-Grafana	3000
-Node Exporter	9100
+Install Development Dependencies
 
-Prometheus scrapes metrics every 15 seconds.
+pip install -r requirements-dev.txt
 
-The monitoring images are pinned to specific versions for reproducibility.
+Run Tests
 
-Prometheus Target Validation
+python -m pytest tests/test_app.py
 
-Prometheus targets can be checked at:
+Expected:
 
-http://localhost:9090/targets
+1 passed
 
-Expected targets:
+🐳 Docker Image Publishing
 
-multicloud-app
-prometheus
-node-exporter
+Docker images are published to Docker Hub when changes reach main.
 
-A healthy monitoring stack should report these targets as:
+Docker Hub Repository
 
-UP
+<a href="https://hub.docker.com/r/josesamuel14/multicloud-app">📦 josesamuel14/multicloud-app</a>
 
-Prometheus health can also be checked at:
+Generated Tags
 
-http://localhost:9090/-/healthy
-🔐 Grafana Credentials
-
-Grafana credentials are provided through .env.
-
-Create:
-
-.env
+latest
+<Git commit SHA>
 
 Example:
 
-GRAFANA_ADMIN_PASSWORD=your-secure-password
+josesamuel14/multicloud-app:fedae7b99f755f833196e396a214e32248a8dd91
 
-The .env file is ignored by Git and must not be committed.
+Development branches validate the image without publishing it.
 
-Start monitoring:
-
-docker compose --env-file .env -f monitoring/docker-compose.yml up -d
-
-Check:
-
-docker compose --env-file .env -f monitoring/docker-compose.yml ps
-
-All services should eventually show:
-
-healthy
-🚀 Quick Start
-
-Clone the repository:
-
-git clone https://github.com/JOSESAMUEL14/multicloud-cicd.git
-cd multicloud-cicd
-
-Create the local environment file:
-
-.env
-
-Add:
-
-GRAFANA_ADMIN_PASSWORD=your-secure-password
-
-Start the application and monitoring stack:
-
-docker compose --env-file .env -f monitoring/docker-compose.yml up -d
-
-Open:
-
-Application:
-
-http://localhost:5000
-
-Prometheus:
-
-http://localhost:9090
-
-Grafana:
-
-http://localhost:3000
-❤️ Health Check
+❤️ Health Endpoint
 
 The application provides:
 
 GET /health
 
-Example:
+Example local response:
 
 {
   "cloud": "local",
   "status": "healthy"
 }
 
-The /health endpoint is used by:
+The endpoint is used for:
 
 Docker smoke testing
-Kubernetes readiness probes
-Kubernetes liveness probes
-Manual application validation
+
+Kubernetes readiness
+
+Kubernetes liveness
+
+Manual validation
+
+AWS EC2 deployment verification
+
 📡 API Endpoints
-Endpoint	Method	Description
-/	GET	Application dashboard
-/health	GET	Application health status
-/stats	GET	Application statistics
-/metrics	GET	Prometheus metrics
-/deploy	POST	Deployment-related API endpoint
+
+<table>
+  <thead>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>/</code></td>
+      <td><code>GET</code></td>
+      <td>Application dashboard</td>
+    </tr>
+    <tr>
+      <td><code>/health</code></td>
+      <td><code>GET</code></td>
+      <td>Application health</td>
+    </tr>
+    <tr>
+      <td><code>/stats</code></td>
+      <td><code>GET</code></td>
+      <td>Application statistics</td>
+    </tr>
+    <tr>
+      <td><code>/metrics</code></td>
+      <td><code>GET</code></td>
+      <td>Prometheus metrics</td>
+    </tr>
+    <tr>
+      <td><code>/deploy</code></td>
+      <td><code>POST</code></td>
+      <td>Deployment-related API</td>
+    </tr>
+  </tbody>
+</table>
+
 📁 Project Structure
+
 multicloud-cicd/
 │
 ├── .github/
@@ -507,8 +984,6 @@ multicloud-cicd/
 │
 ├── tests/
 │   └── test_app.py
-│
-├── requirements-dev.txt
 │
 ├── monitoring/
 │   ├── docker-compose.yml
@@ -524,188 +999,492 @@ multicloud-cicd/
 ├── deployment.yaml
 ├── service.yaml
 ├── kind-config.yaml
+├── requirements-dev.txt
 ├── .gitignore
 ├── LICENSE
 └── README.md
-🔧 Troubleshooting
-Check Application
-curl http://localhost:5000/health
-Check Monitoring Containers
+
+🚀 Quick Start Guide
+
+1️⃣ Clone Repository
+
+git clone https://github.com/JOSESAMUEL14/multicloud-cicd.git
+cd multicloud-cicd
+
+2️⃣ Create Environment File
+
+Create:
+
+.env
+
+Add:
+
+GRAFANA_ADMIN_PASSWORD=your-secure-password
+
+3️⃣ Start Application + Monitoring
+
+docker compose --env-file .env -f monitoring/docker-compose.yml up -d
+
+4️⃣ Verify Containers
+
 docker compose --env-file .env -f monitoring/docker-compose.yml ps
-Check Prometheus Targets
+
+5️⃣ Verify Application
+
+curl http://localhost:5000/health
+
+6️⃣ Open Services
+
+<table>
+  <tr>
+    <td><strong>🌍 Application</strong></td>
+    <td><a href="http://localhost:5000">http://localhost:5000</a></td>
+  </tr>
+  <tr>
+    <td><strong>📡 Prometheus</strong></td>
+    <td><a href="http://localhost:9090">http://localhost:9090</a></td>
+  </tr>
+  <tr>
+    <td><strong>📈 Grafana</strong></td>
+    <td><a href="http://localhost:3000">http://localhost:3000</a></td>
+  </tr>
+</table>
+
+🔧 Troubleshooting
+
+Check Application
+
+curl http://localhost:5000/health
+
+Check Docker
+
+docker ps
+
+Check Monitoring
+
+docker compose --env-file .env -f monitoring/docker-compose.yml ps
+
+Check Prometheus
 
 Open:
 
 http://localhost:9090/targets
 
-Prometheus should report:
-
-multicloud-app
-prometheus
-node-exporter
-
-as healthy and UP.
-
 Check Kubernetes
+
 kubectl get pods
 kubectl get deployment
 kubectl get service
 
-Describe a pod:
-
-kubectl describe pod <pod-name>
-
-View logs:
+Check Kubernetes Logs
 
 kubectl logs -l app=multicloud-app
-Check Kubernetes Rollout
+
+Check Rollout
+
 kubectl rollout status deployment/multicloud-app
-Check Git State
+
+Check Git
+
 git status
 git branch
 
-The stable main branch should not be used for experimental development.
+🔒 Branch & Version Safety
 
-🔒 Development Branch Safety
+The project uses separate branches to protect stable versions and keep development work isolated.
 
-The project uses separate branches for stability and development:
+Branch Structure
 
+<table>
+  <thead>
+    <tr>
+      <th>Branch</th>
+      <th>Purpose</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>main</code></td>
+      <td>Stable recruiter-facing project</td>
+      <td>🟢 Stable</td>
+    </tr>
+    <tr>
+      <td><code>v1-stable</code></td>
+      <td>Original V1 implementation</td>
+      <td>🔒 Preserved</td>
+    </tr>
+    <tr>
+      <td><code>devops-v3</code></td>
+      <td>V3 development and portfolio UI</td>
+      <td>📦 Preserved</td>
+    </tr>
+    <tr>
+      <td><code>v4-aws-ec2-deployment</code></td>
+      <td>V4 AWS EC2 deployment development</td>
+      <td>🛠️ Development</td>
+    </tr>
+  </tbody>
+</table>
+
+Version Flow
+
+v1-stable
+    │
+    ▼
+devops-v3
+    │
+    ▼
+v4-aws-ec2-deployment
+    │
+    ▼
 main
-  │
-  └── Stable merged version
 
-v1-stable
-  │
-  └── Original V1 preserved
+Version History
 
-devops-v3
-  │
-  └── Current V3 development
+<table>
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Branch</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>V1</strong></td>
+      <td><code>v1-stable</code></td>
+      <td>Original working implementation</td>
+    </tr>
+    <tr>
+      <td><strong>V3</strong></td>
+      <td><code>devops-v3</code></td>
+      <td>Advanced portfolio UI and CI/CD improvements</td>
+    </tr>
+    <tr>
+      <td><strong>V4</strong></td>
+      <td><code>v4-aws-ec2-deployment</code> → <code>main</code></td>
+      <td>AWS EC2 automated deployment after merge</td>
+    </tr>
+  </tbody>
+</table>
 
-The original V1 implementation is preserved in:
+Experimental changes should not be made directly on main.
 
-v1-stable
-
-The current V3 work is developed on:
-
-devops-v3
-
-Experimental changes are not made directly on main.
-
-No secrets should be committed to the repository.
+No secrets should ever be committed to the repository.
 
 🧪 CI Reliability Validation
 
-The CI pipeline validates more than simply whether the application can build.
-
-It verifies:
+The pipeline validates multiple layers:
 
 Application Tests
-       ↓
+       │
+       ▼
 Docker Build
-       ↓
+       │
+       ▼
 Docker Runtime
-       ↓
+       │
+       ▼
 Health Endpoint
-       ↓
-Security Scan
-       ↓
+       │
+       ▼
+Trivy Security Scan
+       │
+       ▼
 Kubernetes Cluster
-       ↓
+       │
+       ▼
 Kubernetes Deployment
-       ↓
+       │
+       ▼
 2/2 Ready Replicas
-       ↓
+       │
+       ▼
 Application Health
+       │
+       ▼
+Docker Hub Image
+       │
+       ▼
+AWS EC2 Deployment
+       │
+       ▼
+EC2 Health Check
 
-This provides multiple validation layers before the Docker image is published.
+This creates multiple validation layers before the application is considered successfully deployed.
 
-📚 Engineering Concepts Demonstrated
+🧠 Engineering Concepts Demonstrated
+
 CI/CD
+
 Automated testing
+
 Build automation
+
 Pipeline dependencies
+
 Docker image publishing
+
 CI failure handling
+
+AWS deployment automation
+
+Deployment verification
+
 Docker
+
 Containerization
+
 Immutable image tagging
+
 Non-root containers
+
 Runtime health validation
+
 Vulnerability scanning
+
+Docker Hub publishing
+
 Kubernetes
+
 Deployments
+
 ReplicaSets
+
 Pods
+
 Services
+
 NodePort
+
 Readiness probes
+
 Liveness probes
+
 Resource requests and limits
+
 Security contexts
+
 Self-healing
+
+AWS
+
+EC2 deployment
+
+Docker runtime
+
+SSH-based deployment
+
+Git SHA image deployment
+
+Health verification
+
+Deployment rollback
+
 Terraform
+
 Infrastructure as Code
+
 AWS provider
+
 EC2
+
 Security groups
-Elastic IP
+
 Variables
+
 Outputs
+
 User data
+
 Observability
+
 Prometheus
+
 Grafana
+
 Node Exporter
+
 Application metrics
+
 Health endpoints
+
 Prometheus target monitoring
+
 DevOps Engineering
+
 Git branching
+
 Failure testing
+
 Troubleshooting
+
 Security hardening
+
 Automated validation
+
 Infrastructure automation
+
+Immutable deployments
+
+Deployment verification
+
 Documentation
+
 🎯 Project Objective
 
-The objective of this project is to demonstrate how a software application can move through a DevOps workflow:
+The objective of this project is to demonstrate how a software application can move through a practical DevOps lifecycle.
 
-Code
- ↓
-Test
- ↓
-Build
- ↓
-Containerize
- ↓
-Scan
- ↓
-Deploy
- ↓
-Validate
- ↓
-Monitor
- ↓
-Recover
+DevOps Lifecycle
 
-The project emphasizes practical engineering concepts rather than simply collecting a large number of tools.
+<table>
+  <tr>
+    <td align="center"><strong>01</strong><br>💻<br><strong>CODE</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>02</strong><br>🧪<br><strong>TEST</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>03</strong><br>🐳<br><strong>BUILD</strong></td>
+    <td align="center">→</td>
+    <td align="center"><strong>04</strong><br>📦<br><strong>CONTAINERIZE</strong></td>
+  </tr>
+  <tr>
+    <td colspan="7" align="center">↓</td>
+  </tr>
+  <tr>
+    <td align="center"><strong>08</strong><br>🔄<br><strong>RECOVER</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>07</strong><br>📊<br><strong>MONITOR</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>06</strong><br>🚀<br><strong>DEPLOY</strong></td>
+    <td align="center">←</td>
+    <td align="center"><strong>05</strong><br>🔒<br><strong>SCAN &amp; VALIDATE</strong></td>
+  </tr>
+</table>
+
+The project emphasizes practical DevOps engineering rather than simply collecting a large number of technologies.
+
+🏆 Key Project Highlights
+
+🔹 Automated CI/CD
+
+GitHub Actions automatically validates the application and, on main, publishes the container image and deploys the application to AWS EC2.
+
+🔹 Containerized Application
+
+The Flask application is packaged and executed using Docker.
+
+🔹 Kubernetes Validation
+
+The deployment is validated using Kind with two replicas and health probes.
+
+🔹 Security Scanning
+
+Docker images are scanned using Trivy for HIGH and CRITICAL vulnerabilities.
+
+🔹 Immutable Deployment
+
+AWS deployment uses the exact Git commit SHA rather than relying only on latest.
+
+🔹 AWS EC2 Deployment
+
+The application has been successfully deployed to AWS EC2 through the CI/CD pipeline.
+
+🔹 Health Verification
+
+Deployment completion is verified using the application's /health endpoint.
+
+🔹 Monitoring
+
+Prometheus, Grafana, and Node Exporter provide local observability.
+
+🔗 Direct Repository Links
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🌍 Live Render Application</td>
+      <td><a href="https://multicloud-cicd.onrender.com">Open Application</a></td>
+    </tr>
+    <tr>
+      <td>⚙️ GitHub Actions</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/actions">View Actions</a></td>
+    </tr>
+    <tr>
+      <td>💻 GitHub Repository</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd">Open Repository</a></td>
+    </tr>
+    <tr>
+      <td>🐳 Docker Hub</td>
+      <td><a href="https://hub.docker.com/r/josesamuel14/multicloud-app">Open Docker Image</a></td>
+    </tr>
+    <tr>
+      <td>📄 CI/CD Workflow</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/blob/main/.github/workflows/deploy.yml">deploy.yml</a></td>
+    </tr>
+    <tr>
+      <td>☸️ Kubernetes Deployment</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/blob/main/deployment.yaml">deployment.yaml</a></td>
+    </tr>
+    <tr>
+      <td>☸️ Kubernetes Service</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/blob/main/service.yaml">service.yaml</a></td>
+    </tr>
+    <tr>
+      <td>🏗️ Terraform AWS Config</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/blob/main/terraform/aws-ec2.tf">aws-ec2.tf</a></td>
+    </tr>
+    <tr>
+      <td>🧪 Automated Tests</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/blob/main/tests/test_app.py">test_app.py</a></td>
+    </tr>
+    <tr>
+      <td>📊 Monitoring Configuration</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/tree/main/monitoring">monitoring/</a></td>
+    </tr>
+    <tr>
+      <td>📁 Repository Files</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd/tree/main">Browse Repository</a></td>
+    </tr>
+    <tr>
+      <td>📘 Documentation</td>
+      <td><a href="https://github.com/JOSESAMUEL14/multicloud-cicd#readme">README</a></td>
+    </tr>
+  </tbody>
+</table>
 
 👨‍💻 Author
 
-Samuel D
+<p>
+  <strong>Samuel D</strong><br>
+  B.E. Computer Science and Engineering
+</p>
 
-B.E. Computer Science and Engineering
+Connect
 
-GitHub:
+<table>
+  <tr>
+    <td>💻 <strong>GitHub</strong></td>
+    <td><a href="https://github.com/JOSESAMUEL14">@JOSESAMUEL14</a></td>
+  </tr>
+  <tr>
+    <td>💼 <strong>LinkedIn</strong></td>
+    <td><a href="https://linkedin.com/in/samueld14">linkedin.com/in/samueld14</a></td>
+  </tr>
+  <tr>
+    <td>📧 <strong>Email</strong></td>
+    <td><a href="mailto:Josesamueld2005@gmail.com">Josesamueld2005@gmail.com</a></td>
+  </tr>
+</table>
 
-https://github.com/JOSESAMUEL14
+📜 License
 
-LinkedIn:
+This project is distributed under the MIT License.
 
-https://linkedin.com/in/samueld14
-
-## 📜 License
-
-MIT License
+See the LICENSE file for details.
